@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "911074823851",
+    "project_id": "locationreminder-e1c5a",
+    "storage_bucket": "locationreminder-e1c5a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911074823851:android:76971e1e989cc7c305f1ee",
+        "android_client_info": {
+          "package_name": "com.cryoggen.locationreminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911074823851-b8pua4vhnfrp4f74bnt2ka6kjqr8dgt7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cryoggen.locationreminder",
+            "certificate_hash": "7988e493bc264e1ecbd398ebc25a17591a8006ce"
+          }
+        },
+        {
+          "client_id": "911074823851-qh48d71lrn22gi0e0bt0u43flcuu7kep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUEQwIyp5vILOer6ZSIsEFL9iNotBXsD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911074823851-qh48d71lrn22gi0e0bt0u43flcuu7kep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
