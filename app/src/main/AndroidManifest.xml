@@ -10,10 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocationReminder">
         <activity
-            android:name=".locationreminders.RemindersActivity"
-            android:exported="false" />
-        <activity
-            android:name=".authentication.AuthenticationActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
