@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -46,6 +46,7 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$androidXLegacySupport"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     kapt "androidx.room:room-compiler:$roomVersion"
 
     // Architecture Components
@@ -81,3 +82,5 @@ dependencies {
     // Firebase
     implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
