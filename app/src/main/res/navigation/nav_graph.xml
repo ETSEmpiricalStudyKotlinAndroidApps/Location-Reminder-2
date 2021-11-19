@@ -10,4 +10,9 @@
         android:name="com.cryoggen.locationreminder.authentication.LoginFragment"
         android:label="login_fragment"
         tools:layout="@layout/login_fragment" />
+    <fragment
+        android:id="@+id/fragmentReminderList"
+        android:name="com.cryoggen.locationreminder.locationreminders.FragmentReminders"
+        android:label="fragment_reminder_list_fragment"
+        tools:layout="@layout/fragment_reminder_fragment" />
 </navigation>
