@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">LocationReminder</string>
+    <string name="app_name">Location Reminder</string>
+    <string name="app_description_login_fragment">An app with reminders of what to do when you reach a certain location.</string>
+    <string name="registration_button_text">Login or register</string>
 </resources>

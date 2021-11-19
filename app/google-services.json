@@ -7,14 +7,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:911074823851:android:76971e1e989cc7c305f1ee",
+        "mobilesdk_app_id": "1:911074823851:android:a6f251137cd751f705f1ee",
         "android_client_info": {
           "package_name": "com.cryoggen.locationreminder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "911074823851-b8pua4vhnfrp4f74bnt2ka6kjqr8dgt7.apps.googleusercontent.com",
+          "client_id": "911074823851-psrr62hb2qu07thnae0t47tbh0rl08sv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cryoggen.locationreminder",

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSizeTitleHeading">38sp</dimen>
+    <dimen name="textSizeAppDescription">30sp</dimen>
+    <dimen name="margin_app_description_login_fragment">16dp</dimen>
+</resources>
