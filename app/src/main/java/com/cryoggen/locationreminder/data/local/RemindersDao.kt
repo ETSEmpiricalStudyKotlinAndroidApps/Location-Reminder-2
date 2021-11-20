@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cryoggen.locationreminder.data
+package com.cryoggen.locationreminder.data.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -22,6 +22,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.cryoggen.locationreminder.data.Reminder
 
 /**
  * Data Access Object for the Reminders table.
