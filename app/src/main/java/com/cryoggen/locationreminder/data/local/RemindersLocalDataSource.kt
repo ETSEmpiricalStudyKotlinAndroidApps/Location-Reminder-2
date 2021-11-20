@@ -1,27 +1,9 @@
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.android.architecture.blueprints.todoapp.data.source.local
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import com.example.android.architecture.blueprints.todoapp.data.Result
-import com.example.android.architecture.blueprints.todoapp.data.Result.Error
-import com.example.android.architecture.blueprints.todoapp.data.Result.Success
-import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.TasksDataSource
+import com.cryoggen.locationreminder.data.Reminder
+import com.cryoggen.locationreminder.data.local.RemindersDao
+import com.cryoggen.locationreminder.data.local.RemindersDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -29,81 +11,81 @@ import kotlinx.coroutines.withContext
 /**
  * Concrete implementation of a data source as a db.
  */
-class TasksLocalDataSource internal constructor(
-    private val tasksDao: TasksDao,
+class RemindersLocalDataSource internal constructor(
+    private val RemindersDao: RemindersDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : TasksDataSource {
+) : RemindersDataSource {
 
-    override fun observeTasks(): LiveData<Result<List<Task>>> {
-        return tasksDao.observeTasks().map {
+    override fun observeReminders(): LiveData<Result<List<Reminder>>> {
+        return RemindersDao.observeReminders().map {
             Success(it)
         }
     }
 
-    override fun observeTask(taskId: String): LiveData<Result<Task>> {
-        return tasksDao.observeTaskById(taskId).map {
+    override fun observeReminder(ReminderId: String): LiveData<Result<Reminder>> {
+        return RemindersDao.observeReminderById(ReminderId).map {
             Success(it)
         }
     }
 
-    override suspend fun refreshTask(taskId: String) {
+    override suspend fun refreshReminder(ReminderId: String) {
         //NO-OP
     }
 
-    override suspend fun refreshTasks() {
+    override suspend fun refreshReminders() {
         //NO-OP
     }
 
-    override suspend fun getTasks(): Result<List<Task>> = withContext(ioDispatcher) {
+    override suspend fun getReminders(): Result<List<Reminder>> = withContext(ioDispatcher) {
         return@withContext try {
-            Success(tasksDao.getTasks())
+            Success(RemindersDao.getReminders())
         } catch (e: Exception) {
             Error(e)
         }
     }
 
-    override suspend fun getTask(taskId: String): Result<Task> = withContext(ioDispatcher) {
+    override suspend fun getReminder(ReminderId: String): Result<Reminder> = withContext(ioDispatcher) {
         try {
-            val task = tasksDao.getTaskById(taskId)
-            if (task != null) {
-                return@withContext Success(task)
+            val Reminder = RemindersDao.getReminderById(ReminderId)
+            if (Reminder != null) {
+                return@withContext Success(Reminder)
             } else {
-                return@withContext Error(Exception("Task not found!"))
+                return@withContext Error(Exception("Reminder not found!"))
             }
         } catch (e: Exception) {
             return@withContext Error(e)
         }
     }
 
-    override suspend fun saveTask(task: Task) = withContext(ioDispatcher) {
-        tasksDao.insertTask(task)
+    override suspend fun saveReminder(Reminder: Reminder) = withContext(ioDispatcher) {
+        RemindersDao.insertReminder(Reminder)
     }
 
-    override suspend fun completeTask(task: Task) = withContext(ioDispatcher) {
-        tasksDao.updateCompleted(task.id, true)
+    override suspend fun completeReminder(Reminder: Reminder) = withContext(ioDispatcher) {
+        RemindersDao.updateCompleted(Reminder.id, true)
     }
 
-    override suspend fun completeTask(taskId: String) {
-        tasksDao.updateCompleted(taskId, true)
+    override suspend fun completeReminder(ReminderId: String) {
+        RemindersDao.updateCompleted(ReminderId, true)
     }
 
-    override suspend fun activateTask(task: Task) = withContext(ioDispatcher) {
-        tasksDao.updateCompleted(task.id, false)
+    override suspend fun activateReminder(Reminder: Reminder) = withContext(ioDispatcher) {
+        RemindersDao.updateCompleted(Reminder.id, false)
     }
 
-    override suspend fun activateTask(taskId: String) {
-        tasksDao.updateCompleted(taskId, false)
+    override suspend fun activateReminder(ReminderId: String) {
+        RemindersDao.updateCompleted(ReminderId, false)
     }
 
-    override suspend fun clearCompletedTasks() = withContext<Unit>(ioDispatcher) {
-        tasksDao.deleteCompletedTasks()
+    override suspend fun clearCompletedReminders() = withContext<Unit>(ioDispatcher) {
+        RemindersDao.deleteCompletedReminders()
     }
 
-    override suspend fun deleteAllTasks() = withContext(ioDispatcher) {
-        tasksDao.deleteTasks()
+    override suspend fun deleteAllReminders() = withContext(ioDispatcher) {
+        RemindersDao.deleteReminders()
     }
 
-    override suspend fun deleteTask(taskId: String) = withContext<Unit>(ioDispatcher) {
-        tasksDao.deleteTaskById(taskId)
+    override suspend fun deleteReminder(ReminderId: String) = withContext<Unit>(ioDispatcher) {
+        RemindersDao.deleteReminderById(ReminderId)
     }
 }
