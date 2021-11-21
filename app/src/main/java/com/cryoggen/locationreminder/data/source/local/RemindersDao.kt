@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cryoggen.locationreminder.data.local
+package com.cryoggen.locationreminder.data.source.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

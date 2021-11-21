@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.data.local
+package com.cryoggen.locationreminder.data.source
 
 import androidx.lifecycle.LiveData
 import com.cryoggen.locationreminder.data.Reminder

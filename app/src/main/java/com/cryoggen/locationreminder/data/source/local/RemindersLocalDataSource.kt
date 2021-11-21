@@ -2,8 +2,8 @@
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.data.local.RemindersDao
-import com.cryoggen.locationreminder.data.local.RemindersDataSource
+import com.cryoggen.locationreminder.data.source.local.RemindersDao
+import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
