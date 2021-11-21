@@ -2,14 +2,14 @@ package com.cryoggen.locationreminder.data.source
 
 import androidx.lifecycle.LiveData
 import com.cryoggen.locationreminder.data.Reminder
-
+import com.cryoggen.locationreminder.data.Result
 /**
  * Main entry point for accessing Reminders data.
  */
 interface RemindersDataSource {
 
 
-    fun observeReminders(): LiveData<Result<List<Reminder>>>
+    fun observeReminders(): LiveData<com.cryoggen.locationreminder.data.Result<List<Reminder>>>
 
     suspend fun getReminders(): Result<List<Reminder>>
 

@@ -1,12 +1,16 @@
+package com.cryoggen.locationreminder.data.source.local
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.data.source.local.RemindersDao
 import com.cryoggen.locationreminder.data.source.RemindersDataSource
+import com.cryoggen.locationreminder.data.Result
+import com.cryoggen.locationreminder.data.Result.Error
+import com.cryoggen.locationreminder.data.Result.Success
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
 
 /**
  * Concrete implementation of a data source as a db.
