@@ -8,6 +8,7 @@ import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.local.RemindersLocalDataSource
 import com.cryoggen.locationreminder.data.source.local.ToDoDatabase
+import com.cryoggen.locationreminder.data.source.remote.RemindersRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
  */
 class RemindersRepository private constructor(application: Application) {
 
-//    private val RemindersRemoteDataSource: RemindersDataSource
+    private val remindersRemoteDataSource: RemindersDataSource
     private val RemindersLocalDataSource: RemindersDataSource
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -41,7 +42,7 @@ class RemindersRepository private constructor(application: Application) {
             ToDoDatabase::class.java, "Reminders.db")
             .build()
 
-        RemindersRemoteDataSource = RemindersRemoteDataSource
+        remindersRemoteDataSource = RemindersRemoteDataSource
         RemindersLocalDataSource = RemindersLocalDataSource(database.ReminderDao())
     }
 
