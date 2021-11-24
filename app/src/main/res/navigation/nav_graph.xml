@@ -14,5 +14,5 @@
         android:id="@+id/fragmentReminderList"
         android:name="com.cryoggen.locationreminder.locationreminders.FragmentReminders"
         android:label="fragment_reminder_list_fragment"
-        tools:layout="@layout/fragment_reminder_fragment" />
+        tools:layout="@layout/reminder_fragment" />
 </navigation>
