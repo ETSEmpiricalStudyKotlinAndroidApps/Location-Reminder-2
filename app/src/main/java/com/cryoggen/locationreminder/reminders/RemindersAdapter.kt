@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cryoggen.locationreminder.locationreminders
+package com.cryoggen.locationreminder.reminders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cryoggen.locationreminder.data.Reminder
-
+import com.cryoggen.locationreminder.databinding.ReminderItemBinding
 
 
 /**
@@ -46,7 +46,7 @@ class RemindersAdapter(private val viewModel: RemindersViewModel) :
         fun bind(viewModel: RemindersViewModel, item: Reminder) {
 
             binding.viewmodel = viewModel
-            binding.Reminder = item
+            binding.reminder = item
             binding.executePendingBindings()
         }
 
