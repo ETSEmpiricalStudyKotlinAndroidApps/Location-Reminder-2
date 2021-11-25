@@ -1,5 +1,5 @@
 
-package com.cryoggen.locationreminder.locationreminders
+package com.cryoggen.locationreminder.reminders
 
 /**
  * Used with the filter spinner in the tasks list.
