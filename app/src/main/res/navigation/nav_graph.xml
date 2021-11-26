@@ -12,7 +12,12 @@
         tools:layout="@layout/login_fragment" />
     <fragment
         android:id="@+id/fragmentReminderList"
-        android:name="com.cryoggen.locationreminder.locationreminders.FragmentReminders"
+        android:name="com.cryoggen.locationreminder.reminders.RemindersFragment"
         android:label="fragment_reminder_list_fragment"
-        tools:layout="@layout/reminder_fragment" />
+        tools:layout="@layout/fragment_reminders">
+    <argument
+        android:name="userMessage"
+        app:argType="integer"
+        android:defaultValue="0" />
+    </fragment>
 </navigation>
