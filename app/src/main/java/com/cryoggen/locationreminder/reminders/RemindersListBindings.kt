@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cryoggen.locationreminder.locationreminders
+package com.cryoggen.locationreminder.reminders
 
 import android.graphics.Paint
 import android.widget.TextView
@@ -30,7 +30,7 @@ import com.cryoggen.locationreminder.data.Reminder
 @BindingAdapter("app:items")
 fun setItems(listView: RecyclerView, items: List<Reminder>?) {
     items?.let {
-        (listView.adapter as ReminderAdapter).submitList(items)
+        (listView.adapter as RemindersAdapter).submitList(items)
     }
 }
 
