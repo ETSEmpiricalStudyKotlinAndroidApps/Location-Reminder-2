@@ -10,13 +10,13 @@ internal fun getActiveAndCompletedStats(reminders: List<Reminder>?): StatsResult
     return if (reminders == null || reminders.isEmpty()) {
         StatsResult(0f, 0f)
     } else {
-        val totalTasks = reminders.size
-        val numberOfActiveTasks = reminders.count { it.isActive }
+        val totalReminders = reminders.size
+        val numberOfActiveReminders = reminders.count { it.isActive }
         StatsResult(
-            activeTasksPercent = 100f * numberOfActiveTasks / reminders.size,
-            completedTasksPercent = 100f * (totalTasks - numberOfActiveTasks) / reminders.size
+            activeRemindersPercent = 100f * numberOfActiveReminders / reminders.size,
+            completedRemindersPercent = 100f * (totalReminders - numberOfActiveReminders) / reminders.size
         )
     }
 }
 
-data class StatsResult(val activeTasksPercent: Float, val completedTasksPercent: Float)
+data class StatsResult(val activeRemindersPercent: Float, val completedRemindersPercent: Float)
