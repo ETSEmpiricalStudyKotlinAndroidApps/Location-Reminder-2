@@ -50,8 +50,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:visibility="@{viewmodel.empty ? View.GONE : View.VISIBLE}" />
 
-                <!-- android:paddingTop specified to temporarily work around -->
-                <!-- https://github.com/robolectric/robolectric/issues/4588 -->
                 <TextView
                     android:id="@+id/stats_completed_text"
                     android:layout_width="match_parent"
