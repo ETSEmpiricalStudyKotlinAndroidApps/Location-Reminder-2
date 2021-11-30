@@ -145,4 +145,5 @@ class RemindersFragment : Fragment() {
             Timber.w("ViewModel not initialized when attempting to set up adapter.")
         }
     }
+
 }
