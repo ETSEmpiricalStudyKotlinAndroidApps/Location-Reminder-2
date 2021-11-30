@@ -3,10 +3,37 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/drawer_item_color.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_add.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_assignment_turned_in_24dp.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_check_circle_96dp.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_done.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_edit.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_filter_list.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_list.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_menu.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_statistics.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_statistics_100dp.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_statistics_24dp.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/ic_verified_user_96dp.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/list_completed_touch_feedback.xml" value="0.2557291666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/drawable/touch_feedback.xml" value="0.2557291666666667" />
         <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/activity_authentication.xml" value="0.1" />
         <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/activity_main.xml" value="0.1490036231884058" />
         <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/fragment_reminder_fragment.xml" value="0.13768115942028986" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/fragment_reminders.xml" value="0.18697916666666667" />
         <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/login_fragment.xml" value="0.1408514492753623" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/nav_header.xml" value="0.18697916666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/reminder_fragment.xml" value="0.23958333333333334" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/reminder_item.xml" value="0.23489583333333333" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/reminderdetail_frag.xml" value="0.2708333333333333" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/reminders_frag.xml" value="0.18697916666666667" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/statistics_frag.xml" value="0.18229166666666666" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/layout/tasks_frag.xml" value="0.20208333333333334" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/menu/drawer_actions.xml" value="0.24479166666666666" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/menu/filter_reminders.xml" value="0.2421875" />
+        <entry key="..\:/Android Developer/My projects/Location Reminder/app/src/main/res/menu/reminders_fragment_menu.xml" value="0.23958333333333334" />
       </map>
     </option>
   </component>
