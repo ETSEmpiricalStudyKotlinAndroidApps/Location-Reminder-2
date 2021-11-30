@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.cryoggen.locationreminder.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
@@ -46,14 +47,14 @@ class ReminderDetailFragment : Fragment() {
             val action = ReminderDetailFragmentDirections
                 .actionReminderDetailFragmentToAddEditReminderFragment(
                     args.ReminderId,
-                    resources.getString(R.string.edit_Reminder)
+                    resources.getString(R.string.edit_reminder)
                 )
             findNavController().navigate(action)
         })
     }
 
     private fun setupFab() {
-        activity?.findViewById<View>(R.id.edit_Reminder_fab)?.setOnClickListener {
+        activity?.findViewById<View>(R.id.edit_reminder_fab)?.setOnClickListener {
             viewModel.editReminder()
         }
     }
@@ -63,7 +64,7 @@ class ReminderDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.Reminderdetail_frag, container, false)
+        val view = inflater.inflate(R.layout.reminderdetail_frag, container, false)
         viewDataBinding = ReminderdetailFragBinding.bind(view).apply {
             viewmodel = viewModel
         }
