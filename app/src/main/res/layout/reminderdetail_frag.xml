@@ -65,7 +65,7 @@
                     android:visibility="@{viewmodel.isDataAvailable ? View.VISIBLE : View.GONE}">
 
                     <CheckBox
-                        android:id="@+id/task_detail_complete_checkbox"
+                        android:id="@+id/reminder_detail_complete_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -75,20 +75,20 @@
                         android:paddingTop="1dp" />
 
                     <TextView
-                        android:id="@+id/task_detail_title_text"
+                        android:id="@+id/reminder_detail_title_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/task_detail_complete_checkbox"
+                        android:layout_toRightOf="@id/reminder_detail_complete_checkbox"
                         android:paddingTop="1dp"
                         android:text="@{viewmodel.reminder.title}"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
-                        android:id="@+id/task_detail_description_text"
+                        android:id="@+id/reminder_detail_description_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/task_detail_title_text"
-                        android:layout_toRightOf="@id/task_detail_complete_checkbox"
+                        android:layout_below="@id/reminder_detail_title_text"
+                        android:layout_toRightOf="@id/reminder_detail_complete_checkbox"
                         android:paddingTop="1dp"
                         android:text="@{viewmodel.reminder.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -98,7 +98,7 @@
         </com.cryoggen.locationreminder.ScrollChildSwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_task_fab"
+            android:id="@+id/edit_reminder_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
