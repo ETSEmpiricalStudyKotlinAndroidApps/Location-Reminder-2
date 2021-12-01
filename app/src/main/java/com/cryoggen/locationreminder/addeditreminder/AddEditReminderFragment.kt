@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.reminderdetail.addeditreminder
+package com.cryoggen.locationreminder.addeditreminder
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.cryoggen.locationreminder.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.material.snackbar.Snackbar
@@ -19,9 +21,9 @@ import com.google.android.material.snackbar.Snackbar
  */
 class AddEditReminderFragment : Fragment() {
 
-    private lateinit var viewDataBinding: AddreminderFragBinding
+    private lateinit var viewDataBinding:AddreminderFragBinding
 
-    private val args: AddEditreminderFragmentArgs by navArgs()
+    private val args: AddEditReminderFragmentArgs by navArgs()
 
     private val viewModel by viewModels<AddEditReminderViewModel>()
 
@@ -52,8 +54,8 @@ class AddEditReminderFragment : Fragment() {
 
     private fun setupNavigation() {
         viewModel.reminderUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
-            val action = AddEditreminderFragmentDirections
-                .actionAddEditreminderFragmentToremindersFragment(ADD_EDIT_RESULT_OK)
+            val action = AddEditReminderFragmentDirections
+                .actionAddEditReminderFragmentToRemindersFragment(ADD_EDIT_RESULT_OK)
             findNavController().navigate(action)
         })
     }
