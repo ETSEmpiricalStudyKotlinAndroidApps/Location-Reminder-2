@@ -25,7 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 class ReminderDetailFragment : Fragment() {
     private lateinit var viewDataBinding: ReminderdetailFragBinding
 
-    private val args: ReminderdetailFragmentArgs by navArgs()
+    private val args: ReminderDetailFragmentArgs by navArgs()
 
     private val viewModel by viewModels<ReminderDetailViewModel>()
 
@@ -46,7 +46,7 @@ class ReminderDetailFragment : Fragment() {
         viewModel.editReminderEvent.observe(viewLifecycleOwner, EventObserver {
             val action = ReminderDetailFragmentDirections
                 .actionReminderDetailFragmentToAddEditReminderFragment(
-                    args.ReminderId,
+                    args.reminderId,
                     resources.getString(R.string.edit_reminder)
                 )
             findNavController().navigate(action)
@@ -70,7 +70,7 @@ class ReminderDetailFragment : Fragment() {
         }
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
-        viewModel.start(args.ReminderId)
+        viewModel.start(args.reminderId)
 
         setHasOptionsMenu(true)
         return view
@@ -87,6 +87,6 @@ class ReminderDetailFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.Reminderdetail_fragment_menu, menu)
+        inflater.inflate(R.menu.reminderdetail_fragment_menu, menu)
     }
 }
