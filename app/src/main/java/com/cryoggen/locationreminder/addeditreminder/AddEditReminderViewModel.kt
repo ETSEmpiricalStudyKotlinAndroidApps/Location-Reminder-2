@@ -1,5 +1,5 @@
 
-package com.cryoggen.locationreminder.reminderdetail.addeditreminder
+package com.cryoggen.locationreminder.addeditreminder
 
 import android.app.Application
 import androidx.lifecycle.*
