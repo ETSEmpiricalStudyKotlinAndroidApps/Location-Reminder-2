@@ -2,8 +2,7 @@
     <string name="app_name">Location Reminder</string>
     <string name="app_description_login_fragment">An app with reminders of what to do when you reach a certain location.</string>
     <string name="registration_button_text">Login or register</string>
-
-    <string name="app_name">Todo</string>
+    
     <string name="add_reminder">New reminder</string>
     <string name="edit_reminder">Edit reminder</string>
     <string name="reminder_marked_complete">reminder marked complete</string>
