@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@id/tasks_fragment_dest"
+        android:id="@id/reminders_fragment_dest"
         android:icon="@drawable/ic_list"
         android:title="@string/list_title" />
     <item
