@@ -13,5 +13,5 @@ import com.cryoggen.locationreminder.data.Reminder
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 abstract class ToDoDatabase : RoomDatabase() {
 
-    abstract fun ReminderDao(): RemindersDao
+    abstract fun reminderDao(): RemindersDao
 }
