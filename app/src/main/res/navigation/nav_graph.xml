@@ -12,8 +12,8 @@
         android:label="login_fragment"
         tools:layout="@layout/login_fragment" >
         <action
-            android:id="@+id/action_loginFragment_to_reminderDetailFragment"
-            app:destination="@id/reminder_detail_fragment_dest" />
+            android:id="@+id/action_loginFragment_to_reminders_fragment_dest"
+            app:destination="@id/reminders_fragment_dest" />
     </fragment>
 
     <fragment
