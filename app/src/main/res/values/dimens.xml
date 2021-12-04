@@ -9,7 +9,7 @@
     <dimen name="header_height">192dp</dimen>
     <dimen name="header_padding">16dp</dimen>
     <dimen name="header_image_width">100dp</dimen>
-    <dimen name="textSizeTitleHeading">48sp</dimen>
-    <dimen name="margin_app_description_login_fragment">30sp</dimen>
+    <dimen name="textSizeTitleHeading">38sp</dimen>
+    <dimen name="margin_app_description_login_fragment">16sp</dimen>
 
 </resources>
