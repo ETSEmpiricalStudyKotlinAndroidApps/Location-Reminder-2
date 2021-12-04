@@ -6,7 +6,7 @@
     <color name="colorTextPrimary">#000000</color>
     <color name="colorGrey">#757575</color>
 
-    <drawable name="completedTaskBackground">#CCCCCC</drawable>
+    <drawable name="completedreminderBackground">#CCCCCC</drawable>
 
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>
