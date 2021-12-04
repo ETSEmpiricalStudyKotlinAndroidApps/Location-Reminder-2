@@ -34,7 +34,7 @@ fun setItems(listView: RecyclerView, items: List<Reminder>?) {
     }
 }
 
-@BindingAdapter("app:completedTask")
+@BindingAdapter("app:completedReminder")
 fun setStyle(textView: TextView, enabled: Boolean) {
     if (enabled) {
         textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
