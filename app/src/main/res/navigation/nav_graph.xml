@@ -56,6 +56,9 @@
             android:name="userMessage"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_reminders_fragment_dest_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/add_edit_reminder_fragment_dest"
