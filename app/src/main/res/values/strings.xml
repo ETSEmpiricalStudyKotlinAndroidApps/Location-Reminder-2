@@ -48,4 +48,5 @@
     <!-- Content Descriptions -->
     <string name="reminders_header_image_content_description">reminders header image</string>
     <string name="no_reminders_image_content_description">No reminders image</string>
+    <string name="sign_out">Sing out</string>
 </resources>
