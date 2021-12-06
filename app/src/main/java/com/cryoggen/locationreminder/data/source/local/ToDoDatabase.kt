@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.cryoggen.locationreminder.data.Reminder
 
+
 /**
  * The Room Database that contains the Task table.
  *
@@ -13,5 +14,5 @@ import com.cryoggen.locationreminder.data.Reminder
 @Database(entities = [Reminder::class], version = 1, exportSchema = false)
 abstract class ToDoDatabase : RoomDatabase() {
 
-    abstract fun reminderDao(): RemindersDao
+    abstract fun remindersDao(): RemindersDao
 }
