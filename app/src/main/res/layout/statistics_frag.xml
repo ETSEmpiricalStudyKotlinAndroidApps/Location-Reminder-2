@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="1dp"
-                    android:text="@{@string/statistics_active_tasks(viewmodel.activeRemindersPercent)}"
+                    android:text="@{@string/statistics_active_reminders(viewmodel.activeRemindersPercent)}"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:visibility="@{viewmodel.empty ? View.GONE : View.VISIBLE}" />
 
@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="1dp"
-                    android:text="@{@string/statistics_completed_tasks(viewmodel.completedRemindersPercent)}"
+                    android:text="@{@string/statistics_completed_reminders(viewmodel.completedRemindersPercent)}"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:visibility="@{viewmodel.empty ? View.GONE : View.VISIBLE}" />
 
