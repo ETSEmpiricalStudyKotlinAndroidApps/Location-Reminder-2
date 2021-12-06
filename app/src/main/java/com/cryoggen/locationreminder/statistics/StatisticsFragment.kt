@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.StatisticsFragBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
-import com.example.android.architecture.blueprints.todoapp.statistics.StatisticsViewModel
 
 /**
  * Main UI for the statistics screen.
