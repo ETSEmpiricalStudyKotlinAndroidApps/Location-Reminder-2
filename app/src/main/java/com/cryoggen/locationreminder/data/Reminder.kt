@@ -6,15 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
-/**
- * Immutable model class for a Reminder. In order to compile with Room, we can't use @JvmOverloads to
- * generate multiple constructors.
- *
- * @param title       title of the task
- * @param description description of the task
- * @param isCompleted whether or not this task is completed
- * @param id          id of the task
- */
 @Entity(tableName = "reminders")
 data class Reminder @JvmOverloads constructor(
     @ColumnInfo(name = "title") var title: String = "",
