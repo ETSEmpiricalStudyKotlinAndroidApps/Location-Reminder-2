@@ -30,4 +30,10 @@
         android:id="@+id/menu_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_sign_out"
+        android:title="@string/sign_out"
+        app:showAsAction="never" />
+
+
 </menu>
