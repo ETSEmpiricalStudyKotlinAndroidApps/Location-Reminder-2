@@ -43,7 +43,7 @@ class RemindersRepository private constructor(application: Application) {
             .build()
 
         remindersRemoteDataSource = RemindersRemoteDataSource
-        RemindersLocalDataSource = RemindersLocalDataSource(database.reminderDao())
+        RemindersLocalDataSource = RemindersLocalDataSource(database.remindersDao())
     }
 
     suspend fun getReminders(forceUpdate: Boolean = false): Result<List<Reminder>> {
