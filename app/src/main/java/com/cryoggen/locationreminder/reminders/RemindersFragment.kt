@@ -8,19 +8,27 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
+import com.cryoggen.locationreminder.MainActivity
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
+import android.content.Intent.getIntent
+
+import android.content.Intent
+import com.cryoggen.locationreminder.authentication.LoginFragmentDirections
+
 
 /**
  * Display a grid of [Reminder]s. User can choose to view all, active or completed Reminders.
@@ -60,6 +68,14 @@ class RemindersFragment : Fragment() {
                 viewModel.loadReminders(true)
                 true
             }
+            R.id.menu_sign_out -> {
+                AuthUI.getInstance().signOut(requireContext())
+                val action = RemindersFragmentDirections
+                    .actionRemindersFragmentDestToLoginFragment()
+                findNavController().navigate(action)
+                true
+            }
+
             else -> false
         }
 
@@ -123,7 +139,7 @@ class RemindersFragment : Fragment() {
     }
 
     private fun navigateToAddNewReminder() {
-        val action = FragmentRemindersDirections
+        val action = RemindersFragmentDirections
             .actionRemindersFragmentToAddEditReminderFragment(
                 null,
                 resources.getString(R.string.add_reminder)
@@ -132,7 +148,8 @@ class RemindersFragment : Fragment() {
     }
 
     private fun openReminderDetails(ReminderId: String) {
-        val action = RemindersFragmentDirections.actionRemindersFragmentToReminderDetailFragment(ReminderId)
+        val action =
+            RemindersFragmentDirections.actionRemindersFragmentToReminderDetailFragment(ReminderId)
         findNavController().navigate(action)
     }
 
