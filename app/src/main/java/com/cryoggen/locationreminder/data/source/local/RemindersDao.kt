@@ -19,8 +19,8 @@ interface RemindersDao {
      *
      * @return all Reminders.
      */
-    @Query("SELECT * FROM Reminders")
-    fun observeReminders(): LiveData<List<Reminder>>
+    @Query("SELECT * FROM Reminders WHERE useruid = :authorizedUserUID")
+    fun observeReminders(authorizedUserUID: String): LiveData<List<Reminder>>
 
     /**
      * Observes a single Reminder.
@@ -36,8 +36,8 @@ interface RemindersDao {
      *
      * @return all Reminders.
      */
-    @Query("SELECT * FROM Reminders")
-     fun getReminders(): List<Reminder>
+    @Query("SELECT * FROM Reminders WHERE useruid = :authorizedUserUID")
+     fun getReminders(authorizedUserUID: String): List<Reminder>
 
     /**
      * Select a Reminder by id.
