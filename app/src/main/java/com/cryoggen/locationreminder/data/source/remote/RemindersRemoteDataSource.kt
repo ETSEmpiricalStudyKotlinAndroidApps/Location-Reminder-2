@@ -80,7 +80,7 @@ object RemindersRemoteDataSource : RemindersDataSource {
     }
 
     override suspend fun completeReminder(Reminder: Reminder) {
-        val completedReminder = Reminder(Reminder.title, Reminder.description, true, Reminder.id)
+        val completedReminder = Reminder(Reminder.title, Reminder.description, Reminder.userUID, true, Reminder.id)
         Reminders_SERVICE_DATA[Reminder.id] = completedReminder
     }
 
@@ -89,7 +89,7 @@ object RemindersRemoteDataSource : RemindersDataSource {
     }
 
     override suspend fun activateReminder(Reminder: Reminder) {
-        val activeReminder = Reminder(Reminder.title, Reminder.description, false, Reminder.id)
+        val activeReminder = Reminder(Reminder.title, Reminder.description, Reminder.userUID, false, Reminder.id)
         Reminders_SERVICE_DATA[Reminder.id] = activeReminder
     }
 
