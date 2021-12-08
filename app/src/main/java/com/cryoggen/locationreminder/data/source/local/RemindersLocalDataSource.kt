@@ -7,6 +7,7 @@ import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Error
 import com.cryoggen.locationreminder.data.Result.Success
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ class RemindersLocalDataSource internal constructor(
 ) : RemindersDataSource {
 
     override fun observeReminders(): LiveData<Result<List<Reminder>>> {
-        return RemindersDao.observeReminders().map {
+        return RemindersDao.observeReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString()).map {
             Success(it)
         }
     }
@@ -42,7 +43,7 @@ class RemindersLocalDataSource internal constructor(
 
     override suspend fun getReminders(): Result<List<Reminder>> = withContext(ioDispatcher) {
         return@withContext try {
-            Success(RemindersDao.getReminders())
+            Success(RemindersDao.getReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString()))
         } catch (e: Exception) {
             Error(e)
         }
