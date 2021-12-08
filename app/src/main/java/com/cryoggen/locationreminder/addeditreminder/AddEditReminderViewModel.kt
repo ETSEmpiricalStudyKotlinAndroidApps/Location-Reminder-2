@@ -8,6 +8,7 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 /**
@@ -88,6 +89,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     fun saveReminder() {
         val currentTitle = title.value
         val currentDescription = description.value
+        val currentUserUID = FirebaseAuth.getInstance().currentUser?.getUid().toString()
 
         if (currentTitle == null || currentDescription == null) {
             _snackbarText.value = Event(R.string.empty_reminder_message)
@@ -100,9 +102,9 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
         val currentReminderId = reminderId
         if (isNewReminder || currentReminderId == null) {
-            createReminder(Reminder(currentTitle, currentDescription))
+            createReminder(Reminder(currentTitle, currentDescription,currentUserUID))
         } else {
-            val reminder = Reminder(currentTitle, currentDescription, reminderCompleted, currentReminderId)
+            val reminder = Reminder(currentTitle, currentDescription, currentUserUID, reminderCompleted, currentReminderId)
             updateReminder(reminder)
         }
     }
