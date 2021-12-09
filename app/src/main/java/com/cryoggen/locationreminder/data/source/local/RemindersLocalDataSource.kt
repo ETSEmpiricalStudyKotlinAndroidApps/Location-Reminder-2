@@ -83,11 +83,11 @@ class RemindersLocalDataSource internal constructor(
     }
 
     override suspend fun clearCompletedReminders() = withContext<Unit>(ioDispatcher) {
-        RemindersDao.deleteCompletedReminders()
+        RemindersDao.deleteCompletedReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString())
     }
 
     override suspend fun deleteAllReminders() = withContext(ioDispatcher) {
-        RemindersDao.deleteReminders()
+        RemindersDao.deleteReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString())
     }
 
     override suspend fun deleteReminder(ReminderId: String) = withContext<Unit>(ioDispatcher) {
