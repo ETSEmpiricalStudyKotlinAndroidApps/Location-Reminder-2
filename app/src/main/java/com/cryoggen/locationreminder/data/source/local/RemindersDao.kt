@@ -85,14 +85,14 @@ interface RemindersDao {
     /**
      * Delete all Reminders.
      */
-    @Query("DELETE FROM reminders")
-    fun deleteReminders()
+    @Query("DELETE FROM reminders WHERE useruid = :authorizedUserUID")
+    fun deleteReminders(authorizedUserUID: String)
 
     /**
      * Delete all completed Reminders from the table.
      *
      * @return the number of Reminders deleted.
      */
-    @Query("DELETE FROM Reminders WHERE completed = 1")
-   fun deleteCompletedReminders(): Int
+    @Query("DELETE FROM Reminders WHERE completed = 1 AND useruid = :authorizedUserUID ")
+   fun deleteCompletedReminders(authorizedUserUID: String): Int
 }
