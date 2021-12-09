@@ -3,6 +3,7 @@ package com.cryoggen.locationreminder.authentication
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +44,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Toast.makeText(requireContext(), "тест", Toast.LENGTH_SHORT).show()
         observeAuthenticationState()
         binding.registrationButton.setOnClickListener { launchSignInFlow() }
     }
