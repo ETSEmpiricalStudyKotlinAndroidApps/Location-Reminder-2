@@ -58,7 +58,7 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun refreshReminders() {
-        updateRemindersFromRemoteDataSource()
+       // updateRemindersFromRemoteDataSource()
     }
 
     fun observeReminders(): LiveData<Result<List<Reminder>>> {
@@ -66,7 +66,7 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun refreshReminder(ReminderId: String) {
-        updateReminderFromRemoteDataSource(ReminderId)
+     //   updateReminderFromRemoteDataSource(ReminderId)
     }
 
     private suspend fun updateRemindersFromRemoteDataSource() {
