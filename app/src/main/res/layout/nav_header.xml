@@ -19,6 +19,7 @@
         android:contentDescription="@string/reminders_header_image_content_description" />
 
     <TextView
+        android:id="@+id/textViewNavHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
