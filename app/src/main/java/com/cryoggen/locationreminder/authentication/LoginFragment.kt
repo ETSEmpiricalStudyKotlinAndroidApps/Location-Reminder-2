@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -53,6 +54,10 @@ class LoginFragment : Fragment() {
         if (requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
+
+                val textViewNavHeader = requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
+                textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
+
                 // Пользователь успешно вошел в систему
                 Log.i(
                     TAG,
@@ -104,8 +109,6 @@ class LoginFragment : Fragment() {
             ).build(), LoginFragment.SIGN_IN_RESULT_CODE
         )
     }
-
-
 
 
 }
