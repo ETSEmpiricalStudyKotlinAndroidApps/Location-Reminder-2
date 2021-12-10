@@ -4,12 +4,12 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/login_fragment">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/login_fragment"
         android:name="com.cryoggen.locationreminder.authentication.LoginFragment"
-        android:label="login_fragment"
+        android:label="@string/login"
         tools:layout="@layout/login_fragment" >
         <action
             android:id="@+id/action_loginFragment_to_reminders_fragment_dest"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/reminder_detail_fragment_dest"
         android:name="com.cryoggen.locationreminder.reminderdetail.ReminderDetailFragment"
-        android:label="Reminder Details">
+        android:label="@string/reminder_deatails">
         <action
             android:id="@+id/action_reminderDetailFragment_to_addEditReminderFragment"
             app:destination="@id/add_edit_reminder_fragment_dest" />
@@ -57,8 +57,8 @@
             app:argType="integer"
             android:defaultValue="0" />
         <action
-            android:id="@+id/action_reminders_fragment_dest_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_reminders_fragment_dest_to_exitFragment"
+            app:destination="@id/exit_fragment" />
     </fragment>
     <fragment
         android:id="@+id/add_edit_reminder_fragment_dest"
@@ -80,5 +80,14 @@
     <argument
         android:name="userMessage"
         android:defaultValue="0" />
-    
+    <fragment
+        android:id="@+id/exit_fragment"
+        android:name="com.cryoggen.locationreminder.exit.ExitFragment"
+        android:label="@string/exit"
+        tools:layout="@layout/fragment_exit" >
+        <action
+            android:id="@+id/action_exitFragment_to_login_fragment"
+            app:destination="@id/login_fragment" />
+    </fragment>
+
 </navigation>
