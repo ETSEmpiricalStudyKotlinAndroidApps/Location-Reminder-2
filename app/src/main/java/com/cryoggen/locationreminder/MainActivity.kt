@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
-            AppBarConfiguration.Builder(R.id.reminders_fragment_dest, R.id.statistics_fragment_dest)
+            AppBarConfiguration.Builder(R.id.exit_fragment, R.id.reminders_fragment_dest, R.id.statistics_fragment_dest)
                 .setDrawerLayout(drawerLayout)
                 .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
