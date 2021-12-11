@@ -2,7 +2,7 @@
     <string name="app_name">Location Reminder</string>
     <string name="app_description_login_fragment">An app with reminders of what to do when you reach a certain location.</string>
     <string name="registration_button_text">Login or register</string>
-    
+
     <string name="add_reminder">New reminder</string>
     <string name="edit_reminder">Edit reminder</string>
     <string name="reminder_marked_complete">reminder marked complete</string>
@@ -49,4 +49,12 @@
     <string name="reminders_header_image_content_description">reminders header image</string>
     <string name="no_reminders_image_content_description">No reminders image</string>
     <string name="sign_out">Sing out</string>
+    <string name="login">Login</string>
+    <string name="reminder_deatails">Reminder details</string>
+    <string name="exit">Exit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="exit_fragment_text">Logging out...</string>
+    <string name="menu_clear_all">Clear All</string>
+    <string name="All_reminders_cleared">All reminders cleared</string>
 </resources>
