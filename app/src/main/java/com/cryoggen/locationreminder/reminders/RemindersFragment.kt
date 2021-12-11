@@ -60,19 +60,19 @@ class RemindersFragment : Fragment() {
                 viewModel.clearCompletedReminders()
                 true
             }
+
+            R.id.menu_clear_all -> {
+                viewModel.clearAllReminders()
+                true
+            }
+
             R.id.menu_filter -> {
                 showFilteringPopUpMenu()
                 true
             }
+
             R.id.menu_refresh -> {
                 viewModel.loadReminders(true)
-                true
-            }
-            R.id.menu_sign_out -> {
-                AuthUI.getInstance().signOut(requireContext())
-                val action = RemindersFragmentDirections
-                    .actionRemindersFragmentDestToLoginFragment()
-                findNavController().navigate(action)
                 true
             }
 
