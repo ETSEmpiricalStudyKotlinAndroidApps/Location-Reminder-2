@@ -88,14 +88,10 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     // Called when clicking on fab.
     fun saveReminder() {
         val currentTitle = title.value
-        val currentDescription = description.value
+        val currentDescription = description.value?:""
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.getUid().toString()
 
-        if (currentTitle == null || currentDescription == null) {
-            _snackbarText.value = Event(R.string.empty_reminder_message)
-            return
-        }
-        if (Reminder(currentTitle, currentDescription).isEmpty) {
+        if (currentTitle == null ) {
             _snackbarText.value = Event(R.string.empty_reminder_message)
             return
         }
