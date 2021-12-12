@@ -131,6 +131,13 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun clearAllReminders() {
+        viewModelScope.launch {
+            remindersRepository.deleteAllReminders()
+            showSnackbarMessage(R.string.completed_reminders_cleared)
+        }
+    }
+
     fun completeReminder(Reminder: Reminder, completed: Boolean) = viewModelScope.launch {
         if (completed) {
             remindersRepository.completeReminder(Reminder)
@@ -214,4 +221,5 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun refresh() {
         _forceUpdate.value = true
     }
+
 }
