@@ -99,9 +99,9 @@ class RemindersRepository private constructor(application: Application) {
      * Relies on [getReminders] to fetch data and picks the Reminder with the same ID.
      */
     suspend fun getReminder(ReminderId: String,  forceUpdate: Boolean = false): Result<Reminder> {
-        if (forceUpdate) {
-            updateReminderFromRemoteDataSource(ReminderId)
-        }
+//        if (forceUpdate) {
+//            updateReminderFromRemoteDataSource(ReminderId)
+//        }
         return RemindersLocalDataSource.getReminder(ReminderId)
     }
 
@@ -150,12 +150,10 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun deleteAllReminders() {
-        withContext(ioDispatcher) {
             coroutineScope {
                 launch { RemindersRemoteDataSource.deleteAllReminders() }
                 launch { RemindersLocalDataSource.deleteAllReminders() }
             }
-        }
     }
 
     suspend fun deleteReminder(ReminderId: String) {
@@ -168,4 +166,5 @@ class RemindersRepository private constructor(application: Application) {
     private suspend fun getReminderWithId(id: String): Result<Reminder> {
         return RemindersLocalDataSource.getReminder(id)
     }
+
 }
