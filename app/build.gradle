@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 
 android {
@@ -49,6 +50,7 @@ dependencies {
 
     // Architecture Components
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation 'com.google.android.gms:play-services-maps:18.0.1'
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
@@ -79,6 +81,7 @@ dependencies {
 
     // Firebase
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
