@@ -52,6 +52,7 @@
                         android:text="@string/no_data"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:visibility="@{viewmodel.dataLoading ? View.GONE : View.VISIBLE}" />
+
                 </LinearLayout>
 
                 <RelativeLayout
@@ -93,7 +94,15 @@
                         android:text="@{viewmodel.reminder.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                    <fragment
+                        android:id="@+id/map_new_reminder"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:layout_below="@id/reminder_detail_description_text"
+                        android:layout_marginTop="@dimen/margin_app_description_login_fragment" />
                 </RelativeLayout>
+
             </LinearLayout>
         </com.cryoggen.locationreminder.ScrollChildSwipeRefreshLayout>
 
