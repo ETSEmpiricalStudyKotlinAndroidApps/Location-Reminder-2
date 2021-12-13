@@ -14,12 +14,20 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 
 /**
  * Main UI for the add reminder screen. Users can enter a reminder title and description.
  */
-class AddEditReminderFragment : Fragment() {
+class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
+
+    private lateinit var map: GoogleMap
 
     private lateinit var viewDataBinding:AddreminderFragBinding
 
@@ -37,6 +45,11 @@ class AddEditReminderFragment : Fragment() {
         }
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map_new_reminder) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+
         return viewDataBinding.root
     }
 
@@ -59,4 +72,14 @@ class AddEditReminderFragment : Fragment() {
             findNavController().navigate(action)
         })
     }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
 }
