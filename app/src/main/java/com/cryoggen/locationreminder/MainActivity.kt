@@ -3,6 +3,7 @@ package com.cryoggen.locationreminder
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                 setStatusBarBackground(R.color.colorPrimaryDark)
             }
     }
+
 }
 
 const val ADD_EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 1
