@@ -95,7 +95,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <fragment
-                        android:id="@+id/map_new_reminder"
+                        android:id="@+id/map_detail_reminder"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
