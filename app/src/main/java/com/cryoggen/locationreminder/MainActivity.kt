@@ -1,6 +1,7 @@
 package com.cryoggen.locationreminder
 
 import android.app.Activity
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -15,6 +16,7 @@ import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
+    private val REQUEST_LOCATION_PERMISSION = 1
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                 setStatusBarBackground(R.color.colorPrimaryDark)
             }
     }
+
 
 }
 
