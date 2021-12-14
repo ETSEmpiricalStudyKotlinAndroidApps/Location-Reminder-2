@@ -1,9 +1,13 @@
 package com.cryoggen.locationreminder.addeditreminder
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,24 +16,27 @@ import com.cryoggen.locationreminder.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
+import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+
 
 /**
  * Main UI for the add reminder screen. Users can enter a reminder title and description.
  */
 class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var map: GoogleMap
+    private lateinit var googleMap: GoogleMap
 
-    private lateinit var viewDataBinding:AddreminderFragBinding
+    private val REQUEST_LOCATION_PERMISSION = 1
+
+    private lateinit var mapReminder: MapReminder
+
+    private lateinit var viewDataBinding: AddreminderFragBinding
 
     private val args: AddEditReminderFragmentArgs by navArgs()
 
@@ -47,8 +54,8 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map_new_reminder) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
+            .findFragmentById(R.id.map_new_reminder) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         return viewDataBinding.root
     }
@@ -74,12 +81,45 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+        this.googleMap = googleMap
+        mapReminder = MapReminder(googleMap, context,37.422160,-122.084270)
+        enableMyLocation(mapReminder)
+    }
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    private fun isPermissionGranted() : Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun enableMyLocation(mapReminder: MapReminder) {
+        if (isPermissionGranted()) {
+         mapReminder.turnOnMyLocation()
+        }
+        else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)) {
+                enableMyLocation(mapReminder)
+            }
+        }else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        }
     }
 
 }
