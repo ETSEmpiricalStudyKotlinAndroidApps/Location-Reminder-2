@@ -50,6 +50,7 @@ dependencies {
 
     // Architecture Components
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
@@ -81,6 +82,8 @@ dependencies {
 
     // Firebase
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    
+
 
 }
 
