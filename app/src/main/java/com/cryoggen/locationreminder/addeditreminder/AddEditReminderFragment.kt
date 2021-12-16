@@ -64,7 +64,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState)
         setupSnackbar()
         setupNavigation()
-        this.setupRefreshLayout(viewDataBinding.refreshLayout)
         viewModel.start(args.reminderId)
     }
 
