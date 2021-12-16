@@ -32,6 +32,7 @@ import com.cryoggen.locationreminder.addeditreminder.AddEditReminderFragmentDire
 import com.cryoggen.locationreminder.databinding.LoginFragmentBinding
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.location.GeofencingClient
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
@@ -39,7 +40,7 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginFragment : Fragment() {
 
     companion object {
-        private const val TAG = "MainFragment"
+        private const val TAG = "LoginFragment"
         private const val SIGN_IN_RESULT_CODE = 1001
 
         private const val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
@@ -60,20 +61,29 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeAuthenticationState()
+    }
+
+    override fun onStart() {
+        super.onStart()
         checkPermissionsAndStartGeofencing()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
             checkDeviceLocationSettingsAndStartGeofence(false)
+            return
         }
         if (requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
@@ -155,8 +165,7 @@ class LoginFragment : Fragment() {
             else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
         }
         Log.d(TAG, "Request foreground only location permission")
-        ActivityCompat.requestPermissions(
-            requireActivity(),
+        requestPermissions(
             permissionsArray,
             resultCode
         )
@@ -193,8 +202,9 @@ class LoginFragment : Fragment() {
                     grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] ==
                     PackageManager.PERMISSION_DENIED))
         {
+
             Snackbar.make(
-                requireActivity().findViewById(R.id.login_fragment) ,
+                binding.root ,
                 R.string.permission_denied_explanation,
                 Snackbar.LENGTH_INDEFINITE
             )
@@ -228,7 +238,7 @@ class LoginFragment : Fragment() {
                 }
             } else {
                 Snackbar.make(
-                    requireActivity().findViewById(R.id.login_fragment),
+                    binding.root,
                     R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
                 ).setAction(android.R.string.ok) {
                     checkDeviceLocationSettingsAndStartGeofence()
@@ -241,6 +251,7 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
 
 
 }
