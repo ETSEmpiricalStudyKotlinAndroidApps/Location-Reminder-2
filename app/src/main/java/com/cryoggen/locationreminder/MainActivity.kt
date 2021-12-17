@@ -30,7 +30,11 @@ class MainActivity : AppCompatActivity() {
 
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
-            AppBarConfiguration.Builder(R.id.exit_fragment, R.id.reminders_fragment_dest, R.id.statistics_fragment_dest)
+            AppBarConfiguration.Builder(
+                R.id.exit_fragment,
+                R.id.reminders_fragment_dest,
+                R.id.statistics_fragment_dest
+            )
                 .setDrawerLayout(drawerLayout)
                 .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -54,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val fragment = navHostFragment?.childFragmentManager?.fragments?.get(0)!!
-        fragment.onActivityResult(requestCode,resultCode,data)
+        fragment.onActivityResult(requestCode, resultCode, data)
     }
 
 }
