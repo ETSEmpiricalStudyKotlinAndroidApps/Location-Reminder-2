@@ -81,7 +81,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        mapReminder = MapReminder(googleMap, context,37.422160,-122.084270)
+        mapReminder = MapReminder(googleMap, context, 37.422160, -122.084270)
         mapReminder.turnOnMyLocation()
     }
 
