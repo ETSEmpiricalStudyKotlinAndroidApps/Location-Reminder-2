@@ -89,7 +89,8 @@ class LoginFragment : Fragment() {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
 
-                val textViewNavHeader = requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
+                val textViewNavHeader =
+                    requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
                 textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
 
                 // Пользователь успешно вошел в систему
@@ -171,11 +172,13 @@ class LoginFragment : Fragment() {
         )
     }
 
-    private fun foregroundAndBackgroundLocationPermissionApproved() : Boolean {
+    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundLocationApproved = (
                 PackageManager.PERMISSION_GRANTED ==
-                        ActivityCompat.checkSelfPermission(requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION))
+                        ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ))
         val backgroundPermissionApproved =
             if (runningQOrLater) {
                 PackageManager.PERMISSION_GRANTED ==
@@ -200,11 +203,11 @@ class LoginFragment : Fragment() {
             grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
             (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
                     grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] ==
-                    PackageManager.PERMISSION_DENIED))
-        {
+                    PackageManager.PERMISSION_DENIED)
+        ) {
 
             Snackbar.make(
-                binding.root ,
+                binding.root,
                 R.string.permission_denied_explanation,
                 Snackbar.LENGTH_INDEFINITE
             )
@@ -220,7 +223,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun checkDeviceLocationSettingsAndStartGeofence(resolve:Boolean = true) {
+    private fun checkDeviceLocationSettingsAndStartGeofence(resolve: Boolean = true) {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -229,10 +232,12 @@ class LoginFragment : Fragment() {
         val locationSettingsResponseTask =
             settingsClient.checkLocationSettings(builder.build())
         locationSettingsResponseTask.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException && resolve){
+            if (exception is ResolvableApiException && resolve) {
                 try {
-                    exception.startResolutionForResult(requireActivity(),
-                        REQUEST_TURN_DEVICE_LOCATION_ON)
+                    exception.startResolutionForResult(
+                        requireActivity(),
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
                 } catch (sendEx: IntentSender.SendIntentException) {
                     Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
                 }
@@ -246,12 +251,11 @@ class LoginFragment : Fragment() {
             }
         }
         locationSettingsResponseTask.addOnCompleteListener {
-            if ( it.isSuccessful ) {
+            if (it.isSuccessful) {
                 launchSignInFlow()
             }
         }
     }
-
 
 
 }
