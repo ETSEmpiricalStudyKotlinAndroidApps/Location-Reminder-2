@@ -50,6 +50,9 @@ class LoginFragment : Fragment() {
         private const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
     }
 
+    private val action = LoginFragmentDirections
+        .actionLoginFragmentToRemindersFragmentDest()
+
     private val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
             android.os.Build.VERSION_CODES.Q
 
@@ -61,22 +64,20 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
+        observeAuthenticationState()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeAuthenticationState()
     }
 
     override fun onStart() {
         super.onStart()
-        checkPermissionsAndStartGeofencing()
     }
 
     override fun onResume() {
         super.onResume()
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -89,9 +90,6 @@ class LoginFragment : Fragment() {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
 
-                val textViewNavHeader =
-                    requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
-                textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
 
                 // Пользователь успешно вошел в систему
                 Log.i(
@@ -116,12 +114,10 @@ class LoginFragment : Fragment() {
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
             when (authenticationState) {
                 AuthenticationState.AUTHENTICATED -> {
-                    val action = LoginFragmentDirections
-                        .actionLoginFragmentToRemindersFragmentDest()
-                    findNavController().navigate(action)
+                    checkPermissionsAndStartGeofencing()
                 }
                 else -> {
-
+                    launchSignInFlow()
                 }
             }
         })
@@ -252,7 +248,7 @@ class LoginFragment : Fragment() {
         }
         locationSettingsResponseTask.addOnCompleteListener {
             if (it.isSuccessful) {
-                launchSignInFlow()
+                findNavController().navigate(action)
             }
         }
     }
