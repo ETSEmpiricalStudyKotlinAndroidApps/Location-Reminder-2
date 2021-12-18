@@ -27,7 +27,9 @@ import timber.log.Timber
 import android.content.Intent.getIntent
 
 import android.content.Intent
+import android.widget.TextView
 import com.cryoggen.locationreminder.authentication.LoginFragmentDirections
+import com.google.firebase.auth.FirebaseAuth
 
 
 /**
@@ -85,7 +87,9 @@ class RemindersFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        val textViewNavHeader =
+            requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
+        textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
         setupSnackbar()
