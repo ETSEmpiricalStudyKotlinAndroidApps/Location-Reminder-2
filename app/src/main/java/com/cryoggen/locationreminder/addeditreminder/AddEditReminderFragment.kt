@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -53,11 +54,30 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
+        setingsMapView()
+
+        return viewDataBinding.root
+    }
+
+    private fun setingsMapView() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map_new_reminder) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        return viewDataBinding.root
+        val mapView = mapFragment.view
+        val view = mapView?.findViewWithTag<View>("GoogleMapMyLocationButton")
+
+        val layoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE)
+        layoutParams.marginEnd = 73
+        layoutParams.bottomMargin = 260
+
+        view!!.layoutParams = layoutParams
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -81,7 +101,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        mapReminder = MapReminder(googleMap, context, 37.422160, -122.084270)
+        mapReminder = MapReminder(googleMap, context)
         mapReminder.turnOnMyLocation()
     }
 
