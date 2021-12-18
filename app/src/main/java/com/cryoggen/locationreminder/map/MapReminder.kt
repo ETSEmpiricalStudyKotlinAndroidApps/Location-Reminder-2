@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapReminder(
     val googleMap: GoogleMap,
     val context: Context?,
-    latitude: Double,
-    longitude: Double
+    latitude: Double=55.75253338241553,
+    longitude: Double=37.617544731021034
 ) {
 
     private val REQUEST_LOCATION_PERMISSION = 1
@@ -40,7 +40,6 @@ class MapReminder(
     init {
         val homeLatLng = LatLng(latitude, longitude)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        googleMap.addMarker(MarkerOptions().position(homeLatLng))
         setMapLongClick()
     }
 
@@ -51,11 +50,14 @@ class MapReminder(
 
     private fun setMapLongClick() {
         googleMap.setOnMapLongClickListener { latLng ->
+            googleMap.clear()
             googleMap.addMarker(
                 MarkerOptions()
                     .position(latLng)
                     .title(context?.getResources()?.getString(R.string.location_reminder))
             )
+            latitude=latLng.latitude
+            longitude=latLng.longitude
         }
     }
 
