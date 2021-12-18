@@ -17,9 +17,7 @@ class ExitFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         AuthUI.getInstance().signOut(requireContext())
-        val action = ExitFragmentDirections
-            .actionExitFragmentToLoginFragment()
-        findNavController().navigate(action)
+        requireActivity().finish()
         return inflater.inflate(R.layout.fragment_exit, container, false)
     }
 
