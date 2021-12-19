@@ -61,6 +61,15 @@ class MapReminder(
             longitude=latLng.longitude
         }
     }
+    fun addMarker(){
+       val latLng = LatLng(latitude,longitude)
+       googleMap.clear()
+       googleMap.addMarker(
+           MarkerOptions()
+               .position(latLng)
+               .title(context?.getResources()?.getString(R.string.location_reminder))
+       )
+    }
 
 
 }
