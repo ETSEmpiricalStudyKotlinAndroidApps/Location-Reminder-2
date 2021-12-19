@@ -1,6 +1,7 @@
 package com.cryoggen.locationreminder.reminderdetail
 
 import android.app.Application
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.Event
@@ -9,11 +10,14 @@ import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.cryoggen.locationreminder.map.MapReminder
+import com.google.android.gms.maps.GoogleMap
 import kotlinx.coroutines.launch
 /**
  * ViewModel for the Details screen.
  */
 class ReminderDetailViewModel(application: Application) : AndroidViewModel(application) {
+
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
@@ -100,4 +104,6 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
     }
+
+
 }
