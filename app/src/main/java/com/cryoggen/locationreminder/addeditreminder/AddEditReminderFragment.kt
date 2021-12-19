@@ -73,7 +73,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         )
 
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE)
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
         layoutParams.marginEnd = 73
         layoutParams.bottomMargin = 260
 
@@ -102,7 +102,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         mapReminder = MapReminder(googleMap, context)
-        mapReminder.turnOnMyLocation()
+        viewModel.setMapReminder(mapReminder)
     }
 
 
