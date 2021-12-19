@@ -9,20 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.authentication.AuthenticationState
+import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
+import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -30,7 +31,8 @@ import com.google.android.material.snackbar.Snackbar
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var map: GoogleMap
+    private lateinit var mapReminder:MapReminder
+
 
     private lateinit var viewDataBinding: ReminderdetailFragBinding
 
@@ -73,21 +75,31 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view = inflater.inflate(R.layout.reminderdetail_frag, container, false)
+
         viewDataBinding = ReminderdetailFragBinding.bind(view).apply {
             viewmodel = viewModel
         }
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
+        observeReminderState()
+
         viewModel.start(args.reminderId)
+
+        observeReminderState()
 
         setHasOptionsMenu(true)
 
         val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map_detail_reminder) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
+            .findFragmentById(R.id.map_detail_reminder) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -104,15 +116,17 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         inflater.inflate(R.menu.reminderdetail_fragment_menu, menu)
     }
 
+    private fun observeReminderState() {
+        viewModel.reminder.observe(viewLifecycleOwner, Observer { reminderState ->
+           if (reminderState != null) {
+               mapReminder.latitude = reminderState.latitude
+                mapReminder.longitude = reminderState.longitude
+               mapReminder.addMarker()
+            }
+        })
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        val latitude = 37.422160
-        val longitude = -122.084270
-        val zoomLevel = 15f
-
-        val homeLatLng = LatLng(latitude, longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        map.addMarker(MarkerOptions().position(homeLatLng))
-
+        mapReminder = MapReminder(googleMap,context)
     }
 }
