@@ -1,4 +1,3 @@
-
 package com.cryoggen.locationreminder.addeditreminder
 
 import android.app.Application
@@ -8,6 +7,7 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.cryoggen.locationreminder.map.MapReminder
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
  * ViewModel for the Add/Edit screen.
  */
 class AddEditReminderViewModel(application: Application) : AndroidViewModel(application) {
+
+    private lateinit var mapReminder: MapReminder
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
@@ -88,19 +90,36 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     // Called when clicking on fab.
     fun saveReminder() {
         val currentTitle = title.value
-        val currentDescription = description.value?:""
+        val currentDescription = description.value ?: ""
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.getUid().toString()
-
-        if (currentTitle == null ) {
+        val latitude = mapReminder.latitude
+        val longitude = mapReminder.longitude
+        if ((currentTitle == null) || (latitude == 0.0 && longitude == 0.0)) {
             _snackbarText.value = Event(R.string.empty_reminder_message)
             return
         }
 
         val currentReminderId = reminderId
         if (isNewReminder || currentReminderId == null) {
-            createReminder(Reminder(currentTitle, currentDescription,currentUserUID))
+            createReminder(
+                Reminder(
+                    currentTitle,
+                    currentDescription,
+                    currentUserUID,
+                    latitude,
+                    longitude
+                )
+            )
         } else {
-            val reminder = Reminder(currentTitle, currentDescription, currentUserUID, reminderCompleted, currentReminderId)
+            val reminder = Reminder(
+                currentTitle,
+                currentDescription,
+                currentUserUID,
+                latitude,
+                longitude,
+                reminderCompleted,
+                currentReminderId
+            )
             updateReminder(reminder)
         }
     }
@@ -118,5 +137,9 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             remindersRepository.saveReminder(reminder)
             _reminderUpdatedEvent.value = Event(Unit)
         }
+    }
+
+    fun setMapReminder(mapReminder: MapReminder) {
+        this.mapReminder = mapReminder
     }
 }
