@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapReminder(
     val googleMap: GoogleMap,
     val context: Context?,
-    latitude: Double=55.75253338241553,
-    longitude: Double=37.617544731021034
+    latitude: Double=0.0,
+    longitude: Double=0.0
 ) {
 
     private val REQUEST_LOCATION_PERMISSION = 1
@@ -38,9 +38,10 @@ class MapReminder(
         }
 
     init {
-        val homeLatLng = LatLng(latitude, longitude)
+        val homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
         setMapLongClick()
+        turnOnMyLocation()
     }
 
     @SuppressLint("MissingPermission")
