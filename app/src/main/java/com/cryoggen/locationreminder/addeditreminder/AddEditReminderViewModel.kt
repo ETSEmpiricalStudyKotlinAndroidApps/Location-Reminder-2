@@ -81,6 +81,9 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         reminderCompleted = reminder.isCompleted
         _dataLoading.value = false
         isDataLoaded = true
+        mapReminder.longitude = reminder.longitude
+        mapReminder.latitude = reminder.latitude
+        mapReminder.addMarker()
     }
 
     private fun onDataNotAvailable() {
