@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -45,7 +46,6 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         setupFab()
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
         setupNavigation()
-        this.setupRefreshLayout(viewDataBinding.refreshLayout)
     }
 
     private fun setupNavigation() {
@@ -91,9 +91,7 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
         setHasOptionsMenu(true)
 
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map_detail_reminder) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        setingsMapView()
 
         return view
     }
@@ -114,6 +112,27 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.reminderdetail_fragment_menu, menu)
+    }
+
+    private fun setingsMapView() {
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map_detail_reminder) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        val mapView = mapFragment.view
+        val view = mapView?.findViewWithTag<View>("GoogleMapMyLocationButton")
+
+        val layoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+        layoutParams.marginEnd = 70
+        layoutParams.bottomMargin = 260
+
+        view!!.layoutParams = layoutParams
     }
 
     private fun observeReminderState() {
