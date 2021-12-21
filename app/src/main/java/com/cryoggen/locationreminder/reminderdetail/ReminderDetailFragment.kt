@@ -32,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var mapReminder:MapReminder
+    private lateinit var mapReminder: MapReminder
 
 
     private lateinit var viewDataBinding: ReminderdetailFragBinding
@@ -137,15 +137,16 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
     private fun observeReminderState() {
         viewModel.reminder.observe(viewLifecycleOwner, Observer { reminderState ->
-           if (reminderState != null) {
-               mapReminder.latitude = reminderState.latitude
+            if (reminderState != null) {
+                mapReminder.switchMapLongClick(false)
+                mapReminder.latitude = reminderState.latitude
                 mapReminder.longitude = reminderState.longitude
-               mapReminder.addMarker()
+                mapReminder.addMarker()
             }
         })
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mapReminder = MapReminder(googleMap,context)
+        mapReminder = MapReminder(googleMap, context)
     }
 }
