@@ -74,7 +74,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
-        layoutParams.marginEnd = 73
+        layoutParams.marginEnd = 70
         layoutParams.bottomMargin = 260
 
         view!!.layoutParams = layoutParams
