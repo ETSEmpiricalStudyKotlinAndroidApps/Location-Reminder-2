@@ -16,10 +16,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapReminder(
     val googleMap: GoogleMap,
     val context: Context?,
-    latitude: Double=0.0,
-    longitude: Double=0.0
-) {
+    latitude: Double = 0.0,
+    longitude: Double = 0.0
 
+) {
+    private val homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
     private val REQUEST_LOCATION_PERMISSION = 1
 
     var latitude = latitude
@@ -38,10 +39,20 @@ class MapReminder(
         }
 
     init {
-        val homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        setMapLongClick()
         turnOnMyLocation()
+    }
+
+    fun switchMapLongClick(switcher:Boolean) {
+        if (switcher) {
+            setMapLongClick()
+        } else {
+            clearSetMapLongClick()
+        }
+    }
+
+    private fun clearSetMapLongClick() {
+        googleMap.setOnMapLongClickListener {}
     }
 
     @SuppressLint("MissingPermission")
@@ -57,18 +68,20 @@ class MapReminder(
                     .position(latLng)
                     .title(context?.getResources()?.getString(R.string.location_reminder))
             )
-            latitude=latLng.latitude
-            longitude=latLng.longitude
+            latitude = latLng.latitude
+            longitude = latLng.longitude
         }
     }
-    fun addMarker(){
-       val latLng = LatLng(latitude,longitude)
-       googleMap.clear()
-       googleMap.addMarker(
-           MarkerOptions()
-               .position(latLng)
-               .title(context?.getResources()?.getString(R.string.location_reminder))
-       )
+
+    fun addMarker() {
+        val latLng = LatLng(latitude, longitude)
+        googleMap.clear()
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title(context?.getResources()?.getString(R.string.location_reminder))
+        )
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
     }
 
 
