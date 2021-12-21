@@ -102,6 +102,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         mapReminder = MapReminder(googleMap, context)
+        mapReminder.switchMapLongClick(true)
         viewModel.setMapReminder(mapReminder)
     }
 
