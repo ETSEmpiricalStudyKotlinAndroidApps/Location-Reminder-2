@@ -14,18 +14,15 @@
             type="com.cryoggen.locationreminder.reminderdetail.ReminderDetailViewModel" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-
-        <com.cryoggen.locationreminder.ScrollChildSwipeRefreshLayout
-            android:id="@+id/refresh_layout"
+        <fragment
+            android:id="@+id/map_detail_reminder"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:onRefreshListener="@{viewmodel::refresh}"
-            app:refreshing="@{viewmodel.dataLoading}">
+            android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,7 +54,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_vertical_margin"
@@ -94,17 +92,10 @@
                         android:text="@{viewmodel.reminder.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <fragment
-                        android:id="@+id/map_detail_reminder"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp"
-                        android:layout_below="@id/reminder_detail_description_text"
-                        android:layout_marginTop="@dimen/margin_app_description_login_fragment" />
+
                 </RelativeLayout>
 
             </LinearLayout>
-        </com.cryoggen.locationreminder.ScrollChildSwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_reminder_fab"
@@ -113,8 +104,8 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_edit"
             app:fabSize="normal"
-            app:layout_anchor="@id/refresh_layout"
-            app:layout_anchorGravity="bottom|right|end" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
