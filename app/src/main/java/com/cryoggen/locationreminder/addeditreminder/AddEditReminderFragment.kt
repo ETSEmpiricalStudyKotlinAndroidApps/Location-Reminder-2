@@ -1,19 +1,13 @@
 package com.cryoggen.locationreminder.addeditreminder
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -23,11 +17,11 @@ import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.map.MapReminder
-import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -73,25 +67,40 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
+        geofencingClient = LocationServices.getGeofencingClient(requireActivity())
+
         setingsMapView()
 
         return viewDataBinding.root
     }
 
-    @SuppressLint("MissingPermission")
-    private fun addGeofenceForClue() {
-        val currentGeofenceIndex = 1111
+
+    private fun addGeofenceForReminder() {
 
         val currentGeofenceData = GeofencingConstants.LANDMARK_DATA[0]
 
         val geofence = Geofence.Builder()
-            .setRequestId(currentGeofenceData.id)
-            .setCircularRegion(currentGeofenceData.latLong.latitude,
-                currentGeofenceData.latLong.longitude,
-                GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
+
+            // Set the request ID of the geofence. This is a string to identify this
+            // geofence.
+            .setRequestId("id_zone")
+
+            // Set the circular region of this geofence.
+            .setCircularRegion(
+                0.0,
+                0.0,
+                100f
             )
+
+            // Set the expiration duration of the geofence. This geofence gets automatically
+            // removed after this period of time.
             .setExpirationDuration(GeofencingConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+
+            // Set the transition types of interest. Alerts are only generated for these
+            // transition. We track entry and exit transitions in this sample.
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+
+            // Create the geofence.
             .build()
 
         val geofencingRequest = GeofencingRequest.Builder()
@@ -99,20 +108,43 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
             .addGeofence(geofence)
             .build()
 
-        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
-            addOnCompleteListener {
-                geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
+//        geofencingClient?.removeGeofences(geofencePendingIntent)?.run {
+//            addOnCompleteListener {
+                geofencingClient?.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
                     addOnSuccessListener {
-                        Toast.makeText(requireActivity(), R.string.geofences_added,
-                            Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            requireActivity(), R.string.geofences_added,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                     addOnFailureListener {
-                        Toast.makeText(requireActivity(), R.string.geofences_not_added,
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(), R.string.geofences_not_added,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     }
                 }
+//            }
+//        }
+    }
+
+    /**
+     * Removes geofences. This method should be called after the user has granted the location
+     * permission.
+     */
+    private fun removeGeofences() {
+
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            addOnSuccessListener {
+                // Geofences removed
+                Toast.makeText(requireContext(), R.string.geofences_removed, Toast.LENGTH_SHORT)
+                    .show()
+            }
+            addOnFailureListener {
+                // Failed to remove geofences
+
             }
         }
     }
@@ -151,6 +183,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private fun setupNavigation() {
         viewModel.reminderUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
+            addGeofenceForReminder()
             val action = AddEditReminderFragmentDirections
                 .actionAddEditReminderFragmentToRemindersFragment(ADD_EDIT_RESULT_OK)
             findNavController().navigate(action)
