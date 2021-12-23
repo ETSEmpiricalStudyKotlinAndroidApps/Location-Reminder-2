@@ -1,4 +1,3 @@
-
 package com.cryoggen.locationreminder.data
 
 import androidx.room.ColumnInfo
@@ -19,7 +18,6 @@ data class Reminder @JvmOverloads constructor(
 
     val titleForList: String
         get() = if (title.isNotEmpty()) title else description
-
 
     val isActive
         get() = !isCompleted
