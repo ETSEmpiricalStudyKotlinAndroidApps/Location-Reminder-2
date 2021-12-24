@@ -65,7 +65,7 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, foundI
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle(context.getString(R.string.app_name))
         .setContentText(context.getString(R.string.content_text,
-            GeofencingConstants.LANDMARK_DATA[foundIndex].name))
+            "test"))
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setContentIntent(contentPendingIntent)
         .setSmallIcon(R.drawable.map_small)
