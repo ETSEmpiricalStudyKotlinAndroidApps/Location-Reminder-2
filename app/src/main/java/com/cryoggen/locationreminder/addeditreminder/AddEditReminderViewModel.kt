@@ -145,4 +145,5 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     fun setMapReminder(mapReminder: MapReminder) {
         this.mapReminder = mapReminder
     }
+
 }
