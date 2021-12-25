@@ -37,7 +37,9 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     private val _reminderUpdatedEvent = MutableLiveData<Event<Unit>>()
     val reminderUpdatedEvent: LiveData<Event<Unit>> = _reminderUpdatedEvent
 
-    private var reminderId: String? = null
+    private var reminderIdForEdtiReminder: String? = null
+
+    private var reminderIdForGeofencing: String = ""
 
     private var isNewReminder: Boolean = false
 
@@ -50,7 +52,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             return
         }
 
-        this.reminderId = reminderId
+        this.reminderIdForEdtiReminder = reminderId
         if (reminderId == null) {
             // No need to populate, it's a new reminder
             isNewReminder = true
@@ -102,16 +104,18 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             return
         }
 
-        val currentReminderId = reminderId
+        val currentReminderId = reminderIdForEdtiReminder
         if (isNewReminder || currentReminderId == null) {
+            val newReminder =     Reminder(
+                currentTitle,
+                currentDescription,
+                currentUserUID,
+                latitude,
+                longitude
+            )
+            reminderIdForGeofencing = newReminder.id
             createReminder(
-                Reminder(
-                    currentTitle,
-                    currentDescription,
-                    currentUserUID,
-                    latitude,
-                    longitude
-                )
+                newReminder
             )
         } else {
             val reminder = Reminder(
@@ -127,9 +131,11 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-    private fun createReminder(newReminder: Reminder) = viewModelScope.launch {
-        remindersRepository.saveReminder(newReminder)
-        _reminderUpdatedEvent.value = Event(Unit)
+    private fun createReminder(newReminder: Reminder) {
+        viewModelScope.launch {
+            remindersRepository.saveReminder(newReminder)
+            _reminderUpdatedEvent.value = Event(Unit)
+        }
     }
 
     private fun updateReminder(reminder: Reminder) {
@@ -144,6 +150,10 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     fun setMapReminder(mapReminder: MapReminder) {
         this.mapReminder = mapReminder
+    }
+
+    fun getreminderIdForGeofencing(): String? {
+        return reminderIdForGeofencing
     }
 
 }
