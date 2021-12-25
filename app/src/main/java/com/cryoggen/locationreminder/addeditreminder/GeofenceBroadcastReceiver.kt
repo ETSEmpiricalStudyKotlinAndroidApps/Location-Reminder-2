@@ -7,7 +7,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.AddEditReminderFragment.Companion.ACTION_GEOFENCE_EVENT
+import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.ACTION_GEOFENCE_EVENT
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 
@@ -60,11 +60,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 ) as NotificationManager
 
                 notificationManager.sendGeofenceEnteredNotification(
-                    context, fenceId.toInt()
+                    context, fenceId
                 )
             }
         }
     }
 }
 
-private const val TAG = "GeofenceReceiver"
+const val TAG = "GeofenceReceiver"
