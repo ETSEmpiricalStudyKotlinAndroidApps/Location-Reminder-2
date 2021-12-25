@@ -19,11 +19,16 @@ import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        lateinit var activity: AppCompatActivity
+    }
+
     private val REQUEST_LOCATION_PERMISSION = 1
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity = this
         setContentView(R.layout.activity_main)
         setupNavigationDrawer()
         setSupportActionBar(findViewById(R.id.toolbar))
