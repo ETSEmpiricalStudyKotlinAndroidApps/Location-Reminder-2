@@ -43,7 +43,7 @@ fun createChannel(context: Context) {
  * entered notification.  It sends a custom notification based on the name string associated
  * with the LANDMARK_DATA from GeofencingConstatns in the GeofenceUtils file.
  */
-fun NotificationManager.sendGeofenceEnteredNotification(context: Context, foundIndex: Int) {
+fun NotificationManager.sendGeofenceEnteredNotification(context: Context, foundIndex: String) {
     val contentIntent = Intent(context, MainActivity::class.java)
     contentIntent.putExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX, foundIndex)
     val contentPendingIntent = PendingIntent.getActivity(
