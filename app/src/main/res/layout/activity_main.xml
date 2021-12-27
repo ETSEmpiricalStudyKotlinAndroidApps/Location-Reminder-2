@@ -8,7 +8,9 @@ android:layout_height="match_parent"
 tools:context=".MainActivity"
 tools:openDrawer="start">
 
-<LinearLayout
+
+
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -47,6 +49,25 @@ tools:openDrawer="start">
     app:headerLayout="@layout/nav_header"
     app:itemIconTint="@drawable/drawer_item_color"
     app:itemTextColor="@drawable/drawer_item_color"
-    app:menu="@menu/drawer_actions" />
+    app:menu="@menu/drawer_actions" >
 
+</com.google.android.material.navigation.NavigationView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chek_premission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:id="@+id/text_info_premissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="view for chek premisson"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
+
