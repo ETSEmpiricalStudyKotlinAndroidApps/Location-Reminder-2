@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,44 +42,46 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
-        observeAuthenticationState()
+//        observeAuthenticationState()
         observePermissonState()
         return binding.root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SIGN_IN_RESULT_CODE) {
-            val response = IdpResponse.fromResultIntent(data)
-            if (resultCode == Activity.RESULT_OK) {
-
-
-                // Пользователь успешно вошел в систему
-                Log.i(
-                    TAG,
-                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!"
-                )
-                Log.i(
-                    TAG,
-                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.getUid()}!"
-                )
-
-            } else {
-                // Ошибка входа. Если ответ равен нулю, пользователь отменил
-                // процесс входа с помощью кнопки возврата. В противном случае проверьте
-                // response.getError (). getErrorCode () и обрабатываем ошибку.
-                Log.i(TAG, "Sign in unsuccessful ${response?.error?.errorCode}")
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == SIGN_IN_RESULT_CODE) {
+//            val response = IdpResponse.fromResultIntent(data)
+//            if (resultCode == Activity.RESULT_OK) {
+//
+//
+//                // Пользователь успешно вошел в систему
+//                Log.i(
+//                    TAG,
+//                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!"
+//                )
+//                Log.i(
+//                    TAG,
+//                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.getUid()}!"
+//                )
+//
+//            } else {
+//                // Ошибка входа. Если ответ равен нулю, пользователь отменил
+//                // процесс входа с помощью кнопки возврата. В противном случае проверьте
+//                // response.getError (). getErrorCode () и обрабатываем ошибку.
+//                Log.i(TAG, "Sign in unsuccessful ${response?.error?.errorCode}")
+//            }
+//        }
+//    }
 
     private fun observeAuthenticationState() {
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
             when (authenticationState) {
                 AuthenticationState.AUTHENTICATED -> {
-                    checkPermissionsAndStartGeofencing()
+                    val action = LoginFragmentDirections
+                        .actionLoginFragmentToRemindersFragmentDest()
+                    findNavController().navigate(action)
                 }
                 else -> {
                     launchSignInFlow()
@@ -87,17 +90,15 @@ class LoginFragment : Fragment() {
         })
     }
 
-
     private fun observePermissonState() {
         _chekStatusLocationSettingsAndStartGeofence.observe(viewLifecycleOwner, Observer { premissionState ->
             if (premissionState) {
-                    val action = LoginFragmentDirections
-                        .actionLoginFragmentToRemindersFragmentDest()
-                    findNavController().navigate(action)
-                }
+                observeAuthenticationState()
+            }
 
         })
     }
+
 
 
     private fun launchSignInFlow() {
