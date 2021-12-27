@@ -49,32 +49,6 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == SIGN_IN_RESULT_CODE) {
-//            val response = IdpResponse.fromResultIntent(data)
-//            if (resultCode == Activity.RESULT_OK) {
-//
-//
-//                // Пользователь успешно вошел в систему
-//                Log.i(
-//                    TAG,
-//                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!"
-//                )
-//                Log.i(
-//                    TAG,
-//                    "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.getUid()}!"
-//                )
-//
-//            } else {
-//                // Ошибка входа. Если ответ равен нулю, пользователь отменил
-//                // процесс входа с помощью кнопки возврата. В противном случае проверьте
-//                // response.getError (). getErrorCode () и обрабатываем ошибку.
-//                Log.i(TAG, "Sign in unsuccessful ${response?.error?.errorCode}")
-//            }
-//        }
-//    }
-
     private fun observeAuthenticationState() {
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
             when (authenticationState) {
