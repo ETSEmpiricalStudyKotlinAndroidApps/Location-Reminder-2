@@ -8,18 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.Menu
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.cryoggen.locationreminder.authentication.LoginFragmentDirections
 import com.cryoggen.locationreminder.map.ConstantsPermissions
+import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
+import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupNavigationDrawer()
         setSupportActionBar(findViewById(R.id.toolbar))
-
+        observePermissonState()
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
             AppBarConfiguration.Builder(
@@ -51,6 +54,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPermissionsAndStartGeofencing()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -69,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ConstantsPermissions.REQUEST_TURN_DEVICE_LOCATION_ON) {
             checkDeviceLocationSettingsAndStartGeofence(false)
+
             return
         }
     }
@@ -104,6 +113,16 @@ class MainActivity : AppCompatActivity() {
         } else {
             checkDeviceLocationSettingsAndStartGeofence()
         }
+    }
+
+    private fun observePermissonState() {
+        _chekStatusLocationSettingsAndStartGeofence.observe(this, Observer { premissionState ->
+            if (premissionState) {
+                val chekPermissionLayout = findViewById<ConstraintLayout>(R.id.chek_premission)
+                chekPermissionLayout.visibility = View.INVISIBLE
+            }
+
+        })
     }
 
 }
