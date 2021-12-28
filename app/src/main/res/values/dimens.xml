@@ -12,5 +12,6 @@
     <dimen name="textSizeTitleHeading">38sp</dimen>
     <dimen name="margin_app_description_login_fragment">16sp</dimen>
     <dimen name="reminder_description_margin">16dp</dimen>
+    <dimen name="please_wait_text_size">32sp</dimen>
 
 </resources>
