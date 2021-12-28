@@ -38,6 +38,9 @@
             android:id="@+id/action_statisticsFragment_to_remindersFragment"
             app:destination="@id/reminders_fragment_dest"
             />
+        <action
+            android:id="@+id/action_statistics_fragment_dest_to_exit_fragment2"
+            app:destination="@id/exit_fragment" />
     </fragment>
     <fragment
         android:id="@+id/reminders_fragment_dest"
