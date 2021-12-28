@@ -39,24 +39,11 @@ tools:openDrawer="start">
 
 </LinearLayout>
 
-<!-- Navigation Drawer -->
-<com.google.android.material.navigation.NavigationView
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/nav_header"
-    app:itemIconTint="@drawable/drawer_item_color"
-    app:itemTextColor="@drawable/drawer_item_color"
-    app:menu="@menu/drawer_actions" >
-
-</com.google.android.material.navigation.NavigationView>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/chek_permision_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/chek_permisson_layout_color_background">
 
         <TextView
             android:id="@+id/applicationNameLoginFragmentTextView"
@@ -91,5 +78,21 @@ tools:openDrawer="start">
             app:layout_constraintGuide_percent="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!-- Navigation Drawer -->
+<com.google.android.material.navigation.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:headerLayout="@layout/nav_header"
+    app:itemIconTint="@drawable/drawer_item_color"
+    app:itemTextColor="@drawable/drawer_item_color"
+    app:menu="@menu/drawer_actions" >
+
+</com.google.android.material.navigation.NavigationView>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
 
