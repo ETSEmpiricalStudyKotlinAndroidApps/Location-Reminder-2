@@ -91,5 +91,6 @@
     <string name="channel_name">GeofenceStatus</string>
     <string name="content_text">You found a clue <xliff:g id="geofence_location">%1$s</xliff:g>.</string>
     <string name="notification_channel_description">Geofence status notification</string>
+    <string name="plase_wait">Please wait...</string>
 
 </resources>
