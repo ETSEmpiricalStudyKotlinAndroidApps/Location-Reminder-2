@@ -18,13 +18,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.cryoggen.locationreminder.authentication.LoginFragmentDirections
 import com.cryoggen.locationreminder.map.ConstantsPermissions
 import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import java.lang.StringBuilder
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var activity: AppCompatActivity
     }
 
+    private var startupRestrictionPermissionCheck = true
+    private lateinit var chekPermissionLayout: ConstraintLayout
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -40,25 +42,39 @@ class MainActivity : AppCompatActivity() {
         activity = this
         setContentView(R.layout.activity_main)
         setupNavigationDrawer()
+        chekPermissionLayout = findViewById<ConstraintLayout>(R.id.chek_permision_layout)
         setSupportActionBar(findViewById(R.id.toolbar))
-        observePermissonState()
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
             AppBarConfiguration.Builder(
-                R.id.exit_fragment,
                 R.id.reminders_fragment_dest,
-                R.id.statistics_fragment_dest
+                R.id.statistics_fragment_dest,
+                R.id.exit_fragment
             )
                 .setDrawerLayout(drawerLayout)
                 .build()
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
+        observePermissonState()
     }
 
     override fun onResume() {
         super.onResume()
-        checkPermissionsAndStartGeofencing()
+        if (startupRestrictionPermissionCheck) {
+            checkPermissionsAndStartGeofencing()
+            startupRestrictionPermissionCheck = false
+        }
+    }
+
+    override fun onStart() {
+        startupRestrictionPermissionCheck = true
+        super.onStart()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -97,13 +113,14 @@ class MainActivity : AppCompatActivity() {
                     grantResults[ConstantsPermissions.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
                     PackageManager.PERMISSION_DENIED)
         ) {
-
+            chekPermissionLayout.visibility = View.VISIBLE
             Snackbar.make(
                 findViewById(R.id.drawer_layout),
                 R.string.permission_denied_explanation,
                 Snackbar.LENGTH_INDEFINITE
             )
                 .setAction(R.string.settings) {
+                    startupRestrictionPermissionCheck = true
                     startActivity(Intent().apply {
                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
@@ -118,7 +135,6 @@ class MainActivity : AppCompatActivity() {
     private fun observePermissonState() {
         _chekStatusLocationSettingsAndStartGeofence.observe(this, Observer { premissionState ->
             if (premissionState) {
-                val chekPermissionLayout = findViewById<ConstraintLayout>(R.id.chek_premission)
                 chekPermissionLayout.visibility = View.INVISIBLE
             }
 
