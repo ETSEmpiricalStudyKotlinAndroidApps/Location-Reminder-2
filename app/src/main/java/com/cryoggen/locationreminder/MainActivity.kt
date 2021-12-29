@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -24,6 +25,7 @@ import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeof
 import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import java.lang.StringBuilder
 
 
@@ -59,22 +61,12 @@ class MainActivity : AppCompatActivity() {
         observePermissonState()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (startupRestrictionPermissionCheck) {
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if ((hasFocus) && (startupRestrictionPermissionCheck)) {
             checkPermissionsAndStartGeofencing()
-            startupRestrictionPermissionCheck = false
+            chekPermissionLayout.visibility = View.VISIBLE
         }
-    }
-
-    override fun onStart() {
-        startupRestrictionPermissionCheck = true
-        super.onStart()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -104,8 +96,8 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        startupRestrictionPermissionCheck = false
         Log.d(ConstantsPermissions.TAG, "onRequestPermissionResult")
-
         if (
             grantResults.isEmpty() ||
             grantResults[ConstantsPermissions.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
@@ -113,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     grantResults[ConstantsPermissions.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
                     PackageManager.PERMISSION_DENIED)
         ) {
-            chekPermissionLayout.visibility = View.VISIBLE
+
             Snackbar.make(
                 findViewById(R.id.drawer_layout),
                 R.string.permission_denied_explanation,
@@ -146,3 +138,4 @@ class MainActivity : AppCompatActivity() {
 const val ADD_EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 1
 const val DELETE_RESULT_OK = Activity.RESULT_FIRST_USER + 2
 const val EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 3
+
