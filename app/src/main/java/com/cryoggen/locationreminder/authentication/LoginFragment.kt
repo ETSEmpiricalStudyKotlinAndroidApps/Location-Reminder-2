@@ -1,38 +1,22 @@
 package com.cryoggen.locationreminder.authentication
 
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
+
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.LoginFragmentBinding
-import com.cryoggen.locationreminder.map.ConstantsPermissions.BACKGROUND_LOCATION_PERMISSION_INDEX
-import com.cryoggen.locationreminder.map.ConstantsPermissions.LOCATION_PERMISSION_INDEX
-import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
-import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_TURN_DEVICE_LOCATION_ON
 import com.cryoggen.locationreminder.map.ConstantsPermissions.SIGN_IN_RESULT_CODE
-import com.cryoggen.locationreminder.map.ConstantsPermissions.TAG
 import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
-import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
-import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-
 
 class LoginFragment : Fragment() {
 
@@ -53,6 +37,9 @@ class LoginFragment : Fragment() {
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
             when (authenticationState) {
                 AuthenticationState.AUTHENTICATED -> {
+                    val textViewNavHeader =
+                        requireActivity().findViewById<TextView>(R.id.textViewNavHeader)
+                    textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
                     val action = LoginFragmentDirections
                         .actionLoginFragmentToRemindersFragmentDest()
                     findNavController().navigate(action)
@@ -65,14 +52,15 @@ class LoginFragment : Fragment() {
     }
 
     private fun observePermissonState() {
-        _chekStatusLocationSettingsAndStartGeofence.observe(viewLifecycleOwner, Observer { premissionState ->
-            if (premissionState) {
-                observeAuthenticationState()
-            }
+        _chekStatusLocationSettingsAndStartGeofence.observe(
+            viewLifecycleOwner,
+            Observer { premissionState ->
+                if (premissionState) {
+                    observeAuthenticationState()
+                }
 
-        })
+            })
     }
-
 
 
     private fun launchSignInFlow() {
@@ -92,8 +80,6 @@ class LoginFragment : Fragment() {
             ).build(), SIGN_IN_RESULT_CODE
         )
     }
-
-
 
 
 }
