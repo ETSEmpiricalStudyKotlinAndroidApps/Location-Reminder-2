@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.cryoggen.locationreminder.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
+import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.gms.maps.GoogleMap
@@ -26,10 +25,6 @@ import com.google.android.material.snackbar.Snackbar
  * Main UI for the add reminder screen. Users can enter a reminder title and description.
  */
 class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
-
-    companion object {
-
-    }
 
     private lateinit var googleMap: GoogleMap
 
@@ -45,7 +40,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val root = inflater.inflate(R.layout.addreminder_frag, container, false)
         viewDataBinding = AddreminderFragBinding.bind(root).apply {
             this.viewmodel = viewModel
@@ -93,7 +88,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private fun setupNavigation() {
         viewModel.reminderUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
-            addGeofenceForReminder(args.reminderId?:viewModel.getreminderIdForGeofencing(),mapReminder)
             val action = AddEditReminderFragmentDirections
                 .actionAddEditReminderFragmentToRemindersFragment(ADD_EDIT_RESULT_OK)
             findNavController().navigate(action)
