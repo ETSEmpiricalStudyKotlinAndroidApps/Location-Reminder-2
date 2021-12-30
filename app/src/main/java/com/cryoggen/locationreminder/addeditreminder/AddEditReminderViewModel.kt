@@ -39,8 +39,6 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     private var reminderIdForEdtiReminder: String? = null
 
-    private var reminderIdForGeofencing: String = ""
-
     private var isNewReminder: Boolean = false
 
     private var isDataLoaded = false
@@ -113,7 +111,6 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
                 latitude,
                 longitude
             )
-            reminderIdForGeofencing = newReminder.id
             createReminder(
                 newReminder
             )
@@ -133,6 +130,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     private fun createReminder(newReminder: Reminder) {
         viewModelScope.launch {
+            addGeofenceForReminder(newReminder.id,newReminder.latitude,newReminder.latitude)
             remindersRepository.saveReminder(newReminder)
             _reminderUpdatedEvent.value = Event(Unit)
         }
@@ -142,6 +140,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         if (isNewReminder) {
             throw RuntimeException("updateReminder() was called but reminder is new.")
         }
+        addGeofenceForReminder(reminder.id,reminder.latitude,reminder.latitude)
         viewModelScope.launch {
             remindersRepository.saveReminder(reminder)
             _reminderUpdatedEvent.value = Event(Unit)
@@ -150,10 +149,6 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     fun setMapReminder(mapReminder: MapReminder) {
         this.mapReminder = mapReminder
-    }
-
-    fun getreminderIdForGeofencing(): String? {
-        return reminderIdForGeofencing
     }
 
 }
