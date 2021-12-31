@@ -7,9 +7,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
-import com.cryoggen.locationreminder.MainActivity
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
 import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 import com.google.android.gms.common.api.ResolvableApiException
@@ -19,7 +18,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.Snackbar
 
 object ConstantsPermissions {
-    const val TAG = "LoginFragment"
+    const val TAG = "MainActivity"
     const val SIGN_IN_RESULT_CODE = 1001
     const val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE = 33
     const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
