@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.authentication
+package com.cryoggen.locationreminder.main
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.FirebaseAuth
