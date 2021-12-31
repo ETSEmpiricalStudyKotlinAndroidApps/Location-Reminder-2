@@ -4,12 +4,11 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
 import android.util.Log
 import android.widget.Toast
-import com.cryoggen.locationreminder.MainActivity
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.ACTION_GEOFENCE_EVENT
+import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.map.foregroundAndBackgroundLocationPermissionApproved
 import com.google.android.gms.location.*
@@ -56,17 +55,17 @@ private val geofencePendingIntent: PendingIntent by lazy {
 private val geofencingClient = LocationServices.getGeofencingClient(MainActivity.activity)
 
 @SuppressLint("MissingPermission")
-fun addGeofenceForReminder(reminderId: String?, mapReminder: MapReminder) {
+fun addGeofenceForReminder(geofenceId: String?, latitude:Double,longitude:Double ) {
     val geofence = Geofence.Builder()
 
         // Set the request ID of the geofence. This is a string to identify this
         // geofence.
-        .setRequestId(reminderId!!)
+        .setRequestId(geofenceId!!)
 
         // Set the circular region of this geofence.
         .setCircularRegion(
-            mapReminder.latitude,
-            mapReminder.longitude,
+            latitude,
+            longitude,
             GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
         )
 
@@ -86,8 +85,6 @@ fun addGeofenceForReminder(reminderId: String?, mapReminder: MapReminder) {
         .addGeofence(geofence)
         .build()
 
-    geofencingClient.removeGeofences(geofencePendingIntent)?.run {
-        addOnCompleteListener {
             geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
                 addOnSuccessListener {
                     Toast.makeText(
@@ -103,8 +100,7 @@ fun addGeofenceForReminder(reminderId: String?, mapReminder: MapReminder) {
                     ).show()
 
                 }
-            }
-        }
+
     }
 }
 
@@ -116,7 +112,7 @@ fun removeGeofences() {
     if (!foregroundAndBackgroundLocationPermissionApproved()) {
         return
     }
-    geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+    geofencingClient.removeGeofences(geofencePendingIntent).run {
         addOnSuccessListener {
             Log.d(TAG, MainActivity.activity.resources.getString(R.string.geofences_removed))
             Toast.makeText(MainActivity.activity, R.string.geofences_removed, Toast.LENGTH_SHORT)
@@ -124,6 +120,27 @@ fun removeGeofences() {
         }
         addOnFailureListener {
             Log.d(TAG, MainActivity.activity.resources.getString(R.string.geofences_not_removed))
+        }
+    }
+}
+
+/**
+ * Removes one geofence. This method should be called after the user has granted the location
+ * permission.
+ */
+fun removeOneGeofence(geofenceId: String) {
+    val geofenceForDel = listOf<String>(geofenceId)
+    if (!foregroundAndBackgroundLocationPermissionApproved()) {
+        return
+    }
+    geofencingClient.removeGeofences(geofenceForDel).run {
+        addOnSuccessListener {
+            Log.d(TAG, MainActivity.activity.resources.getString(R.string.geofences_removed))
+            Toast.makeText(MainActivity.activity, R.string.one_geofence_removed, Toast.LENGTH_SHORT)
+                .show()
+        }
+        addOnFailureListener {
+            Log.d(TAG, MainActivity.activity.resources.getString(R.string.geofence_not_removed))
         }
     }
 }
