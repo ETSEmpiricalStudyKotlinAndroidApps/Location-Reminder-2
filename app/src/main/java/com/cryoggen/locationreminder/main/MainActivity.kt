@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder
+package com.cryoggen.locationreminder.main
 
 import android.app.Activity
 import android.content.Intent
@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -19,14 +20,16 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.cryoggen.locationreminder.BuildConfig
+import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.map.ConstantsPermissions
 import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import java.lang.StringBuilder
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var activity: AppCompatActivity
     }
 
+    private val viewModel by viewModels<MainActivityViewModel>()
     private var startupRestrictionPermissionCheck = true
     private lateinit var chekPermissionLayout: ConstraintLayout
     private lateinit var drawerLayout: DrawerLayout
@@ -59,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<NavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
         observePermissonState()
+        observeAuthenticationState()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -130,6 +135,39 @@ class MainActivity : AppCompatActivity() {
                 chekPermissionLayout.visibility = View.INVISIBLE
             }
 
+        })
+    }
+
+    private fun launchSignInFlow() {
+        // Give users the ability to login / register by email
+        // If users choose to register with their email address,
+        // they will also need to create a password
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+
+        // Create and run the login intent.
+        // We listen for the response of this action with
+        // SIGN_IN_RESULT_CODE code
+        startActivityForResult(
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
+                providers
+            ).build(), ConstantsPermissions.SIGN_IN_RESULT_CODE
+        )
+    }
+
+    private fun observeAuthenticationState() {
+        viewModel.authenticationState.observe(this, Observer { authenticationState ->
+            when (authenticationState) {
+                AuthenticationState.AUTHENTICATED -> {
+                    val textViewNavHeader =
+                        this.findViewById<TextView>(R.id.textViewNavHeader)
+                    textViewNavHeader.text = FirebaseAuth.getInstance().currentUser?.displayName
+                }
+                else -> {
+                    launchSignInFlow()
+                }
+            }
         })
     }
 
