@@ -6,6 +6,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.Event
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.addeditreminder.addGeofenceForReminder
+import com.cryoggen.locationreminder.addeditreminder.removeOneGeofence
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
@@ -13,11 +15,11 @@ import com.cryoggen.locationreminder.data.source.RemindersRepository
 import com.cryoggen.locationreminder.map.MapReminder
 import com.google.android.gms.maps.GoogleMap
 import kotlinx.coroutines.launch
+
 /**
  * ViewModel for the Details screen.
  */
 class ReminderDetailViewModel(application: Application) : AndroidViewModel(application) {
-
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
@@ -52,6 +54,7 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     fun deleteReminder() = viewModelScope.launch {
         _reminderId.value?.let {
             remindersRepository.deleteReminder(it)
+            removeOneGeofence(_reminderId.value!!)
             _deleteReminderEvent.value = Event(Unit)
         }
     }
@@ -61,23 +64,25 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun setCompleted(completed: Boolean) = viewModelScope.launch {
-        val Reminder = _reminder.value ?: return@launch
+        val reminder = _reminder.value ?: return@launch
         if (completed) {
-            remindersRepository.completeReminder(Reminder)
+            remindersRepository.completeReminder(reminder)
+            removeOneGeofence(_reminderId.value!!)
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
-            remindersRepository.activateReminder(Reminder)
+            remindersRepository.activateReminder(reminder)
+            addGeofenceForReminder(_reminderId.value!!,reminder.latitude,reminder.longitude)
             showSnackbarMessage(R.string.reminder_marked_active)
         }
     }
 
-    fun start(ReminderId: String) {
+    fun start(reminderId: String) {
         // If we're already loading or already loaded, return (might be a config change)
-        if (_dataLoading.value == true || ReminderId == _reminderId.value) {
+        if (_dataLoading.value == true || reminderId == _reminderId.value) {
             return
         }
         // Trigger the load
-        _reminderId.value = ReminderId
+        _reminderId.value = reminderId
     }
 
     private fun computeResult(reminderResult: Result<Reminder>): Reminder? {
