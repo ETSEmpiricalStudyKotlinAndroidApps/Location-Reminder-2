@@ -5,12 +5,19 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.*
+import com.cryoggen.locationreminder.addeditreminder.addGeofenceForReminder
+import com.cryoggen.locationreminder.addeditreminder.removeGeofences
+import com.cryoggen.locationreminder.addeditreminder.removeOneGeofence
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
+import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
+import com.cryoggen.locationreminder.main.EDIT_RESULT_OK
 import kotlinx.coroutines.launch
+import java.security.Permission
 
 /**
  * ViewModel for the Reminder list screen.
@@ -134,16 +141,19 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun clearAllReminders() {
         viewModelScope.launch {
             remindersRepository.deleteAllReminders()
+            removeGeofences()
             showSnackbarMessage(R.string.completed_reminders_cleared)
         }
     }
 
-    fun completeReminder(Reminder: Reminder, completed: Boolean) = viewModelScope.launch {
+    fun completeReminder(reminder: Reminder, completed: Boolean) = viewModelScope.launch {
         if (completed) {
-            remindersRepository.completeReminder(Reminder)
+            remindersRepository.completeReminder(reminder)
+            removeOneGeofence(reminder.id)
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
-            remindersRepository.activateReminder(Reminder)
+            remindersRepository.activateReminder(reminder)
+            addGeofenceForReminder(reminder.id,reminder.latitude,reminder.longitude)
             showSnackbarMessage(R.string.reminder_marked_active)
         }
     }
