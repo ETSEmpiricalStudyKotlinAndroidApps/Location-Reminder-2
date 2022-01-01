@@ -13,14 +13,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.cryoggen.locationreminder.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.authentication.AuthenticationState
-import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
+import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
-import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -96,9 +93,6 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
