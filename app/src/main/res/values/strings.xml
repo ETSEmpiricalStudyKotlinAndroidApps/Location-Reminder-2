@@ -77,6 +77,7 @@
     </string>
 
     <string name="geofences_not_removed">Geofences not removed.</string>
+    <string name="geofence_not_removed">Geofence not removed.</string>
     <string name="geofences_not_added">Problem in adding geofences.</string>
     <string name="insufficient_permissions">Insufficient permissions.</string>
     <string name="geofence_error">There was an error in finding your treasure</string>
@@ -84,6 +85,7 @@
     <!--    Geofence Status Strings-->
     <string name="geofences_added">Clue Geofence added.</string>
     <string name="geofences_removed">Geofences removed.</string>
+    <string name="one_geofence_removed">Geofence removed.</string>
     <string name="geofence_entered">Geofence entered.</string>
     <string name="geofence_over">You have found the treasure! Congratulations!</string>
 
