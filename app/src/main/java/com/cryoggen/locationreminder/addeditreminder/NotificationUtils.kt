@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.cryoggen.locationreminder.MainActivity
+import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
 
 /*
