@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/nav_graph"
-    app:startDestination="@id/login_fragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/reminders_fragment_dest">
 
-    <fragment
-        android:id="@+id/login_fragment"
-        android:name="com.cryoggen.locationreminder.authentication.LoginFragment"
-        android:label="@string/login"
-        tools:layout="@layout/login_fragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_reminders_fragment_dest"
-            app:destination="@id/reminders_fragment_dest" />
-    </fragment>
 
     <fragment
         android:id="@+id/reminder_detail_fragment_dest"
@@ -36,8 +27,7 @@
         android:label="@string/app_name">
         <action
             android:id="@+id/action_statisticsFragment_to_remindersFragment"
-            app:destination="@id/reminders_fragment_dest"
-            />
+            app:destination="@id/reminders_fragment_dest" />
         <action
             android:id="@+id/action_statistics_fragment_dest_to_exit_fragment2"
             app:destination="@id/exit_fragment" />
@@ -57,8 +47,8 @@
             app:destination="@id/add_edit_reminder_fragment_dest" />
         <argument
             android:name="userMessage"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_reminders_fragment_dest_to_exitFragment"
             app:destination="@id/exit_fragment" />
@@ -77,8 +67,7 @@
             app:nullable="false" />
         <action
             android:id="@+id/action_addEditReminderFragment_to_remindersFragment"
-            app:destination="@id/reminders_fragment_dest"
-            />
+            app:destination="@id/reminders_fragment_dest" />
     </fragment>
     <argument
         android:name="userMessage"
@@ -87,10 +76,7 @@
         android:id="@+id/exit_fragment"
         android:name="com.cryoggen.locationreminder.exit.ExitFragment"
         android:label="@string/exit"
-        tools:layout="@layout/fragment_exit" >
-        <action
-            android:id="@+id/action_exitFragment_to_login_fragment"
-            app:destination="@id/login_fragment" />
+        tools:layout="@layout/fragment_exit">
     </fragment>
 
 </navigation>
