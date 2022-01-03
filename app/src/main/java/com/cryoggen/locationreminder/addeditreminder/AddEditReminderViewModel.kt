@@ -104,7 +104,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
         val currentReminderId = reminderIdForEdtiReminder
         if (isNewReminder || currentReminderId == null) {
-            val newReminder =     Reminder(
+            val newReminder = Reminder(
                 currentTitle,
                 currentDescription,
                 currentUserUID,
@@ -130,7 +130,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     private fun createReminder(newReminder: Reminder) {
         viewModelScope.launch {
-            addGeofenceForReminder(newReminder.id,newReminder.latitude,newReminder.latitude)
+            addGeofenceForReminder(newReminder.id, newReminder.latitude, newReminder.latitude)
             remindersRepository.saveReminder(newReminder)
             _reminderUpdatedEvent.value = Event(Unit)
         }
@@ -140,7 +140,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         if (isNewReminder) {
             throw RuntimeException("updateReminder() was called but reminder is new.")
         }
-        addGeofenceForReminder(reminder.id,reminder.latitude,reminder.latitude)
+        addGeofenceForReminder(reminder.id, reminder.latitude, reminder.latitude)
         viewModelScope.launch {
             remindersRepository.saveReminder(reminder)
             _reminderUpdatedEvent.value = Event(Unit)
