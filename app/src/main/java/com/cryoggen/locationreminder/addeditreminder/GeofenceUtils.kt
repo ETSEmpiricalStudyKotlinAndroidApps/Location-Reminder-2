@@ -55,7 +55,7 @@ private val geofencePendingIntent: PendingIntent by lazy {
 private val geofencingClient = LocationServices.getGeofencingClient(MainActivity.activity)
 
 @SuppressLint("MissingPermission")
-fun addGeofenceForReminder(geofenceId: String?, latitude:Double,longitude:Double ) {
+fun addGeofenceForReminder(geofenceId: String?, latitude: Double, longitude: Double) {
     val geofence = Geofence.Builder()
 
         // Set the request ID of the geofence. This is a string to identify this
@@ -85,21 +85,21 @@ fun addGeofenceForReminder(geofenceId: String?, latitude:Double,longitude:Double
         .addGeofence(geofence)
         .build()
 
-            geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
-                addOnSuccessListener {
-                    Toast.makeText(
-                        MainActivity.activity, R.string.geofences_added,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-                addOnFailureListener {
-                    Toast.makeText(
-                        MainActivity.activity, R.string.geofences_not_added,
-                        Toast.LENGTH_SHORT
-                    ).show()
+    geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
+        addOnSuccessListener {
+            Toast.makeText(
+                MainActivity.activity, R.string.geofences_added,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        }
+        addOnFailureListener {
+            Toast.makeText(
+                MainActivity.activity, R.string.geofences_not_added,
+                Toast.LENGTH_SHORT
+            ).show()
 
-                }
+        }
 
     }
 }
