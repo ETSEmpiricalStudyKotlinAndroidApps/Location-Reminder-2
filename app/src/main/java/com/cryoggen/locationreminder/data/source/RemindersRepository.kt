@@ -38,8 +38,10 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     init {
-        val database = Room.databaseBuilder(application.applicationContext,
-            ToDoDatabase::class.java, "Reminders.db")
+        val database = Room.databaseBuilder(
+            application.applicationContext,
+            ToDoDatabase::class.java, "Reminders.db"
+        )
             .build()
 
         remindersRemoteDataSource = RemindersRemoteDataSource
@@ -58,7 +60,7 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun refreshReminders() {
-       // updateRemindersFromRemoteDataSource()
+        // updateRemindersFromRemoteDataSource()
     }
 
     fun observeReminders(): LiveData<Result<List<Reminder>>> {
@@ -66,7 +68,7 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun refreshReminder(reminderId: String) {
-     //   updateReminderFromRemoteDataSource(reminderId)
+        //   updateReminderFromRemoteDataSource(reminderId)
     }
 
     private suspend fun updateRemindersFromRemoteDataSource() {
@@ -98,7 +100,7 @@ class RemindersRepository private constructor(application: Application) {
     /**
      * Relies on [getReminders] to fetch data and picks the Reminder with the same ID.
      */
-    suspend fun getReminder(ReminderId: String,  forceUpdate: Boolean = false): Result<Reminder> {
+    suspend fun getReminder(ReminderId: String, forceUpdate: Boolean = false): Result<Reminder> {
 //        if (forceUpdate) {
 //            updateReminderFromRemoteDataSource(ReminderId)
 //        }
@@ -150,10 +152,10 @@ class RemindersRepository private constructor(application: Application) {
     }
 
     suspend fun deleteAllReminders() {
-            coroutineScope {
-                launch { RemindersRemoteDataSource.deleteAllReminders() }
-                launch { RemindersLocalDataSource.deleteAllReminders() }
-            }
+        coroutineScope {
+            launch { RemindersRemoteDataSource.deleteAllReminders() }
+            launch { RemindersLocalDataSource.deleteAllReminders() }
+        }
     }
 
     suspend fun deleteReminder(reminderId: String) {
