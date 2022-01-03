@@ -31,7 +31,8 @@ fun createChannel(context: Context) {
         notificationChannel.enableLights(true)
         notificationChannel.lightColor = Color.RED
         notificationChannel.enableVibration(true)
-        notificationChannel.description = context.getString(R.string.notification_channel_description)
+        notificationChannel.description =
+            context.getString(R.string.notification_channel_description)
 
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(notificationChannel)
@@ -64,8 +65,12 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, foundI
     // a custom message when a Geofence triggers.
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle(context.getString(R.string.app_name))
-        .setContentText(context.getString(R.string.content_text,
-            "test"))
+        .setContentText(
+            context.getString(
+                R.string.content_text,
+                "test"
+            )
+        )
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setContentIntent(contentPendingIntent)
         .setSmallIcon(R.drawable.map_small)
