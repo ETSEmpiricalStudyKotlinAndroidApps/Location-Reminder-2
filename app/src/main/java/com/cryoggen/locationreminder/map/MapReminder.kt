@@ -5,13 +5,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.CircleOptions
+
+import com.google.android.gms.maps.model.Circle
+
 
 class MapReminder(
     val googleMap: GoogleMap,
@@ -43,7 +49,7 @@ class MapReminder(
         turnOnMyLocation()
     }
 
-    fun switchMapLongClick(switcher:Boolean) {
+    fun switchMapLongClick(switcher: Boolean) {
         if (switcher) {
             setMapLongClick()
         } else {
@@ -70,6 +76,7 @@ class MapReminder(
             )
             latitude = latLng.latitude
             longitude = latLng.longitude
+            addCircleOnMarker()
         }
     }
 
@@ -81,8 +88,20 @@ class MapReminder(
                 .position(latLng)
                 .title(context?.getResources()?.getString(R.string.location_reminder))
         )
+        addCircleOnMarker()
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
     }
 
+    fun addCircleOnMarker() {
+        googleMap.addCircle(
+            CircleOptions()
+                .center(LatLng(latitude, longitude))
+                .radius(GEOFENCE_RADIUS_IN_METERS.toDouble())
+                .strokeColor(context!!.resources.getColor(R.color.stroke_color_circle_geofence))
+                .fillColor(
+                    context.resources.getColor(R.color.fill_color_circle_geofence)
+                )
+        )
+    }
 
 }
