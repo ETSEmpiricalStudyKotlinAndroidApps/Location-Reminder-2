@@ -22,7 +22,9 @@ class RemindersLocalDataSource internal constructor(
 ) : RemindersDataSource {
 
     override fun observeReminders(): LiveData<Result<List<Reminder>>> {
-        return RemindersDao.observeReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString()).map {
+        return RemindersDao.observeReminders(
+            FirebaseAuth.getInstance().currentUser?.getUid().toString()
+        ).map {
             Success(it)
         }
     }
@@ -43,24 +45,29 @@ class RemindersLocalDataSource internal constructor(
 
     override suspend fun getReminders(): Result<List<Reminder>> = withContext(ioDispatcher) {
         return@withContext try {
-            Success(RemindersDao.getReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString()))
+            Success(
+                RemindersDao.getReminders(
+                    FirebaseAuth.getInstance().currentUser?.getUid().toString()
+                )
+            )
         } catch (e: Exception) {
             Error(e)
         }
     }
 
-    override suspend fun getReminder(ReminderId: String): Result<Reminder> = withContext(ioDispatcher) {
-        try {
-            val Reminder = RemindersDao.getReminderById(ReminderId)
-            if (Reminder != null) {
-                return@withContext Success(Reminder)
-            } else {
-                return@withContext Error(Exception("Reminder not found!"))
+    override suspend fun getReminder(ReminderId: String): Result<Reminder> =
+        withContext(ioDispatcher) {
+            try {
+                val Reminder = RemindersDao.getReminderById(ReminderId)
+                if (Reminder != null) {
+                    return@withContext Success(Reminder)
+                } else {
+                    return@withContext Error(Exception("Reminder not found!"))
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
             }
-        } catch (e: Exception) {
-            return@withContext Error(e)
         }
-    }
 
     override suspend fun saveReminder(Reminder: Reminder) = withContext(ioDispatcher) {
         RemindersDao.insertReminder(Reminder)
@@ -83,7 +90,9 @@ class RemindersLocalDataSource internal constructor(
     }
 
     override suspend fun clearCompletedReminders() = withContext<Unit>(ioDispatcher) {
-        RemindersDao.deleteCompletedReminders(FirebaseAuth.getInstance().currentUser?.getUid().toString())
+        RemindersDao.deleteCompletedReminders(
+            FirebaseAuth.getInstance().currentUser?.getUid().toString()
+        )
     }
 
     override suspend fun deleteAllReminders() = withContext<Unit>(ioDispatcher) {
