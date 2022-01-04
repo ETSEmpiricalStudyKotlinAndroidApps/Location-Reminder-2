@@ -85,7 +85,7 @@ fun addGeofenceForReminder(geofenceId: String?, latitude: Double, longitude: Dou
         .addGeofence(geofence)
         .build()
 
-    geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
+    geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
         addOnSuccessListener {
             Toast.makeText(
                 MainActivity.activity, R.string.geofences_added,
