@@ -6,6 +6,8 @@
     <color name="colorTextPrimary">#000000</color>
     <color name="colorGrey">#757575</color>
     <color name="chek_permisson_layout_color_background">#FFFFFF</color>
+    <color name="fill_color_circle_geofence">#4D2E7D32</color>
+    <color name="stroke_color_circle_geofence">#2E7D32</color>
 
     <drawable name="completedreminderBackground">#CCCCCC</drawable>
 
