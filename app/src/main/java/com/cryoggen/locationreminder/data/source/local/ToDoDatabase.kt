@@ -1,4 +1,3 @@
-
 package com.cryoggen.locationreminder.data.source.local
 
 import androidx.room.Database
