@@ -29,7 +29,7 @@ interface RemindersDao {
      * @return the Reminder with ReminderId.
      */
     @Query("SELECT * FROM Reminders WHERE entryid = :reminderId")
-     fun observeReminderById(reminderId: String): LiveData<Reminder>
+    fun observeReminderById(reminderId: String): LiveData<Reminder>
 
     /**
      * Select all Reminders from the Reminders table.
@@ -37,7 +37,7 @@ interface RemindersDao {
      * @return all Reminders.
      */
     @Query("SELECT * FROM Reminders WHERE useruid = :authorizedUserUID")
-     fun getReminders(authorizedUserUID: String): List<Reminder>
+    fun getReminders(authorizedUserUID: String): List<Reminder>
 
     /**
      * Select a Reminder by id.
@@ -72,7 +72,7 @@ interface RemindersDao {
      * @param completed status to be updated
      */
     @Query("UPDATE Reminders SET completed = :completed WHERE entryid = :reminderId")
-     fun updateCompleted(reminderId: String, completed: Boolean)
+    fun updateCompleted(reminderId: String, completed: Boolean)
 
     /**
      * Delete a Reminder by id.
@@ -80,13 +80,13 @@ interface RemindersDao {
      * @return the number of Reminders deleted. This should always be 1.
      */
     @Query("DELETE FROM Reminders WHERE entryid = :reminderId")
-     fun deleteReminderById(reminderId: String): Int
+    fun deleteReminderById(reminderId: String): Int
 
     /**
      * Delete all Reminders.
      */
     @Query("DELETE FROM reminders WHERE useruid = :authorizedUserUID")
-    fun deleteReminders(authorizedUserUID: String):Int
+    fun deleteReminders(authorizedUserUID: String): Int
 
     /**
      * Delete all completed Reminders from the table.
@@ -94,5 +94,5 @@ interface RemindersDao {
      * @return the number of Reminders deleted.
      */
     @Query("DELETE FROM Reminders WHERE completed = 1 AND useruid = :authorizedUserUID ")
-   fun deleteCompletedReminders(authorizedUserUID: String): Int
+    fun deleteCompletedReminders(authorizedUserUID: String): Int
 }
