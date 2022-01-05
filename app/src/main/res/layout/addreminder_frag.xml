@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
@@ -38,7 +39,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_reminder_title_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,7 +53,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textStyle="bold" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_reminder_description_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
