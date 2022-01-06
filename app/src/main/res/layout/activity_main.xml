@@ -41,7 +41,7 @@ tools:openDrawer="start">
         android:id="@+id/chek_permision_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/chek_permisson_layout_color_background">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/applicationNameLoginFragmentTextView"
