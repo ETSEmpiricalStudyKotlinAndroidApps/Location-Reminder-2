@@ -1,6 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -24,11 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/title_hint"
             android:orientation="vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
@@ -37,36 +34,37 @@
             android:visibility="@{viewmodel.dataLoading ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
+            app:layout_constraintTop_toTopOf="@+id/map_new_reminder">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_reminder_title_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:hint="@string/title_hint"
-                android:imeOptions="flagNoExtractUi"
-                android:maxLines="1"
-                android:minHeight="48dp"
-                android:text="@={viewmodel.title}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textStyle="bold" />
+                android:background="@color/white"
+                android:text="@={viewmodel.title}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:hint="@string/description_hint"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:visibility="@{viewmodel.dataLoading ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/add_reminder_description_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="@dimen/reminder_description_margin"
-                android:background="#FFFFFF"
-                android:gravity="top"
-                android:hint="@string/description_hint"
-                android:imeOptions="flagNoExtractUi"
+                android:layout_height="match_parent"
+                android:background="@color/white"
                 android:text="@={viewmodel.description}" />
-
-
-        </LinearLayout>
-
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/save_reminder_fab"
@@ -78,6 +76,6 @@
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout >
-    </layout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout >
+</layout>
