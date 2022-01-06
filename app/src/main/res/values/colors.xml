@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFF0</color>
-    <color name="colorPrimaryDark">#263238</color>
-    <color name="colorAccent">#2E7D32</color>
-    <color name="colorTextPrimary">#000000</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
     <color name="colorGrey">#757575</color>
-    <color name="chek_permisson_layout_color_background">#FFFFFF</color>
     <color name="fill_color_circle_geofence">#4D2E7D32</color>
     <color name="stroke_color_circle_geofence">#2E7D32</color>
-
     <drawable name="completedreminderBackground">#CCCCCC</drawable>
-
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>
