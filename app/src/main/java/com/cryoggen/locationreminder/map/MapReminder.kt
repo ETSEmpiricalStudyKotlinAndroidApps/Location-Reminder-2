@@ -71,7 +71,7 @@ class MapReminder(
     }
 
     private fun setMapLongClick() {
-        googleMap.setOnMapLongClickListener { latLng ->
+        googleMap.setOnMapClickListener { latLng ->
             googleMap.clear()
             googleMap.addMarker(
                 MarkerOptions()
@@ -101,7 +101,7 @@ class MapReminder(
             CircleOptions()
                 .center(LatLng(latitude, longitude))
                 .radius(GEOFENCE_RADIUS_IN_METERS.toDouble())
-                .strokeColor(context!!.resources.getColor(R.color.stroke_color_circle_geofence))
+                .strokeColor(context!!.resources.getColor(R.color.primaryColor))
                 .fillColor(
                     context.resources.getColor(R.color.fill_color_circle_geofence)
                 )
