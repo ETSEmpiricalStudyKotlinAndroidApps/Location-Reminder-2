@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="primaryColor">#e6e4c0</color>
+
+    <color name="primaryLightColor">#fffff3</color>
+
+    <color name="primaryDarkColor">#b4b290</color>
+
+    <color name="secondaryColor">#adab92</color>
+
+    <color name="secondaryLightColor">#dfddc2</color>
+
+    <color name="secondaryDarkColor">#7e7c64</color>
+
+    <color name="primaryTextColor">#48473A</color>
+
+    <color name="secondaryTextColor">#48473A</color>
 
     <color name="colorGrey">#757575</color>
-    <color name="fill_color_circle_geofence">#4D2E7D32</color>
-    <color name="stroke_color_circle_geofence">#2E7D32</color>
+    <color name="color_background_list_item">#FFFCF3</color>
+    <color name="fill_color_circle_geofence">#7097b498</color>
+    <color name="backgraund_text_edit">#FFFCF3</color>
     <drawable name="completedreminderBackground">#CCCCCC</drawable>
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>
