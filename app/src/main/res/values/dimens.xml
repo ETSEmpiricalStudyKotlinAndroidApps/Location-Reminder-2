@@ -10,8 +10,13 @@
     <dimen name="header_padding">16dp</dimen>
     <dimen name="header_image_width">100dp</dimen>
     <dimen name="textSizeTitleHeading">38sp</dimen>
-    <dimen name="margin_app_description_login_fragment">16sp</dimen>
+    <dimen name="app_description_login_fragment_margin">16sp</dimen>
     <dimen name="reminder_description_margin">16dp</dimen>
+    <dimen name="reminder_title_margin">16dp</dimen>
+    <dimen name="reminder_description_padding">4dp</dimen>
+    <dimen name="reminder_title_padding">4dp</dimen>
     <dimen name="please_wait_text_size">32sp</dimen>
+    <dimen name="text_Input_edit_text_margin">4dp</dimen>
+    <dimen name="reminder_item_list_margin">4dp</dimen>
 
 </resources>
