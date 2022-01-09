@@ -16,7 +16,9 @@
 
     <color name="secondaryTextColor">#48473A</color>
 
+
     <color name="colorGrey">#757575</color>
+    <color name="colorGreen">#2E7D32</color>
     <color name="color_background_list_item">#FFFCF3</color>
     <color name="fill_color_circle_geofence">#7097b498</color>
     <color name="backgraund_text_edit">#FFFCF3</color>
