@@ -18,5 +18,8 @@
     <dimen name="please_wait_text_size">32sp</dimen>
     <dimen name="text_Input_edit_text_margin">4dp</dimen>
     <dimen name="reminder_item_list_margin">4dp</dimen>
+    <dimen name="item_list_reminder_margin_start_end">16dp</dimen>
+    <dimen name="item_list_reminder_margin_top_bottom">4dp</dimen>
+    <dimen name="nav_heder_text_size_with_logo">25dp</dimen>
 
 </resources>
