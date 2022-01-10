@@ -19,8 +19,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
-        android:layout_margin="@dimen/reminder_item_list_margin"
-        android:layout_marginBottom="@dimen/reminder_item_list_margin"
+        android:layout_marginStart="@dimen/item_list_reminder_margin_start_end"
+        android:layout_marginTop="@dimen/item_list_reminder_margin_top_bottom"
+        android:layout_marginEnd="@dimen/item_list_reminder_margin_start_end"
+        android:layout_marginBottom="@dimen/item_list_reminder_margin_top_bottom"
         android:background="@drawable/round_corner"
         android:onClick="@{() -> viewmodel.openReminder(reminder.id)}"
         android:orientation="horizontal"
