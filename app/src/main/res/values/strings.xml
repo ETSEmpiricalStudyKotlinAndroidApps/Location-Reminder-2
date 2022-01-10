@@ -91,8 +91,12 @@
 
     <!-- Notification Strings-->
     <string name="channel_name">GeofenceStatus</string>
-    <string name="content_text">You found a clue <xliff:g id="geofence_location">%1$s</xliff:g>.</string>
+    <string name="content_text">You\'re near your destination!</string>
     <string name="notification_channel_description">Geofence status notification</string>
     <string name="plase_wait">Please wait...</string>
+    <string name="nav_header_text_with_logo">Location \nreminder</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
 
 </resources>
