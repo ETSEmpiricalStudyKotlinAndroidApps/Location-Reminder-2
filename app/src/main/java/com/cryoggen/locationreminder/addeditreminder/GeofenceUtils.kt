@@ -44,6 +44,8 @@ internal object GeofencingConstants {
     const val EXTRA_GEOFENCE_INDEX = "GEOFENCE_INDEX"
     const val ACTION_GEOFENCE_EVENT =
         "ACTION_GEOFENCE_EVENT"
+    const val ACTION_CLOSE_NOTIFICATION =
+        "ACTION_CLOSE_NOTIFICATION"
 }
 
 private val geofencePendingIntent: PendingIntent by lazy {
