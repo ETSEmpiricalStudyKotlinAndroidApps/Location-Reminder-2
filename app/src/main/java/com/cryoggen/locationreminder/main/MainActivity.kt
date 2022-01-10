@@ -22,6 +22,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants
 import com.cryoggen.locationreminder.map.ConstantsPermissions
 import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
 import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             .setupWithNavController(navController)
         observePermissonState()
         observeAuthenticationState()
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
