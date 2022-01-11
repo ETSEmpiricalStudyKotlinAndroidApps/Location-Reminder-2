@@ -1,5 +1,7 @@
 package com.cryoggen.locationreminder.reminders
 
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -14,13 +16,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
+import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
+import android.content.Intent.getIntent
+
 
 /**
  * Display a grid of [Reminder]s. User can choose to view all, active or completed Reminders.
@@ -46,6 +52,18 @@ class RemindersFragment : Fragment() {
         return viewDataBinding.root
     }
 
+
+    private fun handleIntentfromActivity() {
+        val extras = MainActivity.activity.intent?.extras
+        if (extras != null) {
+            if (extras.containsKey(GeofencingConstants.EXTRA_GEOFENCE_INDEX)) {
+                val idReminder = extras.getString(GeofencingConstants.EXTRA_GEOFENCE_INDEX)
+                MainActivity.activity.intent?.removeExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX)
+                viewModel.openReminder(idReminder!!)
+            }
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem) =
         when (item.itemId) {
             R.id.menu_clear -> {
@@ -63,10 +81,6 @@ class RemindersFragment : Fragment() {
                 true
             }
 
-            R.id.menu_refresh -> {
-                viewModel.loadReminders(true)
-                true
-            }
 
             else -> false
         }
@@ -84,6 +98,7 @@ class RemindersFragment : Fragment() {
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.remindersList)
         setupNavigation()
         setupFab()
+        handleIntentfromActivity()
     }
 
     private fun setupNavigation() {
@@ -139,6 +154,7 @@ class RemindersFragment : Fragment() {
     }
 
     private fun openReminderDetails(ReminderId: String) {
+        MainActivity.activity.intent?.extras?.clear()
         val action =
             RemindersFragmentDirections.actionRemindersFragmentToReminderDetailFragment(ReminderId)
         findNavController().navigate(action)
