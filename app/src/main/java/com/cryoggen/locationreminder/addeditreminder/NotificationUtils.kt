@@ -8,10 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
+import android.media.RingtoneManager
+import android.net.Uri
+
 
 /*
  * We need to create a NotificationChannel associated with our CHANNEL_ID before sending a
@@ -22,19 +26,19 @@ fun createChannel(context: Context) {
         val notificationChannel = NotificationChannel(
             CHANNEL_ID,
             context.getString(R.string.channel_name),
-
             NotificationManager.IMPORTANCE_HIGH
         )
             .apply {
                 setShowBadge(false)
             }
 
-        notificationChannel.enableLights(true)
-        notificationChannel.lightColor = Color.RED
-        notificationChannel.enableVibration(true)
-        notificationChannel.description =
-            context.getString(R.string.notification_channel_description)
-
+        notificationChannel.apply {
+            enableLights(true)
+            lightColor = Color.RED
+            enableVibration(true)
+            description =
+                context.getString(R.string.notification_channel_description)
+        }
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(notificationChannel)
     }
@@ -86,9 +90,13 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, Geofen
         .setSmallIcon(R.drawable.ic_notification)
         .setAutoCancel(true)
         .setColor(context.resources.getColor(R.color.secondaryDarkColor))
-    val tst = builder.build()
-//    tst.flags = Notification.FLAG_NO_CLEAR or Notification.FLAG_ONGOING_EVENT
-    notify(NOTIFICATION_ID, tst)
+        .setCategory(NotificationCompat.CATEGORY_ALARM)
+        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        .setOngoing(true)
+        .setDefaults(Notification.DEFAULT_LIGHTS)
+
+    notify(NOTIFICATION_ID, builder.build())
+
 }
 
 const val NOTIFICATION_ID = 33
