@@ -17,13 +17,13 @@ android:shape="rectangle">
                 android:right="3.0dp"
                 android:top="1.2dp" />
 
-            <corners android:radius="50dp" />
+            <corners android:radius="10dp" />
         </shape>
     </item>
     <item>
         <shape>
             <solid android:color="@color/color_background_list_item" />
-            <corners android:radius="50dp" />
+            <corners android:radius="10dp" />
         </shape>
     </item>
 
