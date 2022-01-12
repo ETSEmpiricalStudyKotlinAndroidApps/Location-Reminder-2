@@ -90,11 +90,10 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, Geofen
         .setSmallIcon(R.drawable.ic_notification)
         .setAutoCancel(true)
         .setColor(context.resources.getColor(R.color.secondaryDarkColor))
-        .setCategory(NotificationCompat.CATEGORY_ALARM)
+//        .setCategory(NotificationCompat.CATEGORY_ALARM)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-        .setOngoing(true)
+//        .setOngoing(true)
         .setDefaults(Notification.DEFAULT_LIGHTS)
-
     notify(NOTIFICATION_ID, builder.build())
 
 }
