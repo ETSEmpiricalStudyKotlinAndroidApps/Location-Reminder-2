@@ -1,20 +1,15 @@
 package com.cryoggen.locationreminder.addeditreminder
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.media.AudioAttributes
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
-import android.media.RingtoneManager
-import android.net.Uri
 
 
 /*
@@ -38,6 +33,8 @@ fun createChannel(context: Context) {
             enableVibration(true)
             description =
                 context.getString(R.string.notification_channel_description)
+            setSound(null, null)
+
         }
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(notificationChannel)
@@ -50,6 +47,7 @@ fun createChannel(context: Context) {
  * with the LANDMARK_DATA from GeofencingConstatns in the GeofenceUtils file.
  */
 fun NotificationManager.sendGeofenceEnteredNotification(context: Context, GeofenceId: String) {
+
     val contentIntent = Intent(context, MainActivity::class.java)
     contentIntent.putExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX, GeofenceId)
     val contentPendingIntent = PendingIntent.getActivity(
@@ -58,8 +56,10 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, Geofen
         contentIntent,
         PendingIntent.FLAG_UPDATE_CURRENT
     )
+
     val closeNotificationIntent = Intent(context, GeofenceBroadcastReceiver::class.java)
     closeNotificationIntent.action = GeofencingConstants.ACTION_CLOSE_NOTIFICATION
+
     val closePendingIntent = PendingIntent.getBroadcast(
         context,
         111,
@@ -77,7 +77,7 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, Geofen
                 R.string.content_text
             )
         )
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setPriority(NotificationCompat.PRIORITY_LOW)
         .setContentIntent(contentPendingIntent)
         .addAction(
             R.drawable.ic_notification_open_button_foreground,
@@ -90,12 +90,18 @@ fun NotificationManager.sendGeofenceEnteredNotification(context: Context, Geofen
         .setSmallIcon(R.drawable.ic_notification)
         .setAutoCancel(true)
         .setColor(context.resources.getColor(R.color.secondaryDarkColor))
-//        .setCategory(NotificationCompat.CATEGORY_ALARM)
+        .setCategory(NotificationCompat.CATEGORY_ALARM)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//        .setOngoing(true)
-        .setDefaults(Notification.DEFAULT_LIGHTS)
+        .setOngoing(true)
+        .setDefaults(0)
+        .setSound(null)
+
     notify(NOTIFICATION_ID, builder.build())
 
+}
+
+fun NotificationManager.cancelNotifications() {
+    cancelAll()
 }
 
 const val NOTIFICATION_ID = 33
