@@ -40,7 +40,8 @@
         android:id="@+id/chek_permision_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primaryLightColor">
+        android:background="@color/primaryLightColor"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/applicationNameLoginFragmentTextView"
