@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.addeditreminder
+package com.cryoggen.locationreminder.geofence
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -7,9 +7,13 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.ACTION_CLOSE_NOTIFICATION
-import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.ACTION_GEOFENCE_EVENT
-import com.cryoggen.locationreminder.sound.Sound
+import com.cryoggen.locationreminder.addeditreminder.NOTIFICATION_ID
+import com.cryoggen.locationreminder.addeditreminder.cancelNotifications
+import com.cryoggen.locationreminder.addeditreminder.sendGeofenceEnteredNotification
+import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_CLOSE_NOTIFICATION
+import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_GEOFENCE_EVENT
+import com.cryoggen.locationreminder.sound.startSound
+import com.cryoggen.locationreminder.sound.stopSound
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 
@@ -26,11 +30,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        val intentService = Intent(context, Sound::class.java)
 
         if (intent.action == ACTION_CLOSE_NOTIFICATION) {
             //stop work service for sound
-            context.stopService(intentService)
+            stopSound(context)
 
             val manager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -43,8 +46,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
+
+            val geofenceHelper = GeofenceHelper(context)
             if (geofencingEvent.hasError()) {
-                val errorMessage = errorMessage(context, geofencingEvent.errorCode)
+                val errorMessage = geofenceHelper.errorMessage(context, geofencingEvent.errorCode)
                 Log.e(TAG, errorMessage)
                 return
             }
@@ -71,11 +76,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     context, GeofenceId
                 )
                 //start work service for sound
-                context.startService(intentService)
+                startSound(context)
             }
         }
     }
-
 
 
 }
