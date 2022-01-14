@@ -7,6 +7,7 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.map.MapReminder
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -15,6 +16,10 @@ import kotlinx.coroutines.launch
  * ViewModel for the Add/Edit screen.
  */
 class AddEditReminderViewModel(application: Application) : AndroidViewModel(application) {
+
+    lateinit var reminder:Reminder
+
+    private val geofenceHelper = GeofenceHelper(application)
 
     private lateinit var mapReminder: MapReminder
 
@@ -76,11 +81,15 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     }
 
     private fun onReminderLoaded(reminder: Reminder) {
+        this.reminder = reminder
         title.value = reminder.title
         description.value = reminder.description
         reminderCompleted = reminder.isCompleted
         _dataLoading.value = false
         isDataLoaded = true
+    }
+
+    fun loadedDataInMap(){
         mapReminder.longitude = reminder.longitude
         mapReminder.latitude = reminder.latitude
         mapReminder.addMarker()
@@ -130,7 +139,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     private fun createReminder(newReminder: Reminder) {
         viewModelScope.launch {
-            addGeofenceForReminder(newReminder.id, newReminder.latitude, newReminder.longitude)
+            geofenceHelper.addGeofenceForReminder(newReminder.id, newReminder.latitude, newReminder.longitude)
             remindersRepository.saveReminder(newReminder)
             _reminderUpdatedEvent.value = Event(Unit)
         }
@@ -141,7 +150,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             throw RuntimeException("updateReminder() was called but reminder is new.")
         }
         viewModelScope.launch {
-            addGeofenceForReminder(reminder.id, reminder.latitude, reminder.longitude)
+            geofenceHelper.addGeofenceForReminder(reminder.id, reminder.latitude, reminder.longitude)
             remindersRepository.saveReminder(reminder)
             _reminderUpdatedEvent.value = Event(Unit)
         }
