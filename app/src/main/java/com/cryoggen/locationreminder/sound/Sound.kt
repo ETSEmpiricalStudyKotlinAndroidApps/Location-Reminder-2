@@ -2,6 +2,7 @@ package com.cryoggen.locationreminder.sound
 
 import android.annotation.SuppressLint
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
@@ -10,6 +11,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.main.MainActivity
 
 
 class Sound : Service() {
@@ -44,10 +46,20 @@ class Sound : Service() {
             return START_STICKY
         }
 
+        @SuppressLint("MissingPermission")
         override fun onDestroy() {
             super.onDestroy()
             mediaPlayer.release()
             vibrator.cancel()
 
     }
+}
+
+fun startSound(context: Context){
+    val intentService = Intent(context, Sound::class.java)
+    context.startService(intentService)
+}
+fun stopSound(context: Context){
+    val intentService = Intent(context, Sound::class.java)
+    context.stopService(intentService)
 }
