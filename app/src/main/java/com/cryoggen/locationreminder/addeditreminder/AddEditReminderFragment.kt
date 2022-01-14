@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
@@ -50,6 +51,8 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         setingsMapView()
 
+        observeLoadData()
+
         return viewDataBinding.root
     }
 
@@ -86,6 +89,14 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
+    private fun observeLoadData(){
+        viewModel.dataLoading.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                viewModel.loadedDataInMap()
+            }
+        })
+    }
+
     private fun setupNavigation() {
         viewModel.reminderUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
             val action = AddEditReminderFragmentDirections
@@ -96,7 +107,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        mapReminder = MapReminder(googleMap, context)
+        mapReminder = MapReminder(googleMap, requireContext())
         mapReminder.switchMapLongClick(true)
         viewModel.setMapReminder(mapReminder)
     }
