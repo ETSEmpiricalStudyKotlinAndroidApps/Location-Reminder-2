@@ -16,9 +16,11 @@ import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
+import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.cryoggen.locationreminder.sound.stopSound
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -29,8 +31,9 @@ import com.google.android.material.snackbar.Snackbar
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
-    private lateinit var mapReminder: MapReminder
+    private val geofenceHelper = GeofenceHelper(requireActivity())
 
+    private lateinit var mapReminder: MapReminder
 
     private lateinit var viewDataBinding: ReminderdetailFragBinding
 
@@ -80,11 +83,7 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         }
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
-        observeReminderState()
-
         viewModel.start(args.reminderId)
-
-        observeReminderState()
 
         setHasOptionsMenu(true)
 
@@ -92,7 +91,6 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
         return view
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -136,11 +134,26 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
                 mapReminder.latitude = reminderState.latitude
                 mapReminder.longitude = reminderState.longitude
                 mapReminder.addMarker()
+                observeReminderIdRemoveGeofence()
+                observeReminderForAddGeofence()
             }
         })
     }
 
+    private fun observeReminderIdRemoveGeofence() {
+        viewModel.reminderIdForRemoveGeofence.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.removeOneGeofence(it)
+        })
+    }
+
+    private fun observeReminderForAddGeofence() {
+        viewModel.reminder.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.addGeofenceForReminder(it!!.id, it.latitude, it.longitude)
+        })
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
-        mapReminder = MapReminder(googleMap, context)
+        mapReminder = MapReminder(googleMap, requireActivity())
+        observeReminderState()
     }
 }

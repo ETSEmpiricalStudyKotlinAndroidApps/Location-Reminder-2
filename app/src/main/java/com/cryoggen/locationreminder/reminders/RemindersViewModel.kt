@@ -1,28 +1,35 @@
 package com.cryoggen.locationreminder.reminders
 
+import android.app.Activity
 import android.app.Application
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.*
-import com.cryoggen.locationreminder.addeditreminder.addGeofenceForReminder
-import com.cryoggen.locationreminder.addeditreminder.removeGeofences
-import com.cryoggen.locationreminder.addeditreminder.removeOneGeofence
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import com.cryoggen.locationreminder.data.source.RemindersRepository
+import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.main.EDIT_RESULT_OK
 import kotlinx.coroutines.launch
-import java.security.Permission
 
 /**
  * ViewModel for the Reminder list screen.
  */
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val _reminderIdRemoveGeofence = MutableLiveData<String>()
+    val reminderIdForRemoveGeofence: LiveData<String> = _reminderIdRemoveGeofence
+
+    private val _reminderForAddGeofence = MutableLiveData<Reminder>()
+    val reminderForAddGeofence: LiveData<Reminder> = _reminderForAddGeofence
+
+    private val _removeAllGeofences= MutableLiveData<Boolean>()
+    val removeAllGeofences: LiveData<Boolean> = _removeAllGeofences
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
@@ -141,19 +148,23 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun clearAllReminders() {
         viewModelScope.launch {
             remindersRepository.deleteAllReminders()
-            removeGeofences()
+            _removeAllGeofences.value = true
             showSnackbarMessage(R.string.completed_reminders_cleared)
         }
+    }
+
+    fun resetClearAllGeofences(){
+        _removeAllGeofences.value = false
     }
 
     fun completeReminder(reminder: Reminder, completed: Boolean) = viewModelScope.launch {
         if (completed) {
             remindersRepository.completeReminder(reminder)
-            removeOneGeofence(reminder.id)
+            _reminderIdRemoveGeofence.value= reminder.id
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
             remindersRepository.activateReminder(reminder)
-            addGeofenceForReminder(reminder.id,reminder.latitude,reminder.longitude)
+            _reminderForAddGeofence.value = reminder
             showSnackbarMessage(R.string.reminder_marked_active)
         }
     }

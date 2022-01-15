@@ -1,6 +1,8 @@
-package com.cryoggen.locationreminder.map
+package com.cryoggen.locationreminder.permissions
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.util.Log
@@ -8,9 +10,8 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.main.MainActivity
-import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
-import com.cryoggen.locationreminder.map.ConstantsPermissions.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+import com.cryoggen.locationreminder.permissions.ConstantsPermissions.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+import com.cryoggen.locationreminder.permissions.ConstantsPermissions.REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -26,12 +27,12 @@ object ConstantsPermissions {
     const val BACKGROUND_LOCATION_PERMISSION_INDEX = 1
     const val REQUEST_TURN_DEVICE_LOCATION_ON = 29
 }
-
+class PermissionsHelper(val context: Context){
 private val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
         android.os.Build.VERSION_CODES.Q
 
-private var chekStatusLocationSettingsAndStartGeofence = MutableLiveData<Boolean>()
-val _chekStatusLocationSettingsAndStartGeofence: LiveData<Boolean> = chekStatusLocationSettingsAndStartGeofence
+private var _chekStatusLocationSettingsAndStartGeofence = MutableLiveData<Boolean>()
+val chekStatusLocationSettingsAndStartGeofence: LiveData<Boolean> = _chekStatusLocationSettingsAndStartGeofence
 
 fun checkPermissionsAndStartGeofencing() {
     if (foregroundAndBackgroundLocationPermissionApproved()) {
@@ -55,7 +56,7 @@ private fun requestForegroundAndBackgroundLocationPermissions() {
     }
     Log.d(ConstantsPermissions.TAG, "Request foreground only location permission")
     ActivityCompat.requestPermissions(
-        MainActivity.activity,
+        context as Activity,
         permissionsArray,
         resultCode
     )
@@ -65,14 +66,14 @@ private fun requestForegroundAndBackgroundLocationPermissions() {
     val foregroundLocationApproved = (
             PackageManager.PERMISSION_GRANTED ==
                     ActivityCompat.checkSelfPermission(
-                        MainActivity.activity,
+                        context,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ))
     val backgroundPermissionApproved =
         if (runningQOrLater) {
             PackageManager.PERMISSION_GRANTED ==
                     ActivityCompat.checkSelfPermission(
-                        MainActivity.activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                        context, Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
         } else {
             true
@@ -85,14 +86,14 @@ private fun requestForegroundAndBackgroundLocationPermissions() {
         priority = LocationRequest.PRIORITY_LOW_POWER
     }
     val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-    val settingsClient = LocationServices.getSettingsClient(MainActivity.activity)
+    val settingsClient = LocationServices.getSettingsClient(context)
     val locationSettingsResponseTask =
         settingsClient.checkLocationSettings(builder.build())
     locationSettingsResponseTask.addOnFailureListener { exception ->
         if (exception is ResolvableApiException && resolve) {
             try {
                 exception.startResolutionForResult(
-                    MainActivity.activity,
+                    context as Activity,
                     ConstantsPermissions.REQUEST_TURN_DEVICE_LOCATION_ON
                 )
             } catch (sendEx: IntentSender.SendIntentException) {
@@ -103,7 +104,7 @@ private fun requestForegroundAndBackgroundLocationPermissions() {
             }
         } else {
             Snackbar.make(
-                MainActivity.activity.findViewById(R.id.drawer_layout),
+                (context as Activity).findViewById(R.id.drawer_layout),
                 R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
             ).setAction(android.R.string.ok) {
                 checkDeviceLocationSettingsAndStartGeofence()
@@ -112,7 +113,8 @@ private fun requestForegroundAndBackgroundLocationPermissions() {
     }
     locationSettingsResponseTask.addOnCompleteListener {
         if (it.isSuccessful) {
-            chekStatusLocationSettingsAndStartGeofence.value = true
+            _chekStatusLocationSettingsAndStartGeofence.value = true
         }
     }
+}
 }

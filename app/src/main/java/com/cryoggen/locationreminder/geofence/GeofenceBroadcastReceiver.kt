@@ -1,5 +1,6 @@
 package com.cryoggen.locationreminder.geofence
 
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context

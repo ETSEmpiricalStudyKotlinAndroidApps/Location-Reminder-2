@@ -10,6 +10,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.geofence.GeofenceBroadcastReceiver
+import com.cryoggen.locationreminder.geofence.GeofencingConstants
 
 
 /*
@@ -30,7 +32,7 @@ fun createChannel(context: Context) {
         notificationChannel.apply {
             enableLights(true)
             lightColor = Color.RED
-            enableVibration(true)
+            enableVibration(false)
             description =
                 context.getString(R.string.notification_channel_description)
             setSound(null, null)
@@ -49,6 +51,7 @@ fun createChannel(context: Context) {
 fun NotificationManager.sendGeofenceEnteredNotification(context: Context, GeofenceId: String) {
 
     val contentIntent = Intent(context, MainActivity::class.java)
+    contentIntent.action = GeofencingConstants.ACTION_CLOSE_NOTIFICATION
     contentIntent.putExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX, GeofenceId)
     val contentPendingIntent = PendingIntent.getActivity(
         context,

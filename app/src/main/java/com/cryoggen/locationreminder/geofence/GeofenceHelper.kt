@@ -67,8 +67,6 @@ class GeofenceHelper(val context: Context) {
     @SuppressLint("MissingPermission")
     fun addGeofenceForReminder(geofenceId: String?, latitude: Double, longitude: Double) {
 
-
-      
         val geofence = Geofence.Builder()
 
             // Set the request ID of the geofence. This is a string to identify this

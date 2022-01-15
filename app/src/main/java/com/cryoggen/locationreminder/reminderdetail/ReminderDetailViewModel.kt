@@ -1,25 +1,26 @@
 package com.cryoggen.locationreminder.reminderdetail
 
 import android.app.Application
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.Event
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.addGeofenceForReminder
-import com.cryoggen.locationreminder.addeditreminder.removeOneGeofence
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
-import com.cryoggen.locationreminder.map.MapReminder
-import com.google.android.gms.maps.GoogleMap
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Details screen.
  */
 class ReminderDetailViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val _reminderIdRemoveGeofence = MutableLiveData<String>()
+    val reminderIdForRemoveGeofence: LiveData<String> = _reminderIdRemoveGeofence
+
+    private val _reminderForAddGeofence = MutableLiveData<Reminder>()
+    val reminderForAddGeofence: LiveData<Reminder> = _reminderForAddGeofence
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
@@ -51,11 +52,13 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
         input?.isCompleted ?: false
     }
 
-    fun deleteReminder() = viewModelScope.launch {
-        _reminderId.value?.let {
-            remindersRepository.deleteReminder(it)
-            removeOneGeofence(_reminderId.value!!)
-            _deleteReminderEvent.value = Event(Unit)
+    fun deleteReminder() {
+        _reminderIdRemoveGeofence.value = _reminderId.value!!
+        viewModelScope.launch {
+            _reminderId.value?.let {
+                remindersRepository.deleteReminder(it)
+                _deleteReminderEvent.value = Event(Unit)
+            }
         }
     }
 
@@ -66,12 +69,12 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     fun setCompleted(completed: Boolean) = viewModelScope.launch {
         val reminder = _reminder.value ?: return@launch
         if (completed) {
+            _reminderIdRemoveGeofence.value = _reminderId.value!!
             remindersRepository.completeReminder(reminder)
-            removeOneGeofence(_reminderId.value!!)
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
+            _reminderForAddGeofence.value = (reminder)
             remindersRepository.activateReminder(reminder)
-            addGeofenceForReminder(_reminderId.value!!,reminder.latitude,reminder.longitude)
             showSnackbarMessage(R.string.reminder_marked_active)
         }
     }
@@ -94,17 +97,6 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-
-    fun refresh() {
-        // Refresh the repository and the Reminder will be updated automatically.
-        _reminder.value?.let {
-            _dataLoading.value = true
-            viewModelScope.launch {
-                remindersRepository.refreshReminder(it.id)
-                _dataLoading.value = false
-            }
-        }
-    }
 
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)

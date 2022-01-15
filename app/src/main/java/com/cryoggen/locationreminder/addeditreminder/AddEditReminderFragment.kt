@@ -12,7 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
+import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
@@ -26,6 +28,10 @@ import com.google.android.material.snackbar.Snackbar
  * Main UI for the add reminder screen. Users can enter a reminder title and description.
  */
 class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
+
+    private var idUploadReminder = ""
+
+    private val geofenceHelper = GeofenceHelper(requireActivity())
 
     private lateinit var googleMap: GoogleMap
 
@@ -50,8 +56,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         setingsMapView()
-
-        observeLoadData()
 
         return viewDataBinding.root
     }
@@ -89,11 +93,32 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
-    private fun observeLoadData(){
-        viewModel.dataLoading.observe(viewLifecycleOwner, Observer {
-            if (!it) {
-                viewModel.loadedDataInMap()
+    private fun observeUploadReminderDataToMap() {
+        viewModel.uploadReminderDataToMap.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                mapReminder.longitude = it.longitude
+                mapReminder.latitude = it.latitude
+                mapReminder.addMarker()
+
+                //save upload Reminder id
+                idUploadReminder = it.id
+
             }
+        })
+    }
+
+    private fun observeLoadDataFromMap() {
+        viewModel.loadDataFromMap.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                viewModel.updateСoordinatesFromMap(mapReminder.latitude, mapReminder.longitude)
+            }
+        })
+    }
+
+    private fun observeSaveReminder() {
+        viewModel.savedReminder.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.removeOneGeofence(idUploadReminder)
+            geofenceHelper.addGeofenceForReminder(it.id, it.latitude, it.longitude)
         })
     }
 
@@ -107,9 +132,17 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-        mapReminder = MapReminder(googleMap, requireContext())
+        mapReminder = MapReminder(googleMap, requireActivity())
         mapReminder.switchMapLongClick(true)
-        viewModel.setMapReminder(mapReminder)
+
+        //after the map is ready, we are waiting for the data to be loaded from the database, and then we load it onto the map
+        observeUploadReminderDataToMap()
+
+        //keeps track of saving data from the map to the repository
+        observeLoadDataFromMap()
+
+        //when saving a reminder, create a geofence for the reminder
+        observeSaveReminder()
     }
 
 

@@ -2,6 +2,7 @@ package com.cryoggen.locationreminder.main
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -22,11 +23,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants
-import com.cryoggen.locationreminder.map.ConstantsPermissions
-import com.cryoggen.locationreminder.map._chekStatusLocationSettingsAndStartGeofence
-import com.cryoggen.locationreminder.map.checkDeviceLocationSettingsAndStartGeofence
-import com.cryoggen.locationreminder.map.checkPermissionsAndStartGeofencing
+import com.cryoggen.locationreminder.permissions.ConstantsPermissions
+import com.cryoggen.locationreminder.permissions.PermissionsHelper
+import com.cryoggen.locationreminder.sound.stopSound
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -34,22 +33,17 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        lateinit var activity: AppCompatActivity
-    }
-
+    private val permissionsHelper = PermissionsHelper(this)
     private val viewModel by viewModels<MainActivityViewModel>()
     private var startupRestrictionPermissionCheck = true
-    private lateinit var chekPermissionLayout: ConstraintLayout
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity = this
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
         setupNavigationDrawer()
-        chekPermissionLayout = findViewById<ConstraintLayout>(R.id.chek_permision_layout)
         setSupportActionBar(findViewById(R.id.toolbar))
         val navController: NavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration =
@@ -71,8 +65,7 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if ((hasFocus) && (startupRestrictionPermissionCheck)) {
-            checkPermissionsAndStartGeofencing()
-            chekPermissionLayout.visibility = View.VISIBLE
+            permissionsHelper.checkPermissionsAndStartGeofencing()
         }
     }
 
@@ -88,11 +81,15 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopSound(this)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ConstantsPermissions.REQUEST_TURN_DEVICE_LOCATION_ON) {
-            checkDeviceLocationSettingsAndStartGeofence(false)
-
+            permissionsHelper.checkDeviceLocationSettingsAndStartGeofence(false)
             return
         }
     }
@@ -127,14 +124,13 @@ class MainActivity : AppCompatActivity() {
                     })
                 }.show()
         } else {
-            checkDeviceLocationSettingsAndStartGeofence()
+            permissionsHelper.checkDeviceLocationSettingsAndStartGeofence()
         }
     }
 
     private fun observePermissonState() {
-        _chekStatusLocationSettingsAndStartGeofence.observe(this, Observer { premissionState ->
+        permissionsHelper.chekStatusLocationSettingsAndStartGeofence.observe(this, Observer { premissionState ->
             if (premissionState) {
-                chekPermissionLayout.visibility = View.INVISIBLE
             }
 
         })

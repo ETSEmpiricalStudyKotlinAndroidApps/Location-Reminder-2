@@ -1,7 +1,5 @@
 package com.cryoggen.locationreminder.reminders
 
-import android.content.Intent
-import android.content.Intent.getIntent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -16,23 +14,25 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
-import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
-import android.content.Intent.getIntent
-import com.cryoggen.locationreminder.sound.Sound
+import androidx.lifecycle.Observer
+import com.cryoggen.locationreminder.geofence.GeofenceHelper
+import com.cryoggen.locationreminder.geofence.GeofencingConstants
+import com.cryoggen.locationreminder.sound.stopSound
 
 
 /**
  * Display a grid of [Reminder]s. User can choose to view all, active or completed Reminders.
  */
 class RemindersFragment : Fragment() {
+
+    private val geofenceHelper = GeofenceHelper(requireActivity())
 
     private val viewModel by viewModels<RemindersViewModel>()
 
@@ -53,17 +53,15 @@ class RemindersFragment : Fragment() {
         return viewDataBinding.root
     }
 
-
     private fun handleIntentfromActivity() {
-        val extras = MainActivity.activity.intent?.extras
+        val extras = requireActivity().intent?.extras
         if (extras != null) {
             if (extras.containsKey(GeofencingConstants.EXTRA_GEOFENCE_INDEX)) {
 
-                val intentService = Intent(context, Sound::class.java)
-                context?.stopService(intentService)
+                stopSound(requireContext())
 
                 val idReminder = extras.getString(GeofencingConstants.EXTRA_GEOFENCE_INDEX)
-                MainActivity.activity.intent?.removeExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX)
+                requireActivity().intent?.removeExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX)
                 viewModel.openReminder(idReminder!!)
             }
         }
@@ -104,6 +102,9 @@ class RemindersFragment : Fragment() {
         setupNavigation()
         setupFab()
         handleIntentfromActivity()
+        observeReminderIdRemoveGeofence()
+        observeReminderForAddGeofence()
+        observeRemoveAllGeofences()
     }
 
     private fun setupNavigation() {
@@ -159,7 +160,7 @@ class RemindersFragment : Fragment() {
     }
 
     private fun openReminderDetails(ReminderId: String) {
-        MainActivity.activity.intent?.extras?.clear()
+        requireActivity().intent?.extras?.clear()
         val action =
             RemindersFragmentDirections.actionRemindersFragmentToReminderDetailFragment(ReminderId)
         findNavController().navigate(action)
@@ -173,6 +174,25 @@ class RemindersFragment : Fragment() {
         } else {
             Timber.w("ViewModel not initialized when attempting to set up adapter.")
         }
+    }
+
+    private fun observeReminderIdRemoveGeofence() {
+        viewModel.reminderIdForRemoveGeofence.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.removeOneGeofence(it)
+        })
+    }
+
+    private fun observeReminderForAddGeofence() {
+        viewModel.reminderForAddGeofence.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.addGeofenceForReminder(it!!.id, it.latitude, it.longitude)
+        })
+    }
+
+    private fun observeRemoveAllGeofences() {
+        viewModel.removeAllGeofences.observe(viewLifecycleOwner, Observer {
+            geofenceHelper.removeGeofences()
+            viewModel.resetClearAllGeofences()
+        })
     }
 
 }

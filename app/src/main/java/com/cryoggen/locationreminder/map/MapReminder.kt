@@ -1,16 +1,9 @@
 package com.cryoggen.locationreminder.map
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.location.Geocoder
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
+import com.cryoggen.locationreminder.geofence.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
 import com.cryoggen.locationreminder.main.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -18,16 +11,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.CircleOptions
-
-import com.google.android.gms.maps.model.Circle
 import java.util.*
 
 
 class MapReminder(
     val googleMap: GoogleMap,
-    val context: Context?,
+    val context: Context,
     latitude: Double = 0.0,
-    longitude: Double = 0.0
+    longitude: Double = 0.0,
 
 ) {
     private var homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
@@ -45,7 +36,7 @@ class MapReminder(
 
     @SuppressLint("MissingPermission")
     private fun moveCameraСurrentLocation() {
-        val client = FusedLocationProviderClient(MainActivity.activity)
+        val client = FusedLocationProviderClient(context)
         val location = client.lastLocation
         location.addOnCompleteListener {
             homeLatLng = LatLng( it.result.latitude, it.result.longitude)
