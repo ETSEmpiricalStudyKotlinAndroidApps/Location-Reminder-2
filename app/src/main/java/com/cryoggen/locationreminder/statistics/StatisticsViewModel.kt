@@ -38,7 +38,7 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
     fun refresh() {
         _dataLoading.value = true
             viewModelScope.launch {
-                remindersRepository.refreshReminders()
+                remindersRepository.observeReminders()
                 _dataLoading.value = false
             }
     }

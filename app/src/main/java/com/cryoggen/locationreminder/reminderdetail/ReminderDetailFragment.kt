@@ -31,7 +31,7 @@ import com.google.android.material.snackbar.Snackbar
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
-    private val geofenceHelper = GeofenceHelper(requireActivity())
+    lateinit var geofenceHelper:GeofenceHelper
 
     private lateinit var mapReminder: MapReminder
 
@@ -75,6 +75,7 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        geofenceHelper = GeofenceHelper(requireActivity())
 
         val view = inflater.inflate(R.layout.reminderdetail_frag, container, false)
 

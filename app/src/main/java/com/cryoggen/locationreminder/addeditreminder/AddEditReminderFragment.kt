@@ -31,7 +31,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private var idUploadReminder = ""
 
-    private val geofenceHelper = GeofenceHelper(requireActivity())
+    lateinit var geofenceHelper:GeofenceHelper
 
     private lateinit var googleMap: GoogleMap
 
@@ -48,6 +48,8 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        geofenceHelper = GeofenceHelper(requireActivity())
+
         val root = inflater.inflate(R.layout.addreminder_frag, container, false)
         viewDataBinding = AddreminderFragBinding.bind(root).apply {
             this.viewmodel = viewModel

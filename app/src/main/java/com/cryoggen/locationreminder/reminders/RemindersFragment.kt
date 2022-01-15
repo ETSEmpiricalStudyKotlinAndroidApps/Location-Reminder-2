@@ -32,7 +32,7 @@ import com.cryoggen.locationreminder.sound.stopSound
  */
 class RemindersFragment : Fragment() {
 
-    private val geofenceHelper = GeofenceHelper(requireActivity())
+    lateinit var geofenceHelper:GeofenceHelper
 
     private val viewModel by viewModels<RemindersViewModel>()
 
@@ -45,7 +45,8 @@ class RemindersFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        geofenceHelper = GeofenceHelper(requireActivity())
         viewDataBinding = FragmentRemindersBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -190,8 +191,10 @@ class RemindersFragment : Fragment() {
 
     private fun observeRemoveAllGeofences() {
         viewModel.removeAllGeofences.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.removeGeofences()
-            viewModel.resetClearAllGeofences()
+            if (it) {
+                geofenceHelper.removeGeofences()
+                viewModel.resetClearAllGeofences()
+            }
         })
     }
 

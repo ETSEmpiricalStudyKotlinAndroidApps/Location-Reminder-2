@@ -41,7 +41,7 @@
             android:enabled="true"
             android:exported="true">
         </service>
-        <receiver android:name=".addeditreminder.GeofenceBroadcastReceiver" />
+        <receiver android:name=".geofence.GeofenceBroadcastReceiver" />
     </application>
 
 </manifest>

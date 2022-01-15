@@ -8,7 +8,6 @@ import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.local.RemindersLocalDataSource
 import com.cryoggen.locationreminder.data.source.local.ToDoDatabase
-import com.cryoggen.locationreminder.data.source.remote.RemindersRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -20,8 +19,7 @@ import kotlinx.coroutines.withContext
  */
 class RemindersRepository private constructor(application: Application) {
 
-    private val remindersRemoteDataSource: RemindersDataSource
-    private val RemindersLocalDataSource: RemindersDataSource
+    private val remindersLocalDataSource: RemindersDataSource
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     companion object {
@@ -44,129 +42,68 @@ class RemindersRepository private constructor(application: Application) {
         )
             .build()
 
-        remindersRemoteDataSource = RemindersRemoteDataSource
-        RemindersLocalDataSource = RemindersLocalDataSource(database.remindersDao())
+        remindersLocalDataSource = RemindersLocalDataSource(database.remindersDao())
     }
 
     suspend fun getReminders(forceUpdate: Boolean = false): Result<List<Reminder>> {
-        if (forceUpdate) {
-            try {
-                updateRemindersFromRemoteDataSource()
-            } catch (ex: Exception) {
-                return Result.Error(ex)
-            }
-        }
-        return RemindersLocalDataSource.getReminders()
+        return remindersLocalDataSource.getReminders()
     }
 
-    suspend fun refreshReminders() {
-        // updateRemindersFromRemoteDataSource()
-    }
 
     fun observeReminders(): LiveData<Result<List<Reminder>>> {
-        return RemindersLocalDataSource.observeReminders()
+        return remindersLocalDataSource.observeReminders()
     }
 
-    suspend fun refreshReminder(reminderId: String) {
-        //   updateReminderFromRemoteDataSource(reminderId)
-    }
-
-    private suspend fun updateRemindersFromRemoteDataSource() {
-        val remoteReminders = RemindersRemoteDataSource.getReminders()
-
-        if (remoteReminders is Success) {
-            // Real apps might want to do a proper sync.
-            RemindersLocalDataSource.deleteAllReminders()
-            remoteReminders.data.forEach { reminder ->
-                RemindersLocalDataSource.saveReminder(reminder)
-            }
-        } else if (remoteReminders is Result.Error) {
-            throw remoteReminders.exception
-        }
-    }
 
     fun observeReminder(ReminderId: String): LiveData<Result<Reminder>> {
-        return RemindersLocalDataSource.observeReminder(ReminderId)
+        return remindersLocalDataSource.observeReminder(ReminderId)
     }
 
-    private suspend fun updateReminderFromRemoteDataSource(reminderId: String) {
-        val remoteReminder = RemindersRemoteDataSource.getReminder(reminderId)
-
-        if (remoteReminder is Success) {
-            RemindersLocalDataSource.saveReminder(remoteReminder.data)
-        }
-    }
 
     /**
      * Relies on [getReminders] to fetch data and picks the Reminder with the same ID.
      */
     suspend fun getReminder(ReminderId: String, forceUpdate: Boolean = false): Result<Reminder> {
-//        if (forceUpdate) {
-//            updateReminderFromRemoteDataSource(ReminderId)
-//        }
-        return RemindersLocalDataSource.getReminder(ReminderId)
+
+        return remindersLocalDataSource.getReminder(ReminderId)
     }
 
     suspend fun saveReminder(reminder: Reminder) {
         coroutineScope {
-            launch { RemindersRemoteDataSource.saveReminder(reminder) }
-            launch { RemindersLocalDataSource.saveReminder(reminder) }
+            launch { remindersLocalDataSource.saveReminder(reminder) }
         }
     }
 
     suspend fun completeReminder(reminder: Reminder) {
         coroutineScope {
-            launch { RemindersRemoteDataSource.completeReminder(reminder) }
-            launch { RemindersLocalDataSource.completeReminder(reminder) }
+            launch { remindersLocalDataSource.completeReminder(reminder) }
         }
     }
 
-    suspend fun completeReminder(ReminderId: String) {
-        withContext(ioDispatcher) {
-            (getReminderWithId(ReminderId) as? Success)?.let { it ->
-                completeReminder(it.data)
-            }
-        }
-    }
 
     suspend fun activateReminder(reminder: Reminder) = withContext<Unit>(ioDispatcher) {
         coroutineScope {
-            launch { RemindersRemoteDataSource.activateReminder(reminder) }
-            launch { RemindersLocalDataSource.activateReminder(reminder) }
-        }
-    }
-
-    suspend fun activateReminder(reminderId: String) {
-        withContext(ioDispatcher) {
-            (getReminderWithId(reminderId) as? Success)?.let { it ->
-                activateReminder(it.data)
-            }
+            launch { remindersLocalDataSource.activateReminder(reminder) }
         }
     }
 
     suspend fun clearCompletedReminders() {
         coroutineScope {
-            launch { RemindersRemoteDataSource.clearCompletedReminders() }
-            launch { RemindersLocalDataSource.clearCompletedReminders() }
+            launch { remindersLocalDataSource.clearCompletedReminders() }
         }
     }
 
     suspend fun deleteAllReminders() {
         coroutineScope {
-            launch { RemindersRemoteDataSource.deleteAllReminders() }
-            launch { RemindersLocalDataSource.deleteAllReminders() }
+            launch { remindersLocalDataSource.deleteAllReminders() }
         }
     }
 
     suspend fun deleteReminder(reminderId: String) {
         coroutineScope {
-            launch { RemindersRemoteDataSource.deleteReminder(reminderId) }
-            launch { RemindersLocalDataSource.deleteReminder(reminderId) }
+            launch { remindersLocalDataSource.deleteReminder(reminderId) }
         }
     }
 
-    private suspend fun getReminderWithId(id: String): Result<Reminder> {
-        return RemindersLocalDataSource.getReminder(id)
-    }
 
 }

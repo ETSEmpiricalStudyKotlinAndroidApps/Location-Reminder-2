@@ -41,7 +41,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         if (forceUpdate) {
             _dataLoading.value = true
             viewModelScope.launch {
-                remindersRepository.refreshReminders()
+                remindersRepository.observeReminders()
                 _dataLoading.value = false
             }
         }
@@ -146,9 +146,9 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun clearAllReminders() {
+        _removeAllGeofences.value = true
         viewModelScope.launch {
             remindersRepository.deleteAllReminders()
-            _removeAllGeofences.value = true
             showSnackbarMessage(R.string.completed_reminders_cleared)
         }
     }
