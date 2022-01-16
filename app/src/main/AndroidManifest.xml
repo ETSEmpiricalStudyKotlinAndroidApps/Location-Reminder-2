@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.cryoggen.locationreminder" >
+    package="com.cryoggen.locationreminder">
 
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_louncher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true">
 
 
         <meta-data
@@ -25,10 +25,9 @@
             android:resource="@array/preloaded_fonts" />
 
 
-
         <activity
             android:name=".main.MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,9 +38,12 @@
         <service
             android:name=".sound.Sound"
             android:enabled="true"
-            android:exported="true">
-        </service>
-        <receiver android:name=".geofence.GeofenceBroadcastReceiver" />
+            android:exported="false" />
+
+        <receiver
+            android:name=".geofence.GeofenceBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
