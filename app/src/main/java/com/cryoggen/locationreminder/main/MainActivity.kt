@@ -23,6 +23,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.geofence.GeofencingConstants
 import com.cryoggen.locationreminder.permissions.ConstantsPermissions
 import com.cryoggen.locationreminder.permissions.PermissionsHelper
 import com.cryoggen.locationreminder.sound.stopSound
@@ -30,6 +31,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_MyApplication)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -51,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             AppBarConfiguration.Builder(
                 R.id.reminders_fragment_dest,
                 R.id.statistics_fragment_dest,
-                R.id.exit_fragment
+                R.id.exit_fragment_dest
             )
                 .setDrawerLayout(drawerLayout)
                 .build()
@@ -60,7 +63,6 @@ class MainActivity : AppCompatActivity() {
             .setupWithNavController(navController)
         observePermissonState()
         observeAuthenticationState()
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -130,11 +132,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observePermissonState() {
-        permissionsHelper.chekStatusLocationSettingsAndStartGeofence.observe(this, Observer { premissionState ->
-            if (premissionState) {
-            }
+        permissionsHelper.chekStatusLocationSettingsAndStartGeofence.observe(
+            this,
+            Observer { premissionState ->
+                if (premissionState) {
 
-        })
+                }
+
+            })
     }
 
     private fun launchSignInFlow() {
