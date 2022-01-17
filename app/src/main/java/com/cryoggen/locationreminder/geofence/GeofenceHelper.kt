@@ -1,12 +1,14 @@
 package com.cryoggen.locationreminder.geofence
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.cryoggen.locationreminder.R
+import com.cryoggen.locationreminder.data.source.RemindersRepository
 import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_GEOFENCE_EVENT
 import com.cryoggen.locationreminder.permissions.PermissionsHelper
 import com.google.android.gms.location.*
@@ -20,12 +22,14 @@ internal object GeofencingConstants {
      * stops tracking the geofence. For this sample, geofences expire after one hour.
      */
     val GEOFENCE_EXPIRATION_IN_MILLISECONDS: Long = TimeUnit.HOURS.toMillis(24)
-    const val GEOFENCE_RADIUS_IN_METERS = 100f
-    const val EXTRA_GEOFENCE_INDEX = "GEOFENCE_INDEX"
+    const val GEOFENCE_RADIUS_IN_METERS = 200f
+    const val EXTRA_GEOFENCE_INDEX = "com.cryoggen.locationreminder.GEOFENCE_INDEX"
     const val ACTION_GEOFENCE_EVENT =
-        "ACTION_GEOFENCE_EVENT"
+        "com.cryoggen.locationreminder.ACTION_GEOFENCE_EVENT"
     const val ACTION_CLOSE_NOTIFICATION =
-        "ACTION_CLOSE_NOTIFICATION"
+        "com.cryoggen.locationreminder.ACTION_CLOSE_NOTIFICATION"
+    const val ACTION_STOP_GEOFENCE_SERVICE =
+        "com.cryoggen.locationreminder.ACTION_STOP_GEOFENCE_SERVICE"
 }
 
 class GeofenceHelper(val context: Context) {
@@ -119,7 +123,7 @@ class GeofenceHelper(val context: Context) {
      * Removes geofences. This method should be called after the user has granted the location
      * permission.
      */
-    fun removeGeofences() {
+    fun removeAllGeofences() {
         if (!permissonHelper.foregroundAndBackgroundLocationPermissionApproved()) {
             return
         }
@@ -166,5 +170,6 @@ class GeofenceHelper(val context: Context) {
             }
         }
     }
+
 
 }
