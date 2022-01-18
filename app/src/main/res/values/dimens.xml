@@ -21,6 +21,6 @@
     <dimen name="item_list_reminder_margin_start_end">16dp</dimen>
     <dimen name="item_list_reminder_margin_top_bottom">4dp</dimen>
     <dimen name="nav_heder_text_size_with_logo">25dp</dimen>
-    <dimen name="start_fragment_text_size">40sp</dimen>
+    <dimen name="start_fragment_text_size">64sp</dimen>
 
 </resources>
