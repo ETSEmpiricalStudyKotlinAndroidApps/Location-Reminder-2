@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_statistics"
         android:title="@string/statistics_title" />
     <item
-        android:id="@id/exit_fragment"
+        android:id="@id/exit_fragment_dest"
         android:icon="@drawable/ic_exit"
         android:title="@string/exit" />
 
