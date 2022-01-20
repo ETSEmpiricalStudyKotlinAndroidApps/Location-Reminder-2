@@ -16,12 +16,6 @@ import kotlinx.coroutines.launch
  */
 class ReminderDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _reminderIdRemoveGeofence = MutableLiveData<String>()
-    val reminderIdForRemoveGeofence: LiveData<String> = _reminderIdRemoveGeofence
-
-    private val _reminderForAddGeofence = MutableLiveData<Reminder>()
-    val reminderForAddGeofence: LiveData<Reminder> = _reminderForAddGeofence
-
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
     private val remindersRepository = RemindersRepository.getRepository(application)
@@ -53,7 +47,6 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun deleteReminder() {
-        _reminderIdRemoveGeofence.value = _reminderId.value!!
         viewModelScope.launch {
             _reminderId.value?.let {
                 remindersRepository.deleteReminder(it)
@@ -69,11 +62,9 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     fun setCompleted(completed: Boolean) = viewModelScope.launch {
         val reminder = _reminder.value ?: return@launch
         if (completed) {
-            _reminderIdRemoveGeofence.value = _reminderId.value!!
             remindersRepository.completeReminder(reminder)
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
-            _reminderForAddGeofence.value = (reminder)
             remindersRepository.activateReminder(reminder)
             showSnackbarMessage(R.string.reminder_marked_active)
         }
@@ -96,7 +87,6 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
             null
         }
     }
-
 
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
