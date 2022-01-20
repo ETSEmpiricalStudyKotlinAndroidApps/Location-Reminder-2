@@ -38,17 +38,7 @@ class GeofenceService : LifecycleService() {
 
     private fun observeReminderIdRemoveGeofence() {
         items.observe(this, Observer {
-            geofenceHelper.removeAllGeofences()
-            for (reminder in it) {
-                geofenceHelper.addGeofenceForReminder(
-                    reminder.id,
-                    reminder.latitude,
-                    reminder.longitude
-                )
-            }
-            val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
-            intent.action = ACTION_STOP_GEOFENCE_SERVICE
-            sendBroadcast(intent)
+
         })
     }
 }
