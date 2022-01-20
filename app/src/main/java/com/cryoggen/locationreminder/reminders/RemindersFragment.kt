@@ -22,7 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 import androidx.lifecycle.Observer
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.geofence.GeofencingConstants
 import com.cryoggen.locationreminder.sound.stopSound
 
@@ -31,8 +30,6 @@ import com.cryoggen.locationreminder.sound.stopSound
  * Display a grid of [Reminder]s. User can choose to view all, active or completed Reminders.
  */
 class RemindersFragment : Fragment() {
-
-    lateinit var geofenceHelper:GeofenceHelper
 
     private val viewModel by viewModels<RemindersViewModel>()
 
@@ -46,7 +43,6 @@ class RemindersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        geofenceHelper = GeofenceHelper(requireActivity())
         viewDataBinding = FragmentRemindersBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -103,9 +99,6 @@ class RemindersFragment : Fragment() {
         setupNavigation()
         setupFab()
         handleIntentfromActivity()
-        observeReminderIdRemoveGeofence()
-        observeReminderForAddGeofence()
-        observeRemoveAllGeofences()
     }
 
     private fun setupNavigation() {
@@ -175,27 +168,6 @@ class RemindersFragment : Fragment() {
         } else {
             Timber.w("ViewModel not initialized when attempting to set up adapter.")
         }
-    }
-
-    private fun observeReminderIdRemoveGeofence() {
-        viewModel.reminderIdForRemoveGeofence.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.removeOneGeofence(it)
-        })
-    }
-
-    private fun observeReminderForAddGeofence() {
-        viewModel.reminderForAddGeofence.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.addGeofenceForReminder(it!!.id, it.latitude, it.longitude)
-        })
-    }
-
-    private fun observeRemoveAllGeofences() {
-        viewModel.removeAllGeofences.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                geofenceHelper.removeGeofences()
-                viewModel.resetClearAllGeofences()
-            }
-        })
     }
 
 }
