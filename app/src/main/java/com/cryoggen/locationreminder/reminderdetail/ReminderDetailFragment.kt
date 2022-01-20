@@ -16,11 +16,9 @@ import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.cryoggen.locationreminder.sound.stopSound
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -30,8 +28,6 @@ import com.google.android.material.snackbar.Snackbar
  * Main UI for the Reminder detail screen.
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
-
-    lateinit var geofenceHelper:GeofenceHelper
 
     private lateinit var mapReminder: MapReminder
 
@@ -75,7 +71,6 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        geofenceHelper = GeofenceHelper(requireActivity())
 
         val view = inflater.inflate(R.layout.reminderdetail_frag, container, false)
 
@@ -135,21 +130,7 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
                 mapReminder.latitude = reminderState.latitude
                 mapReminder.longitude = reminderState.longitude
                 mapReminder.addMarker()
-                observeReminderIdRemoveGeofence()
-                observeReminderForAddGeofence()
             }
-        })
-    }
-
-    private fun observeReminderIdRemoveGeofence() {
-        viewModel.reminderIdForRemoveGeofence.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.removeOneGeofence(it)
-        })
-    }
-
-    private fun observeReminderForAddGeofence() {
-        viewModel.reminder.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.addGeofenceForReminder(it!!.id, it.latitude, it.longitude)
         })
     }
 
