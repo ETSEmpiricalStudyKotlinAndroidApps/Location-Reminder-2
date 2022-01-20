@@ -14,7 +14,6 @@ import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
@@ -31,8 +30,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private var idUploadReminder = ""
 
-    lateinit var geofenceHelper:GeofenceHelper
-
     private lateinit var googleMap: GoogleMap
 
     private lateinit var mapReminder: MapReminder
@@ -48,7 +45,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        geofenceHelper = GeofenceHelper(requireActivity())
 
         val root = inflater.inflate(R.layout.addreminder_frag, container, false)
         viewDataBinding = AddreminderFragBinding.bind(root).apply {
@@ -119,8 +115,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private fun observeSaveReminder() {
         viewModel.savedReminder.observe(viewLifecycleOwner, Observer {
-            geofenceHelper.removeOneGeofence(idUploadReminder)
-            geofenceHelper.addGeofenceForReminder(it.id, it.latitude, it.longitude)
         })
     }
 
