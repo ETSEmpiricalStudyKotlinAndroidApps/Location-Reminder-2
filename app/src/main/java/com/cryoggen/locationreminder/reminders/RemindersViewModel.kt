@@ -11,7 +11,6 @@ import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import com.cryoggen.locationreminder.data.source.RemindersRepository
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.main.EDIT_RESULT_OK
@@ -22,17 +21,6 @@ import kotlinx.coroutines.launch
  */
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _reminderIdRemoveGeofence = MutableLiveData<String>()
-    val reminderIdForRemoveGeofence: LiveData<String> = _reminderIdRemoveGeofence
-
-    private val _reminderForAddGeofence = MutableLiveData<Reminder>()
-    val reminderForAddGeofence: LiveData<Reminder> = _reminderForAddGeofence
-
-    private val _removeAllGeofences= MutableLiveData<Boolean>()
-    val removeAllGeofences: LiveData<Boolean> = _removeAllGeofences
-
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
     private val remindersRepository = RemindersRepository.getRepository(application)
 
     private val _forceUpdate = MutableLiveData<Boolean>(false)
@@ -146,25 +134,18 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun clearAllReminders() {
-        _removeAllGeofences.value = true
         viewModelScope.launch {
             remindersRepository.deleteAllReminders()
             showSnackbarMessage(R.string.completed_reminders_cleared)
         }
     }
 
-    fun resetClearAllGeofences(){
-        _removeAllGeofences.value = false
-    }
-
     fun completeReminder(reminder: Reminder, completed: Boolean) = viewModelScope.launch {
         if (completed) {
             remindersRepository.completeReminder(reminder)
-            _reminderIdRemoveGeofence.value= reminder.id
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
             remindersRepository.activateReminder(reminder)
-            _reminderForAddGeofence.value = reminder
             showSnackbarMessage(R.string.reminder_marked_active)
         }
     }
@@ -222,7 +203,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         _forceUpdate.value = forceUpdate
     }
 
-    private fun filterItems(Reminders: List<Reminder>, filteringType: RemindersFilterType): List<Reminder> {
+    private fun filterItems(
+        Reminders: List<Reminder>,
+        filteringType: RemindersFilterType
+    ): List<Reminder> {
         val RemindersToShow = ArrayList<Reminder>()
         // We filter the Reminders based on the requestType
         for (Reminder in Reminders) {
@@ -242,5 +226,6 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun refresh() {
         _forceUpdate.value = true
     }
+
 
 }
