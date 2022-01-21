@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.sound
+package com.cryoggen.locationreminder.servises
 
 import android.annotation.SuppressLint
 import android.app.Service
@@ -11,10 +11,9 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.main.MainActivity
 
 
-class Sound : Service() {
+class SoundService : Service() {
     lateinit var mediaPlayer: MediaPlayer
     lateinit var vibrator: Vibrator
     val vibratePattern = longArrayOf(0, 400, 800, 600, 800, 800, 800, 1000)
@@ -56,10 +55,10 @@ class Sound : Service() {
 }
 
 fun startSound(context: Context){
-    val intentService = Intent(context, Sound::class.java)
+    val intentService = Intent(context, SoundService::class.java)
     context.startService(intentService)
 }
 fun stopSound(context: Context){
-    val intentService = Intent(context, Sound::class.java)
+    val intentService = Intent(context, SoundService::class.java)
     context.stopService(intentService)
 }
