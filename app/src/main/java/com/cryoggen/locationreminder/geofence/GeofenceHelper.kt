@@ -21,15 +21,15 @@ internal object GeofencingConstants {
      * Used to set an expiration time for a geofence. After this amount of time, Location services
      * stops tracking the geofence. For this sample, geofences expire after one hour.
      */
-    val GEOFENCE_EXPIRATION_IN_MILLISECONDS: Long = TimeUnit.HOURS.toMillis(24)
+
     const val GEOFENCE_RADIUS_IN_METERS = 200f
-    const val EXTRA_GEOFENCE_INDEX = "com.cryoggen.locationreminder.GEOFENCE_INDEX"
+    const val EXTRA_GEOFENCE_INDEX = "com.cryoggen.GEOFENCE_INDEX"
     const val ACTION_GEOFENCE_EVENT =
-        "com.cryoggen.locationreminder.ACTION_GEOFENCE_EVENT"
-    const val ACTION_CLOSE_NOTIFICATION =
-        "com.cryoggen.locationreminder.ACTION_CLOSE_NOTIFICATION"
+        "com.cryoggen.ACTION_GEOFENCE_EVENT"
+
+
     const val ACTION_STOP_GEOFENCE_SERVICE =
-        "com.cryoggen.locationreminder.ACTION_STOP_GEOFENCE_SERVICE"
+        "com.cryoggen.ACTION_STOP_GEOFENCE_SERVICE"
 }
 
 class GeofenceHelper(val context: Context) {
@@ -86,7 +86,7 @@ class GeofenceHelper(val context: Context) {
 
             // Set the expiration duration of the geofence. This geofence gets automatically
             // removed after this period of time.
-            .setExpirationDuration(GeofencingConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
 
             // Set the transition types of interest. Alerts are only generated for these
             // transition. We track entry and exit transitions in this sample.
