@@ -81,7 +81,6 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        createChannel(requireActivity())
         setupSnackbar()
         setupNavigation()
         viewModel.start(args.reminderId)
