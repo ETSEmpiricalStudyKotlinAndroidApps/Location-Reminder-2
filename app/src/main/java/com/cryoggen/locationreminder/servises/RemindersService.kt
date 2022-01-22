@@ -25,13 +25,13 @@ import kotlinx.coroutines.launch
 
 class RemindersService : LifecycleService() {
 
-    private val geofenceHelper by lazy { GeofenceHelper(this)}
+    var stopWork = false
 
-    private var activeReminders = 0
+    var sumActiveReminders = -1
+
+    private val geofenceHelper by lazy { GeofenceHelper(this) }
 
     private var listReminders = listOf<Reminder>()
-
-    private var stopWork = false
 
     private val viewModel by lazy { RemindersViewModel(application) }
 
@@ -49,20 +49,20 @@ class RemindersService : LifecycleService() {
 
     // Handler that receives messages from the thread
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
-
         override fun handleMessage(msg: Message) {
 
-            // Normally we would do some work here, like download a file.
-            // For our sample, we just sleep for 5 seconds.
             try {
                 for (i in 1..500) {
-                    if (stopWork == true) {
-                        stopForeground(true)
-                        break
+                    when (sumActiveReminders) {
+                        in 1..100 -> {
+                            sendNotification()
+                            println("11111 " + i)
+                        }
+                        0 -> {
+                            stopForeground(true)
+                            break
+                        }
                     }
-
-                    sendNotification()
-                    println("11111 " + i)
                     Thread.sleep(1000)
                 }
             } catch (e: InterruptedException) {
@@ -70,33 +70,27 @@ class RemindersService : LifecycleService() {
                 Thread.currentThread().interrupt()
             }
 
-            // Stop the service using the startId, so that we don't stop
-            // the service in the middle of handling another job
             stopSelf(msg.arg1)
+
         }
 
 
         private fun sendNotification() {
-            val textNotification: String = if (activeReminders == 1) getString(R.string.reminder) else "$activeReminders " + getString(
-                        R.string.reminders_active
-                    )
+            val textNotification: String =
+                if (sumActiveReminders == 1) getString(R.string.reminder) else "$sumActiveReminders " + getString(
+                    R.string.reminders_active
+                )
 
             notificationManager.notify(
-                NOTIFICATION_ID,
+                NOTIFICATION_GEOFENCE_STATUS_ID,
                 sendNotificationStatus(context, textNotification)
             )
-
         }
-
-
     }
 
     override fun onCreate() {
         super.onCreate()
-        // Start up the thread running the service.  Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block.  We also make it
-        // background priority so CPU-intensive work will not disrupt our UI.
+
         HandlerThread("ServiceStartArguments", Process.THREAD_PRIORITY_BACKGROUND).apply {
             start()
 
@@ -104,17 +98,13 @@ class RemindersService : LifecycleService() {
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
-        observeReminderIdRemoveGeofence()
 
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
-        startForeground(
-            NOTIFICATION_ID,
-            sendNotificationStatus(this, resources.getString(R.string.loading_notification_text))
-        )
+        startNotifictionForegraund()
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
         serviceHandler?.obtainMessage()?.also { msg ->
@@ -122,8 +112,7 @@ class RemindersService : LifecycleService() {
             serviceHandler?.sendMessage(msg)
         }
 
-        // If we get killed, after returning from here, restart
-
+        observeUpdateReminder()
         return START_STICKY
     }
 
@@ -135,32 +124,61 @@ class RemindersService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopWork = true
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
 
     }
 
-    private fun observeReminderIdRemoveGeofence() {
+    private fun startNotifictionForegraund() {
+        startForeground(
+            NOTIFICATION_GEOFENCE_STATUS_ID,
+            sendNotificationStatus(context, resources.getString(R.string.loading_notification_text))
+        )
+    }
+
+    private fun deactivateAllReminders() {
+        for (reminder in listReminders) {
+            if (reminder.isActive) {
+                viewModel.completeReminder(reminder, true)
+            }
+        }
+        geofenceHelper.removeAllGeofences()
+    }
+
+    private fun observeUpdateReminder() {
         viewModel.items.observe(this, Observer {
             listReminders = it
-            refreshGeofenseReminders()
+            serviceManagement()
         })
     }
 
-    fun refreshGeofenseReminders() {
+    private fun serviceManagement() {
+        updateSumActiveReminders()
+      //  refreshGeofenseReminders()
+    }
+
+
+    fun updateSumActiveReminders() {
         var sumReminders = 0
         for (reminder in listReminders) {
             if (reminder.isActive) {
                 sumReminders++
-                geofenceHelper.removeAllGeofences()
-                geofenceHelper.addGeofenceForReminder(reminder.id,reminder.latitude,reminder.longitude)
             }
         }
-        if (sumReminders == 0) {
-            geofenceHelper.removeAllGeofences()
-            stopWork = true
-        } else {
-            activeReminders = sumReminders
+        sumActiveReminders = sumReminders
+    }
+
+    fun refreshGeofenseReminders() {
+        geofenceHelper.removeAllGeofences()
+        if (sumActiveReminders > 0) {
+            for (reminder in listReminders) {
+                if (reminder.isActive) {
+                    geofenceHelper.addGeofenceForReminder(
+                        reminder.id,
+                        reminder.latitude,
+                        reminder.longitude
+                    )
+                }
+            }
         }
     }
 
