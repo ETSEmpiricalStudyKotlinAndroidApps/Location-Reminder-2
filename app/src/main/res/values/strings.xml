@@ -90,13 +90,20 @@
     <string name="geofence_over">You have found the treasure! Congratulations!</string>
 
     <!-- Notification Strings-->
-    <string name="channel_name">Location Reminder</string>
+    <string name="channel_name_enter_in_geofence">Enter in geofence</string>
+    <string name="channel_name_geofence_status">Geofence status</string>
     <string name="content_text">You\'re near your destination!</string>
-    <string name="notification_channel_description">Geofence status notification</string>
+    <string name="enter_in_geofence_notifications_description">Enter in geofence notifications</string>
+    <string name="geofence_status_notification_channel_description">Geofence status notification</string>
     <string name="plase_wait">Please wait...</string>
     <string name="nav_header_text_with_logo"> Location \nReminder</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="disable">Disable</string>
+    <string name="loading_notification_text">loading...</string>
+    <string name="reminders_active">reminders active</string>
+    <string name="reminder">Reminder</string>
+
 
 
 </resources>
