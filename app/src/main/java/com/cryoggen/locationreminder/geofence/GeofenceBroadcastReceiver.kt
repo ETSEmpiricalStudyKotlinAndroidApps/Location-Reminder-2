@@ -7,13 +7,11 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.NOTIFICATION_ID
-import com.cryoggen.locationreminder.addeditreminder.cancelNotifications
-import com.cryoggen.locationreminder.addeditreminder.sendGeofenceEnteredNotification
-import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_CLOSE_NOTIFICATION
+import com.cryoggen.locationreminder.addeditreminder.*
 import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_GEOFENCE_EVENT
-import com.cryoggen.locationreminder.sound.startSound
-import com.cryoggen.locationreminder.sound.stopSound
+import com.cryoggen.locationreminder.servises.RemindersService
+import com.cryoggen.locationreminder.servises.startSound
+import com.cryoggen.locationreminder.servises.stopSound
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 
@@ -29,15 +27,20 @@ import com.google.android.gms.location.GeofencingEvent
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+val tst = intent.action
+        if (intent.action == ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS) {
+            val intent = Intent(context,RemindersService::class.java)
+            context.stopService(intent)
+        }
 
 
-        if (intent.action == ACTION_CLOSE_NOTIFICATION) {
+        if (intent.action == ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID) {
             //stop work service for sound
             stopSound(context)
 
             val manager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.cancel(NOTIFICATION_ID)
+            manager.cancel(NOTIFICATION_ENTER_IN_GEOFENCE_ID)
 
         }
 
@@ -71,10 +74,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     context,
                     NotificationManager::class.java
                 ) as NotificationManager
-                notificationManager.cancelNotifications()
-                notificationManager.sendGeofenceEnteredNotification(
+                notificationManager.cancelAllNotifications()
+                val notification = sendGeofenceEnteredNotification(
                     context, GeofenceId
                 )
+                notificationManager.notify(NOTIFICATION_ENTER_IN_GEOFENCE_ID, notification)
+
                 //start work service for sound
                 startSound(context)
             }
