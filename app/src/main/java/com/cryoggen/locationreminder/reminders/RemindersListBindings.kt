@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.sound.stopSound
+import com.cryoggen.locationreminder.servises.stopSound
 
 
 /**
