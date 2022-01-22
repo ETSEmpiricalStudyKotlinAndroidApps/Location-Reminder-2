@@ -8,8 +8,6 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersRepository
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
-import com.cryoggen.locationreminder.map.MapReminder
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
