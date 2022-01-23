@@ -102,17 +102,17 @@ class GeofenceHelper(val context: Context) {
 
         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
             addOnSuccessListener {
-                Toast.makeText(
-                    context, R.string.geofences_added,
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+//                Toast.makeText(
+//                    context, R.string.geofences_added,
+//                    Toast.LENGTH_SHORT
+//                )
+//                    .show()
             }
             addOnFailureListener {
-                Toast.makeText(
-                    context, R.string.geofences_not_added,
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    context, R.string.geofences_not_added,
+//                    Toast.LENGTH_SHORT
+//                ).show()
 
             }
 
@@ -129,13 +129,13 @@ class GeofenceHelper(val context: Context) {
         }
         geofencingClient.removeGeofences(geofencePendingIntent).run {
             addOnSuccessListener {
-                Log.d(TAG, context.resources.getString(R.string.geofences_removed))
-                Toast.makeText(
-                    context,
-                    R.string.geofences_removed,
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+//                Log.d(TAG, context.resources.getString(R.string.geofences_removed))
+//                Toast.makeText(
+//                    context,
+//                    R.string.geofences_removed,
+//                    Toast.LENGTH_SHORT
+//                )
+//                    .show()
             }
             addOnFailureListener {
                 Log.d(
@@ -158,12 +158,12 @@ class GeofenceHelper(val context: Context) {
         geofencingClient.removeGeofences(geofenceForDel).run {
             addOnSuccessListener {
                 Log.d(TAG, context.resources.getString(R.string.geofences_removed))
-                Toast.makeText(
-                    context,
-                    R.string.one_geofence_removed,
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+//                Toast.makeText(
+//                    context,
+//                    R.string.one_geofence_removed,
+//                    Toast.LENGTH_SHORT
+//                )
+//                    .show()
             }
             addOnFailureListener {
                 Log.d(TAG, context.resources.getString(R.string.geofence_not_removed))

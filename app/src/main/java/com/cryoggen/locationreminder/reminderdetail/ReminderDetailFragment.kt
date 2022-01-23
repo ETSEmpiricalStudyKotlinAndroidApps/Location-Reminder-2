@@ -1,5 +1,6 @@
 package com.cryoggen.locationreminder.reminderdetail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,6 +21,7 @@ import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.cryoggen.locationreminder.servises.RemindersService
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -85,6 +88,8 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
         setingsMapView()
 
+        observesetCompletedChekedState()
+
         return view
     }
 
@@ -133,6 +138,14 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
             }
         })
     }
+
+    private fun observesetCompletedChekedState() {
+        viewModel.setCompletedCheked.observe(viewLifecycleOwner, Observer { reminderState ->
+            val intentRemindersService = Intent(requireActivity(), RemindersService::class.java)
+            ContextCompat.startForegroundService(requireActivity(), intentRemindersService)
+        })
+    }
+
 
     override fun onMapReady(googleMap: GoogleMap) {
         mapReminder = MapReminder(googleMap, requireActivity())

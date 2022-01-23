@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         findViewById<NavigationView>(R.id.nav_view)
             .setupWithNavController(navController)
-        observePermissonState()
+
         observeAuthenticationState()
     }
 
@@ -140,16 +140,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observePermissonState() {
-        permissionsHelper.chekStatusLocationSettingsAndStartGeofence.observe(
-            this,
-            Observer { premissionState ->
-                if (premissionState) {
-
-                }
-
-            })
-    }
 
     private fun launchSignInFlow() {
         // Give users the ability to login / register by email

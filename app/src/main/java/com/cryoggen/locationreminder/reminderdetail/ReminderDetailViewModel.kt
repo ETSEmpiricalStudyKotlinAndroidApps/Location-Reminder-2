@@ -29,6 +29,11 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
 
     val isDataAvailable: LiveData<Boolean> = _reminder.map { it != null }
 
+
+
+    private val _setCompletedCheked = MutableLiveData<Boolean>()
+    val setCompletedCheked: LiveData<Boolean> = _setCompletedCheked
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -65,6 +70,7 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
             remindersRepository.completeReminder(reminder)
             showSnackbarMessage(R.string.reminder_marked_complete)
         } else {
+            _setCompletedCheked.value = true
             remindersRepository.activateReminder(reminder)
             showSnackbarMessage(R.string.reminder_marked_active)
         }

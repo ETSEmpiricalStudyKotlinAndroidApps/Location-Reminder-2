@@ -86,8 +86,9 @@ class RemindersService : LifecycleService() {
 
         private fun sendNotification() {
             val textNotification: String =
-                if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title}·" + getString(
-                    R.string.after)+"·$minDistanceLocation"+"km."
+                if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title} · " + getString(
+                    R.string.after
+                ) + " · $minDistanceLocation" + "km."
 
             notificationManager.notify(
                 NOTIFICATION_GEOFENCE_STATUS_ID,
@@ -116,7 +117,7 @@ class RemindersService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
         if (intent?.action == ACTION_DEACTIVATE_REMINDER) {
             val idReminder = intent.getStringExtra(DEACIVATE_REMINDER_ID)
             for (reminder in listReminders) {
@@ -143,7 +144,7 @@ class RemindersService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
         deactivateAllReminders()
         unsubscribeToLocationUpdates()
         stopSelf()
@@ -267,7 +268,7 @@ class RemindersService : LifecycleService() {
         minDistanceLocation = Float.MAX_VALUE
         var reminderLocation = Location("location")
         var reminderDistanceLocation = 0.0F
-        if(sumActiveReminders>0) {
+        if (sumActiveReminders > 0) {
 
             for (reminder in listReminders) {
 
@@ -293,7 +294,7 @@ class RemindersService : LifecycleService() {
 
     private fun metersToKilometers(minDistanceLocation: Float): Float {
 
-        return  ((((minDistanceLocation-GEOFENCE_RADIUS_IN_METERS) * 0.1).toInt())/100.0f)
+        return if ((minDistanceLocation - GEOFENCE_RADIUS_IN_METERS) >= 0) ((((minDistanceLocation - GEOFENCE_RADIUS_IN_METERS) * 0.1).toInt()) / 100.0f) else 0.0F
     }
 }
 
