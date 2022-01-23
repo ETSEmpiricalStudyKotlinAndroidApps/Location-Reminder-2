@@ -116,8 +116,12 @@ class RemindersFragment : Fragment() {
 
     private fun observeUpdateRemindersForStartService(){
         viewModel.items.observe(viewLifecycleOwner, Observer {
+            var sumActiveReminders = 0
             val intentRemindersService = Intent(requireActivity(), RemindersService::class.java)
-            ContextCompat.startForegroundService(requireActivity(), intentRemindersService)
+            for (reminders in it) if (reminders.isActive) sumActiveReminders++
+            if (sumActiveReminders>0) {
+                ContextCompat.startForegroundService(requireActivity(), intentRemindersService)
+            } else {requireActivity().stopService(intentRemindersService)}
         })
     }
 

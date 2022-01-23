@@ -62,6 +62,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$archLifecycleVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation("androidx.lifecycle:lifecycle-service:$archLifecycleVersion")
 
     // Dependencies for local unit tests
     testImplementation "junit:junit:$junitVersion"

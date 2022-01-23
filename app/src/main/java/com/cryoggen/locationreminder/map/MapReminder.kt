@@ -6,6 +6,8 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.geofence.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
 import com.cryoggen.locationreminder.main.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -20,7 +22,7 @@ class MapReminder(
     latitude: Double = 0.0,
     longitude: Double = 0.0,
 
-) {
+    ) {
     private var homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
     private val REQUEST_LOCATION_PERMISSION = 1
 
@@ -36,17 +38,23 @@ class MapReminder(
 
     @SuppressLint("MissingPermission")
     private fun moveCameraСurrentLocation() {
-        val client = FusedLocationProviderClient(context)
-        val location = client.lastLocation
-        location.addOnCompleteListener {
-            homeLatLng = LatLng( it.result.latitude, it.result.longitude)
+        try {
+
+           val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener {
+                homeLatLng = LatLng(it.latitude, it.longitude)
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
+            }
+
+        } catch (e: Exception) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
         }
     }
 
     fun switchMapLongClick(switcher: Boolean) {
         if (switcher) {
-            setMapLongClick()
+            setMapClick()
         } else {
             clearSetMapLongClick()
         }
@@ -61,7 +69,7 @@ class MapReminder(
         googleMap.isMyLocationEnabled = true
     }
 
-    private fun setMapLongClick() {
+    private fun setMapClick() {
         googleMap.setOnMapClickListener { latLng ->
             googleMap.clear()
             googleMap.addMarker(

@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.addeditreminder.*
 import com.cryoggen.locationreminder.geofence.GeofencingConstants.ACTION_GEOFENCE_EVENT
-import com.cryoggen.locationreminder.servises.RemindersService
-import com.cryoggen.locationreminder.servises.startSound
-import com.cryoggen.locationreminder.servises.stopSound
+import com.cryoggen.locationreminder.servises.*
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 
@@ -27,9 +25,9 @@ import com.google.android.gms.location.GeofencingEvent
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-val tst = intent.action
+
         if (intent.action == ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS) {
-            val intent = Intent(context,RemindersService::class.java)
+            val intent = Intent(context, RemindersService::class.java)
             context.stopService(intent)
         }
 
@@ -70,6 +68,12 @@ val tst = intent.action
                     }
                 }
 
+                val intentDeactivateReminder = Intent(context, RemindersService::class.java)
+                intentDeactivateReminder.putExtra(DEACIVATE_REMINDER_ID, GeofenceId)
+                intentDeactivateReminder.action = ACTION_DEACTIVATE_REMINDER
+                context.startService(intentDeactivateReminder)
+
+
                 val notificationManager = ContextCompat.getSystemService(
                     context,
                     NotificationManager::class.java
@@ -82,6 +86,7 @@ val tst = intent.action
 
                 //start work service for sound
                 startSound(context)
+
             }
         }
     }

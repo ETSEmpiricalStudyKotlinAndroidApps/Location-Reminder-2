@@ -1,41 +1,31 @@
 package com.cryoggen.locationreminder.servises
 
-import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
-import android.location.Location
 import android.os.*
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.lifecycle.Transformations.switchMap
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.addeditreminder.*
 import com.cryoggen.locationreminder.data.Reminder
+import com.cryoggen.locationreminder.data.source.RemindersRepository
 import com.cryoggen.locationreminder.geofence.GeofenceHelper
-import com.cryoggen.locationreminder.geofence.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
+import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.reminders.RemindersViewModel
-import com.google.android.gms.location.*
+import com.cryoggen.locationreminder.statistics.getActiveAndCompletedStats
+import kotlinx.coroutines.launch
 
 
 class RemindersService : LifecycleService() {
 
-    var reminderMinDistance: Reminder? = null
-    var minDistanceLocation = 0.0F
-
-    // FusedLocationProviderClient - Main class for receiving location updates.
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-    // LocationRequest - Requirements for the location updates, i.e., how often you should receive
-    // updates, the priority, etc.
-    private lateinit var locationRequest: LocationRequest
-
-    // LocationCallback - Called when FusedLocationProviderClient has a new Location.
-    private lateinit var locationCallback: LocationCallback
-
-    // Used only for local storage of the last known location. Usually, this would be saved to your
-    // database, but because this is a simplified sample without a full database, we only need the
-    // last location to create a Notification if the user navigates away from the app.
-    private var currentLocation: Location? = null
+    var stopWork = false
 
     var sumActiveReminders = -1
 
@@ -69,6 +59,7 @@ class RemindersService : LifecycleService() {
                             println("11111 " + i)
                         }
                         0 -> {
+                            stopForeground(true)
                             break
                         }
                     }
@@ -86,8 +77,9 @@ class RemindersService : LifecycleService() {
 
         private fun sendNotification() {
             val textNotification: String =
-                if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title}·" + getString(
-                    R.string.after)+"·$minDistanceLocation"+"km."
+                if (sumActiveReminders == 1) getString(R.string.reminder) else "$sumActiveReminders " + getString(
+                    R.string.reminders_active
+                )
 
             notificationManager.notify(
                 NOTIFICATION_GEOFENCE_STATUS_ID,
@@ -98,8 +90,7 @@ class RemindersService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        createLocationRequest()
-        startNotifictionForegraund()
+
         HandlerThread("ServiceStartArguments", Process.THREAD_PRIORITY_BACKGROUND).apply {
             start()
 
@@ -107,32 +98,22 @@ class RemindersService : LifecycleService() {
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
-        startNotifictionForegraund()
-        // For each start request, send a message to start a job and deliver the
-        // start ID so we know which request we're stopping when we finish the job
 
-        observeUpdateReminder()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+        super.onStartCommand(intent, flags, startId)
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
-        if (intent?.action == ACTION_DEACTIVATE_REMINDER) {
-            val idReminder = intent.getStringExtra(DEACIVATE_REMINDER_ID)
-            for (reminder in listReminders) {
-                if (reminder.id == idReminder) {
-                    viewModel.completeReminder(reminder, true)
-                }
-            }
-
-        } else {
-            subscribeToLocationUpdates()
-            serviceHandler?.obtainMessage()?.also { msg ->
-                msg.arg1 = startId
-                serviceHandler?.sendMessage(msg)
-            }
+        startNotifictionForegraund()
+        // For each start request, send a message to start a job and deliver the
+        // start ID so we know which request we're stopping when we finish the job
+        serviceHandler?.obtainMessage()?.also { msg ->
+            msg.arg1 = startId
+            serviceHandler?.sendMessage(msg)
         }
-        return super.onStartCommand(intent, flags, startId)
+
+        observeUpdateReminder()
+        return START_STICKY
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -144,29 +125,23 @@ class RemindersService : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
         Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
-        deactivateAllReminders()
-        unsubscribeToLocationUpdates()
-        stopSelf()
+
     }
 
     private fun startNotifictionForegraund() {
         startForeground(
             NOTIFICATION_GEOFENCE_STATUS_ID,
-            sendNotificationStatus(
-                context,
-                resources.getString(R.string.loading_notification_text)
-            )
+            sendNotificationStatus(context, resources.getString(R.string.loading_notification_text))
         )
     }
 
     private fun deactivateAllReminders() {
-        sumActiveReminders = 0
         for (reminder in listReminders) {
             if (reminder.isActive) {
                 viewModel.completeReminder(reminder, true)
             }
         }
-
+        geofenceHelper.removeAllGeofences()
     }
 
     private fun observeUpdateReminder() {
@@ -178,7 +153,7 @@ class RemindersService : LifecycleService() {
 
     private fun serviceManagement() {
         updateSumActiveReminders()
-        refreshGeofenseReminders()
+      //  refreshGeofenseReminders()
     }
 
 
@@ -207,96 +182,4 @@ class RemindersService : LifecycleService() {
         }
     }
 
-    fun createLocationRequest() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 1000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            maxWaitTime = 1000
-        }
-        LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-
-                // Normally, you want to save a new location to a database. We are simplifying
-                // things a bit and just saving it as a local variable, as we only need it again
-                // if a Notification is created (when the user navigates away from app).
-                currentLocation = locationResult.lastLocation
-                nearestGeofence()
-            }
-        }
-
-    }
-
-    @SuppressLint("MissingPermission")
-    fun subscribeToLocationUpdates() {
-        try {
-            fusedLocationProviderClient.requestLocationUpdates(
-                locationRequest, locationCallback, Looper.getMainLooper()
-            )
-        } catch (unlikely: SecurityException) {
-            //checks if there are permissions to access geolocation
-
-        }
-    }
-
-    fun unsubscribeToLocationUpdates() {
-
-        try {
-            val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-            removeTask.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    stopSelf()
-                } else {
-
-                }
-            }
-
-        } catch (unlikely: SecurityException) {
-
-        }
-
-    }
-
-    fun nearestGeofence() {
-        reminderMinDistance = null
-        minDistanceLocation = Float.MAX_VALUE
-        var reminderLocation = Location("location")
-        var reminderDistanceLocation = 0.0F
-        if(sumActiveReminders>0) {
-
-            for (reminder in listReminders) {
-
-                if (reminder.isActive) {
-                    reminderLocation.latitude = reminder.latitude
-                    reminderLocation.longitude = reminder.longitude
-
-                    if (currentLocation != null) {
-                        reminderDistanceLocation = currentLocation!!.distanceTo(reminderLocation)
-                        if (minDistanceLocation > reminderDistanceLocation) {
-                            minDistanceLocation = reminderDistanceLocation
-                            reminderMinDistance = reminder
-                        }
-
-                    }
-
-                }
-
-            }
-            minDistanceLocation = metersToKilometers(minDistanceLocation)
-        }
-    }
-
-    private fun metersToKilometers(minDistanceLocation: Float): Float {
-
-        return  ((((minDistanceLocation-GEOFENCE_RADIUS_IN_METERS) * 0.1).toInt())/100.0f).toFloat()
-    }
 }
-
-
-const val ACTION_DEACTIVATE_REMINDER = "com.cryoggen.action.ACTION_DEACTIVATE_REMINDER"
-const val DEACIVATE_REMINDER_ID = "com.cryoggen.action.REMINDER_DEACIVATE_ID"

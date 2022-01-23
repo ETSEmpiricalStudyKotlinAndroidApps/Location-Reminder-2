@@ -126,13 +126,14 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         .setOngoing(true)
         .setDefaults(0)
         .setSound(null)
+        .setVibrate(null)
         .build()
 
     return notification
 
 }
 
-fun sendNotificationStatus(context: Context, text: String): Notification {
+fun sendNotificationStatus(context: Context, textTitle: String): Notification {
     val pendingIntent: PendingIntent =
         Intent(context, MainActivity::class.java).let { notificationIntent ->
             PendingIntent.getActivity(
@@ -159,12 +160,11 @@ fun sendNotificationStatus(context: Context, text: String): Notification {
     val notification: Notification =
         NotificationCompat.Builder(context, CHANNEL_GEOFENCE_STATUS_ID)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentTitle(context.getString(R.string.app_name))
+            .setContentTitle(textTitle)
             .setColor(context.resources.getColor(R.color.colorRed))
-            .setContentText(text)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(pendingIntent)
-            .setTicker(text)
+            .setTicker(textTitle)
             .setAutoCancel(true)
             .addAction(
                 R.drawable.ic_notification_close_button_foreground,

@@ -99,10 +99,11 @@
     <string name="nav_header_text_with_logo"> Location \nReminder</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="disable">Disable</string>
+    <string name="disable">Disable all</string>
     <string name="loading_notification_text">loading...</string>
     <string name="reminders_active">reminders active</string>
     <string name="reminder">Reminder</string>
+    <string name="after">after</string>
 
 
 
