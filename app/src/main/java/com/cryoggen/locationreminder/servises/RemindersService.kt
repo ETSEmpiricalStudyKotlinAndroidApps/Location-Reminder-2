@@ -5,14 +5,11 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.location.Location
 import android.os.*
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.addeditreminder.*
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.geofence.GeofenceHelper
-import com.cryoggen.locationreminder.geofence.GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
 import com.cryoggen.locationreminder.reminders.RemindersViewModel
 import com.google.android.gms.location.*
 
@@ -20,7 +17,7 @@ import com.google.android.gms.location.*
 class RemindersService : LifecycleService() {
 
     var reminderMinDistance: Reminder? = null
-    var minDistanceLocation = 0.0F
+    var minDistanceLocation = -1.0F
 
     // FusedLocationProviderClient - Main class for receiving location updates.
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -39,8 +36,6 @@ class RemindersService : LifecycleService() {
 
     var sumActiveReminders = -1
 
-    private val geofenceHelper by lazy { GeofenceHelper(this) }
-
     private var listReminders = listOf<Reminder>()
 
     private val viewModel by lazy { RemindersViewModel(application) }
@@ -54,60 +49,11 @@ class RemindersService : LifecycleService() {
         ) as NotificationManager
     }
 
-    private var serviceLooper: Looper? = null
-    private var serviceHandler: ServiceHandler? = null
-
-    // Handler that receives messages from the thread
-    private inner class ServiceHandler(looper: Looper) : Handler(looper) {
-        override fun handleMessage(msg: Message) {
-
-            try {
-                for (i in 1..500) {
-                    when (sumActiveReminders) {
-                        in 1..100 -> {
-                            sendNotification()
-                            println("11111 " + i)
-                        }
-                        0 -> {
-                            break
-                        }
-                    }
-                    Thread.sleep(1000)
-                }
-            } catch (e: InterruptedException) {
-                // Restore interrupt status.
-                Thread.currentThread().interrupt()
-            }
-
-            stopSelf(msg.arg1)
-
-        }
-
-
-        private fun sendNotification() {
-            val textNotification: String =
-                if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title} · " + getString(
-                    R.string.after
-                ) + " · $minDistanceLocation" + "km."
-
-            notificationManager.notify(
-                NOTIFICATION_GEOFENCE_STATUS_ID,
-                sendNotificationStatus(context, textNotification)
-            )
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
         createLocationRequest()
         startNotifictionForegraund()
-        HandlerThread("ServiceStartArguments", Process.THREAD_PRIORITY_BACKGROUND).apply {
-            start()
 
-            // Get the HandlerThread's Looper and use it for our Handler
-            serviceLooper = looper
-            serviceHandler = ServiceHandler(looper)
-        }
         startNotifictionForegraund()
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
@@ -118,21 +64,10 @@ class RemindersService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
 //        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show()
-        if (intent?.action == ACTION_DEACTIVATE_REMINDER) {
-            val idReminder = intent.getStringExtra(DEACIVATE_REMINDER_ID)
-            for (reminder in listReminders) {
-                if (reminder.id == idReminder) {
-                    viewModel.completeReminder(reminder, true)
-                }
-            }
 
-        } else {
             subscribeToLocationUpdates()
-            serviceHandler?.obtainMessage()?.also { msg ->
-                msg.arg1 = startId
-                serviceHandler?.sendMessage(msg)
-            }
-        }
+
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -160,6 +95,29 @@ class RemindersService : LifecycleService() {
         )
     }
 
+    private fun sendNotificationStatus() {
+        val textNotification: String =
+            if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title} · " + getString(
+                R.string.after
+            ) + " · $minDistanceLocation" + "km."
+
+        notificationManager.notify(
+            NOTIFICATION_GEOFENCE_STATUS_ID,
+            sendNotificationStatus(context, textNotification)
+        )
+    }
+
+    private fun sendNotificationEnterGeofence() {
+        if (sumActiveReminders>0) sumActiveReminders--
+        notificationManager.cancelAllNotifications()
+        val notification = sendGeofenceEnteredNotification(
+            context, reminderMinDistance!!.id
+        )
+        notificationManager.notify(NOTIFICATION_ENTER_IN_GEOFENCE_ID, notification)
+        viewModel.completeReminder(reminderMinDistance!!, true)
+        startSound(context)
+    }
+
     private fun deactivateAllReminders() {
         sumActiveReminders = 0
         for (reminder in listReminders) {
@@ -173,15 +131,9 @@ class RemindersService : LifecycleService() {
     private fun observeUpdateReminder() {
         viewModel.items.observe(this, Observer {
             listReminders = it
-            serviceManagement()
+            updateSumActiveReminders()
         })
     }
-
-    private fun serviceManagement() {
-        updateSumActiveReminders()
-        refreshGeofenseReminders()
-    }
-
 
     fun updateSumActiveReminders() {
         var sumReminders = 0
@@ -191,21 +143,6 @@ class RemindersService : LifecycleService() {
             }
         }
         sumActiveReminders = sumReminders
-    }
-
-    fun refreshGeofenseReminders() {
-        geofenceHelper.removeAllGeofences()
-        if (sumActiveReminders > 0) {
-            for (reminder in listReminders) {
-                if (reminder.isActive) {
-                    geofenceHelper.addGeofenceForReminder(
-                        reminder.id,
-                        reminder.latitude,
-                        reminder.longitude
-                    )
-                }
-            }
-        }
     }
 
     fun createLocationRequest() {
@@ -227,11 +164,27 @@ class RemindersService : LifecycleService() {
                 // things a bit and just saving it as a local variable, as we only need it again
                 // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
-                nearestGeofence()
+                determinesNearestGeofence()
+                checkSumActiveReminders()
+                if (minDistanceLocation==0.0F){
+                    sendNotificationEnterGeofence()
+                }
             }
         }
 
     }
+
+    private fun checkSumActiveReminders() {
+        when (sumActiveReminders) {
+            in 1..100 -> {
+                sendNotificationStatus()
+            }
+            0 -> {
+                stopSelf()
+            }
+        }
+    }
+
 
     @SuppressLint("MissingPermission")
     fun subscribeToLocationUpdates() {
@@ -263,7 +216,7 @@ class RemindersService : LifecycleService() {
 
     }
 
-    fun nearestGeofence() {
+    fun determinesNearestGeofence() {
         reminderMinDistance = null
         minDistanceLocation = Float.MAX_VALUE
         var reminderLocation = Location("location")
@@ -301,3 +254,8 @@ class RemindersService : LifecycleService() {
 
 const val ACTION_DEACTIVATE_REMINDER = "com.cryoggen.action.ACTION_DEACTIVATE_REMINDER"
 const val DEACIVATE_REMINDER_ID = "com.cryoggen.action.REMINDER_DEACIVATE_ID"
+
+const val GEOFENCE_RADIUS_IN_METERS = 200f
+const val EXTRA_GEOFENCE_INDEX = "com.cryoggen.GEOFENCE_INDEX"
+const val ACTION_GEOFENCE_EVENT =
+    "com.cryoggen.ACTION_GEOFENCE_EVENT"

@@ -11,8 +11,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.geofence.GeofenceBroadcastReceiver
-import com.cryoggen.locationreminder.geofence.GeofencingConstants
+import com.cryoggen.locationreminder.reciver.GeofenceBroadcastReceiver
+import com.cryoggen.locationreminder.servises.EXTRA_GEOFENCE_INDEX
 
 
 /*
@@ -78,7 +78,7 @@ fun createChannelGeofenceStatusNotification(context: Context) {
 fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notification {
     val contentIntent = Intent(context, MainActivity::class.java)
     contentIntent.action = ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID
-    contentIntent.putExtra(GeofencingConstants.EXTRA_GEOFENCE_INDEX, reminderId)
+    contentIntent.putExtra(EXTRA_GEOFENCE_INDEX, reminderId)
 
     val pendingIntent = PendingIntent.getActivity(
         context,
