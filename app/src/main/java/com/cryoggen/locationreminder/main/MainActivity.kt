@@ -10,15 +10,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -87,9 +84,9 @@ class MainActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            checkDeviceLocationSettingsAndStartGeofence()
             if (!foregroundPermissionApproved()) {
                 findViewById<ConstraintLayout>(R.id.permission).visibility = View.VISIBLE
+                checkDeviceLocationSettings()
             } else {
                 findViewById<ConstraintLayout>(R.id.permission).visibility = View.INVISIBLE
             }
@@ -233,7 +230,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun checkDeviceLocationSettingsAndStartGeofence(resolve: Boolean = true) {
+    fun checkDeviceLocationSettings(resolve: Boolean = true) {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }

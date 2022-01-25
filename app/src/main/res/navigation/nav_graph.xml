@@ -27,9 +27,6 @@
         <action
             android:id="@+id/action_statisticsFragment_to_remindersFragment_dest"
             app:destination="@id/reminders_fragment_dest" />
-        <action
-            android:id="@+id/action_statistics_fragment_dest_to_exit_fragment2"
-            app:destination="@id/exit_fragment_dest" />
     </fragment>
     <fragment
         android:id="@+id/reminders_fragment_dest"
@@ -76,6 +73,9 @@
         android:name="com.cryoggen.locationreminder.exit.ExitFragment"
         android:label="@string/exit"
         tools:layout="@layout/fragment_exit">
+        <action
+            android:id="@+id/action_exit_fragment_dest_to_reminders_fragment_dest"
+            app:destination="@id/reminders_fragment_dest" />
     </fragment>
 
 </navigation>
