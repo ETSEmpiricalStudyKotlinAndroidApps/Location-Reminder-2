@@ -1,7 +1,9 @@
 package com.cryoggen.locationreminder.main
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,9 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -24,20 +31,20 @@ import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.addeditreminder.createChannelGeofenceEnterNotifications
 import com.cryoggen.locationreminder.addeditreminder.createChannelGeofenceStatusNotification
-import com.cryoggen.locationreminder.permissions.ConstantsPermissions
-import com.cryoggen.locationreminder.permissions.PermissionsHelper
-import com.cryoggen.locationreminder.servises.RemindersService
 import com.cryoggen.locationreminder.servises.stopSound
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
-    private val permissionsHelper = PermissionsHelper(this)
+
     private val viewModel by viewModels<MainActivityViewModel>()
-    private var startupRestrictionPermissionCheck = true
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -50,6 +57,9 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChanals()
 
+        findViewById<Button>(R.id.grant_access_button).setOnClickListener {
+            requestForegroundPermissions()
+        }
 
         setupNavigationDrawer()
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -76,8 +86,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if ((hasFocus) && (startupRestrictionPermissionCheck)) {
-            permissionsHelper.checkPermissionsAndStartGeofencing()
+        if (hasFocus) {
+            checkDeviceLocationSettingsAndStartGeofence()
+            if (!foregroundPermissionApproved()) {
+                findViewById<ConstraintLayout>(R.id.permission).visibility = View.VISIBLE
+            } else {
+                findViewById<ConstraintLayout>(R.id.permission).visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -89,7 +104,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigationDrawer() {
         drawerLayout = (findViewById<DrawerLayout>(R.id.drawer_layout))
             .apply {
-                setStatusBarBackground(R.color.colorPrimaryDark)
+                setStatusBarBackground(R.color.primaryDarkColor)
             }
     }
 
@@ -98,64 +113,25 @@ class MainActivity : AppCompatActivity() {
         stopSound(this)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ConstantsPermissions.REQUEST_TURN_DEVICE_LOCATION_ON) {
-            permissionsHelper.checkDeviceLocationSettingsAndStartGeofence(false)
-            return
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        startupRestrictionPermissionCheck = false
-        Log.d(ConstantsPermissions.TAG, "onRequestPermissionResult")
-        if (
-            grantResults.isEmpty() ||
-            grantResults[ConstantsPermissions.LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
-            (requestCode == ConstantsPermissions.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
-                    grantResults[ConstantsPermissions.BACKGROUND_LOCATION_PERMISSION_INDEX] ==
-                    PackageManager.PERMISSION_DENIED)
-        ) {
-
-            Snackbar.make(
-                findViewById(R.id.drawer_layout),
-                R.string.permission_denied_explanation,
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .setAction(R.string.settings) {
-                    startupRestrictionPermissionCheck = true
-                    startActivity(Intent().apply {
-                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    })
-                }.show()
-        } else {
-            permissionsHelper.checkDeviceLocationSettingsAndStartGeofence()
-        }
-    }
-
 
     private fun launchSignInFlow() {
         // Give users the ability to login / register by email
         // If users choose to register with their email address,
         // they will also need to create a password
         val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build(),
+            AuthUI.IdpConfig.AnonymousBuilder().build()
         )
 
         // Create and run the login intent.
         // We listen for the response of this action with
         // SIGN_IN_RESULT_CODE code
+
         startActivityForResult(
             AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
                 providers
-            ).build(), ConstantsPermissions.SIGN_IN_RESULT_CODE
+            ).build(), SIGN_IN_RESULT_CODE
         )
     }
 
@@ -174,9 +150,120 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // Review Permissions: Method checks if permissions approved.
+    private fun foregroundPermissionApproved(): Boolean {
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
+
+    // Review Permissions: Method requests permissions.
+    private fun requestForegroundPermissions() {
+        val provideRationale = foregroundPermissionApproved()
+
+        // If the user denied a previous request, but didn't check "Don't ask again", provide
+        // additional rationale.
+        if (provideRationale) {
+            Snackbar.make(
+                findViewById(R.id.drawer_layout),
+                R.string.permission_rationale,
+                Snackbar.LENGTH_LONG
+            )
+                .setAction(R.string.ok) {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+                    )
+                }
+                .show()
+        } else {
+            ActivityCompat.requestPermissions(
+                this@MainActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            )
+        }
+    }
+
+    // Review Permissions: Handles permission result.
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE -> when {
+                grantResults.isEmpty() ->
+                    println()
+                // If user interaction was interrupted, the permission request
+                // is cancelled and you receive empty arrays.
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    findViewById<ConstraintLayout>(R.id.permission).visibility = View.INVISIBLE
+                }
+
+                else -> {
+                    // Permission denied.
+
+                    Snackbar.make(
+                        findViewById(R.id.drawer_layout),
+                        R.string.permission_denied_explanation,
+                        Snackbar.LENGTH_LONG
+                    )
+                        .setAction(R.string.settings) {
+                            // Build intent that displays the App settings screen.
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts(
+                                "package",
+                                BuildConfig.APPLICATION_ID,
+                                null
+                            )
+                            intent.data = uri
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                        }
+                        .show()
+                }
+            }
+        }
+    }
+
+    fun checkDeviceLocationSettingsAndStartGeofence(resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(this)
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                try {
+                    exception.startResolutionForResult(
+                        this,
+                        REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+
+                }
+            }
+            locationSettingsResponseTask.addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                }
+            }
+        }
+    }
 }
 
 const val ADD_EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 1
 const val DELETE_RESULT_OK = Activity.RESULT_FIRST_USER + 2
 const val EDIT_RESULT_OK = Activity.RESULT_FIRST_USER + 3
-
+const val SIGN_IN_RESULT_CODE = 99
+private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+const val REQUEST_TURN_DEVICE_LOCATION_ON = 29

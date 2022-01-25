@@ -82,13 +82,6 @@
     <string name="insufficient_permissions">Insufficient permissions.</string>
     <string name="geofence_error">There was an error in finding your treasure</string>
 
-    <!--    Geofence Status Strings-->
-    <string name="geofences_added">Clue Geofence added.</string>
-    <string name="geofences_removed">Geofences removed.</string>
-    <string name="one_geofence_removed">Geofence removed.</string>
-    <string name="geofence_entered">Geofence entered.</string>
-    <string name="geofence_over">You have found the treasure! Congratulations!</string>
-
     <!-- Notification Strings-->
     <string name="channel_name_enter_in_geofence">Enter in geofence</string>
     <string name="channel_name_geofence_status">Geofence status</string>
@@ -105,6 +98,13 @@
     <string name="reminder">Reminder</string>
     <string name="after">after</string>
 
+    <!-- Permissions Strings-->
+    <string name="permission_rationale">Location permission needed for core functionality</string>
+    <string name="ok">OK</string>
+    <string name="permission_required">Permission required</string>
+    <string name="application_requires_access">The application requires access to your location. The data is only stored on your device.</string>
+    <string name="access_not_granted">Access not granted</string>
+    <string name="grant_access">grant access</string>
 
 
 </resources>

@@ -80,11 +80,12 @@ dependencies {
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
+    implementation 'com.facebook.android:facebook-login:8.1.0'
 
     // Firebase
-    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
-    
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
+    implementation 'com.facebook.android:facebook-login:latest.release'
+
 
 
 }

@@ -1,6 +1,9 @@
 package com.cryoggen.locationreminder.addeditreminder
 
+import android.annotation.SuppressLint
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +20,12 @@ import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -27,6 +33,17 @@ import com.google.android.material.snackbar.Snackbar
  * Main UI for the add reminder screen. Users can enter a reminder title and description.
  */
 class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
+
+    // FusedLocationProviderClient - Main class for receiving location updates.
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    // LocationRequest - Requirements for the location updates, i.e., how often you should receive
+    // updates, the priority, etc.
+    private lateinit var locationRequest: LocationRequest
+
+    // LocationCallback - Called when FusedLocationProviderClient has a new Location.
+    private lateinit var locationCallback: LocationCallback
+
 
     private var idUploadReminder = ""
 
@@ -104,6 +121,11 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unsubscribeToLocationUpdates()
+    }
+
     private fun observeLoadDataFromMap() {
         viewModel.loadDataFromMap.observe(viewLifecycleOwner, Observer {
             if (it) {
@@ -126,7 +148,9 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
         this.googleMap = googleMap
+
         mapReminder = MapReminder(googleMap, requireActivity())
         mapReminder.switchMapLongClick(true)
 
@@ -138,7 +162,51 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         //when saving a reminder, create a geofence for the reminder
         observeSaveReminder()
+        moveCameraСurrentLocation()
+    }
+    @SuppressLint("MissingPermission")
+    private fun moveCameraСurrentLocation() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationRequest = LocationRequest.create().apply {
+            interval = 1000
+            fastestInterval = 1000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            maxWaitTime = 1000
+        }
+        LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+               val homeLatLng = LatLng(
+                    locationResult.lastLocation.latitude,
+                    locationResult.lastLocation.longitude
+                )
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, 15f))
+                //            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
+            }
+
+        }
+        try {
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest, locationCallback, Looper.getMainLooper()
+            )
+        } catch (unlikely: SecurityException) {
+            //checks if there are permissions to access geolocation
+
+        }
     }
 
+    fun unsubscribeToLocationUpdates() {
+
+        try {
+            val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+
+
+        } catch (unlikely: SecurityException) {
+
+        }
+
+    }
 
 }

@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "911074823851",
-    "project_id": "locationreminder-e1c5a",
-    "storage_bucket": "locationreminder-e1c5a.appspot.com"
+    "project_number": "434630703513",
+    "project_id": "location-reminders-334913",
+    "storage_bucket": "location-reminders-334913.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:911074823851:android:a6f251137cd751f705f1ee",
+        "mobilesdk_app_id": "1:434630703513:android:e5d443ab486f28986e3b08",
         "android_client_info": {
           "package_name": "com.cryoggen.locationreminder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "911074823851-2hm9mebimhc17pgnl67r9occ7e53adia.apps.googleusercontent.com",
+          "client_id": "434630703513-8hml350voqkog07lsht6g0ri8jsg93fj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cryoggen.locationreminder",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "911074823851-qh48d71lrn22gi0e0bt0u43flcuu7kep.apps.googleusercontent.com",
+          "client_id": "434630703513-6ivh02173t9k0m2vbehda40200imilce.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCUEQwIyp5vILOer6ZSIsEFL9iNotBXsD4"
+          "current_key": "AIzaSyD2fNa8T6mc_9DCZUC-8KzgccGkyluFkKQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "911074823851-qh48d71lrn22gi0e0bt0u43flcuu7kep.apps.googleusercontent.com",
+              "client_id": "434630703513-6ivh02173t9k0m2vbehda40200imilce.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

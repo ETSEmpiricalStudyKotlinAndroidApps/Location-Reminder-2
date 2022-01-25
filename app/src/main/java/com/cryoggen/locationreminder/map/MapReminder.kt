@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.servises.GEOFENCE_RADIUS_IN_METERS
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -29,24 +31,12 @@ class MapReminder(
 
     init {
         turnOnMyLocation()
-        moveCameraСurrentLocation()
     }
 
-    @SuppressLint("MissingPermission")
-    private fun moveCameraСurrentLocation() {
-        try {
 
-           val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener {
-                homeLatLng = LatLng(it.latitude, it.longitude)
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-            }
 
-        } catch (e: Exception) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        }
-    }
+
+
 
     fun switchMapLongClick(switcher: Boolean) {
         if (switcher) {
