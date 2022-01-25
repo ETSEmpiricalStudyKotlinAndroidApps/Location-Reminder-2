@@ -148,7 +148,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-
+        moveCameraСurrentLocation()
         this.googleMap = googleMap
 
         mapReminder = MapReminder(googleMap, requireActivity())
@@ -162,16 +162,16 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         //when saving a reminder, create a geofence for the reminder
         observeSaveReminder()
-        moveCameraСurrentLocation()
+
     }
     @SuppressLint("MissingPermission")
     private fun moveCameraСurrentLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         locationRequest = LocationRequest.create().apply {
-            interval = 1000
-            fastestInterval = 1000
+            interval = 100
+            fastestInterval = 100
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            maxWaitTime = 1000
+            maxWaitTime = 100
         }
         LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)

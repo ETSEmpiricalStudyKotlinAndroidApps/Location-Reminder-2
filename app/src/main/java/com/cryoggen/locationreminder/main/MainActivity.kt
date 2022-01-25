@@ -86,10 +86,10 @@ class MainActivity : AppCompatActivity() {
         if (hasFocus) {
             if (!foregroundPermissionApproved()) {
                 findViewById<ConstraintLayout>(R.id.permission).visibility = View.VISIBLE
-                checkDeviceLocationSettings()
             } else {
                 findViewById<ConstraintLayout>(R.id.permission).visibility = View.INVISIBLE
             }
+            checkDeviceLocationSettings()
         }
     }
 
