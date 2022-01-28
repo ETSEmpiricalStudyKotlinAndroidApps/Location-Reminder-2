@@ -56,8 +56,8 @@
                         android:id="@+id/reminders_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:items="@{viewmodel.items}" />
+                        app:items="@{viewmodel.items}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -82,6 +82,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/list_item_padding"
+                        android:gravity="center_horizontal"
+                        android:hint="@string/no_reminders_all"
                         android:text="@{context.getString(viewmodel.noRemindersLabel)}" />
                 </LinearLayout>
             </RelativeLayout>
