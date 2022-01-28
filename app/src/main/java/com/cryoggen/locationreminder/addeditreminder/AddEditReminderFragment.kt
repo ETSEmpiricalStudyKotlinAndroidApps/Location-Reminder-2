@@ -1,6 +1,7 @@
 package com.cryoggen.locationreminder.addeditreminder
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -57,6 +59,7 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private val viewModel by viewModels<AddEditReminderViewModel>()
 
+    private var checkOnLocationResult = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -148,8 +151,10 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        moveCameraСurrentLocation()
+
         this.googleMap = googleMap
+
+        checkDarkStyleMap()
 
         mapReminder = MapReminder(googleMap, requireActivity())
         mapReminder.switchMapLongClick(true)
@@ -162,11 +167,38 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         //when saving a reminder, create a geofence for the reminder
         observeSaveReminder()
-
+        moveCameraСurrentLocation()
     }
+
+    fun checkDarkStyleMap(){
+        val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+        when (mode) {
+            Configuration.UI_MODE_NIGHT_YES -> {googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireActivity(),
+                    R.raw.map_dark_style
+                )
+            )}
+            Configuration.UI_MODE_NIGHT_NO -> {   googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireActivity(),
+                    R.raw.map_light_style
+                )
+            )}
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    requireActivity(),
+                    R.raw.map_light_style
+                )
+            )}
+        }
+    }
+
     @SuppressLint("MissingPermission")
+
     private fun moveCameraСurrentLocation() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
         locationRequest = LocationRequest.create().apply {
             interval = 100
             fastestInterval = 100
@@ -178,11 +210,14 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
-               val homeLatLng = LatLng(
+                val homeLatLng = LatLng(
                     locationResult.lastLocation.latitude,
                     locationResult.lastLocation.longitude
                 )
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, 15f))
+                if (checkOnLocationResult==false) {
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, 15f))
+                    checkOnLocationResult=true
+                }
                 //            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
             }
 
