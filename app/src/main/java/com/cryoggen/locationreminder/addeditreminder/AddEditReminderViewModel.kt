@@ -116,8 +116,12 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         val currentTitle = title.value
         val currentDescription = description.value ?: ""
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.getUid().toString()
-        if ((currentTitle == null) || (latitude == 0.0 && longitude == 0.0)) {
-            _snackbarText.value = Event(R.string.empty_reminder_message)
+        if (currentTitle == null)  {
+            _snackbarText.value = Event(R.string.empty_title_reminder_message)
+            return
+        }
+        if  (latitude == 0.0 && longitude == 0.0) {
+            _snackbarText.value = Event(R.string.empty_location_reminder_message)
             return
         }
 
