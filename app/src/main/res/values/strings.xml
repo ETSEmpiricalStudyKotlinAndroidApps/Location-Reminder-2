@@ -15,7 +15,6 @@
     <string name="navigation_view_header_title">Todo</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Enter your reminder here.</string>
-    <string name="empty_reminder_message">reminders cannot be empty</string>
     <string name="successfully_saved_reminder_message">reminder saved</string>
     <string name="list_title">reminder List</string>
     <string name="statistics_title">Statistics</string>
@@ -37,7 +36,7 @@
     <string name="label_all">All reminders</string>
     <string name="label_active">Active reminders</string>
     <string name="label_completed">Completed reminders</string>
-    <string name="no_reminders_all">You have no reminders!</string>
+    <string name="no_reminders_all">You have no reminders! \nClick "+" to get started.</string>
     <string name="no_reminders_active">You have no active reminders!</string>
     <string name="no_reminders_completed">You have no completed reminders!</string>
     <string name="refresh">Refresh</string>
@@ -53,34 +52,16 @@
     <string name="reminder_deatails">Reminder details</string>
     <string name="exit">Exit</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="exit_fragment_text">Logging out...</string>
     <string name="menu_clear_all">Clear All</string>
     <string name="All_reminders_cleared">All reminders cleared</string>
-    <string name="normal_map">Normal Map</string>
-    <string name="hybrid_map">Hybrid Map</string>
-    <string name="satellite_map">Sarellite Map</string>
-    <string name="terrain_map">Terrain Map</string>
     <string name="location_reminder">Location reminder</string>
     <string name="permission_denied_explanation">You need to grant location permission in order to start application.</string>
     <string name="settings">Settings</string>
     <string name="location_required_error">Location services must be enabled for this application.</string>
 
     <!-- Error strings -->
-    <string name="geofence_not_available">Geofence service is not available now</string>
-    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
-    <string name="geofence_too_many_pending_intents">
-        You have provided too many PendingIntents to the addGeofences() call
-    </string>
-    <string name="unknown_geofence_error">
-        Unknown error: the Geofence service is not available now
-    </string>
-
-    <string name="geofences_not_removed">Geofences not removed.</string>
-    <string name="geofence_not_removed">Geofence not removed.</string>
-    <string name="geofences_not_added">Problem in adding geofences.</string>
-    <string name="insufficient_permissions">Insufficient permissions.</string>
-    <string name="geofence_error">There was an error in finding your treasure</string>
 
     <!-- Notification Strings-->
     <string name="channel_name_enter_in_geofence">Enter in geofence</string>
@@ -89,22 +70,24 @@
     <string name="enter_in_geofence_notifications_description">Enter in geofence notifications</string>
     <string name="geofence_status_notification_channel_description">Geofence status notification</string>
     <string name="plase_wait">Please wait...</string>
-    <string name="nav_header_text_with_logo"> Location \nReminder</string>
+    <string name="nav_header_text_with_logo" translatable="false"> Location \nReminder</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="disable">Disable all</string>
     <string name="loading_notification_text">loading...</string>
     <string name="reminders_active">reminders active</string>
-    <string name="reminder">Reminder</string>
+    <string name="reminder" translatable="false">Reminder</string>
     <string name="after">after</string>
 
     <!-- Permissions Strings-->
     <string name="permission_rationale">Location permission needed for core functionality</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="permission_required">Permission required</string>
     <string name="application_requires_access">The application requires access to your location. The data is only stored on your device.</string>
     <string name="access_not_granted">Access not granted</string>
     <string name="grant_access">grant access</string>
 
-
+    <!-- Add Edit Reminder messages-->
+    <string name="empty_title_reminder_message">reminders title cannot be empty</string>
+    <string name="empty_location_reminder_message">set the tracked location on the map</string>
 </resources>
