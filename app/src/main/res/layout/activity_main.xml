@@ -76,17 +76,88 @@
             app:layout_constraintGuide_percent="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/permission_required" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/permission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primaryLightColor">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.05" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/permission_required_text_title_margin_size"
+            android:gravity="center"
+            android:fontFamily="@font/josefin_sans_italic"
+            android:text="@string/permission_required"
+            android:textSize="@dimen/permission_required_text_title_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/permission_required_layout_text_margin"
+            android:gravity="center"
+            android:text="@string/application_requires_access"
+            android:textSize="@dimen/permission_required_layout_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/permission_required_layout_text_margin"
+            android:text="@string/access_not_granted"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/permission_required_layout_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <Button
+            android:id="@+id/grant_access_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grant_access"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/colorGreen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="@dimen/permission_required_layouy_image_margin"
+            app:layout_constraintBottom_toTopOf="@+id/grant_access_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            app:srcCompat="@drawable/logo_no_fill" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/color_background_list_item"
+        android:background="@color/primaryLightColor"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@drawable/drawer_item_color"
