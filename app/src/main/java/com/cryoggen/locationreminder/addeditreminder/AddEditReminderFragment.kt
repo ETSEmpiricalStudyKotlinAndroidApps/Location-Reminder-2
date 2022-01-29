@@ -2,7 +2,6 @@ package com.cryoggen.locationreminder.addeditreminder
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.view.LayoutInflater
@@ -11,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
@@ -46,11 +43,12 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
     // LocationCallback - Called when FusedLocationProviderClient has a new Location.
     private lateinit var locationCallback: LocationCallback
 
-
+    //id reminder, which is loaded onto the map
     private var idUploadReminder = ""
 
     private lateinit var googleMap: GoogleMap
 
+    //wrapper object for googleMap object
     private lateinit var mapReminder: MapReminder
 
     private lateinit var viewDataBinding: AddreminderFragBinding
@@ -59,6 +57,8 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
     private val viewModel by viewModels<AddEditReminderViewModel>()
 
+    //checks if the googleMap.moveCamera() method has already been executed.
+    // It is necessary that the method is not executed every time the current device coordinates are updated
     private var checkOnLocationResult = false
 
     override fun onCreateView(
@@ -70,15 +70,17 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         viewDataBinding = AddreminderFragBinding.bind(root).apply {
             this.viewmodel = viewModel
         }
+
         // Set the lifecycle owner to the lifecycle of the view
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
-        setingsMapView()
+        settingsMapView()
 
         return viewDataBinding.root
     }
 
-    private fun setingsMapView() {
+    //Map display settings
+    private fun settingsMapView() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map_new_reminder) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -110,8 +112,9 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         view?.setupSnackbar(this, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
+    //If the data was loaded from the database, then we display it on the map.
     private fun observeUploadReminderDataToMap() {
-        viewModel.uploadReminderDataToMap.observe(viewLifecycleOwner, Observer {
+        viewModel.uploadReminderDataToMap.observe(viewLifecycleOwner, {
             if (it != null) {
                 mapReminder.longitude = it.longitude
                 mapReminder.latitude = it.latitude
@@ -129,16 +132,17 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         unsubscribeToLocationUpdates()
     }
 
+
     private fun observeLoadDataFromMap() {
-        viewModel.loadDataFromMap.observe(viewLifecycleOwner, Observer {
+        viewModel.loadDataFromMap.observe(viewLifecycleOwner, {
             if (it) {
-                viewModel.updateСoordinatesFromMap(mapReminder.latitude, mapReminder.longitude)
+                viewModel.updateCoordinatesFromMap(mapReminder.latitude, mapReminder.longitude)
             }
         })
     }
 
     private fun observeSaveReminder() {
-        viewModel.savedReminder.observe(viewLifecycleOwner, Observer {
+        viewModel.savedReminder.observe(viewLifecycleOwner, {
         })
     }
 
@@ -157,7 +161,9 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         checkDarkStyleMap()
 
         mapReminder = MapReminder(googleMap, requireActivity())
-        mapReminder.switchMapLongClick(true)
+
+        //sets whether it is necessary to track clicks on the map
+        mapReminder.switchOnMapClick(true)
 
         //after the map is ready, we are waiting for the data to be loaded from the database, and then we load it onto the map
         observeUploadReminderDataToMap()
@@ -167,36 +173,42 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
 
         //when saving a reminder, create a geofence for the reminder
         observeSaveReminder()
-        moveCameraСurrentLocation()
+        moveCameraCurrentLocation()
     }
 
-    fun checkDarkStyleMap(){
-        val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
-        when (mode) {
-            Configuration.UI_MODE_NIGHT_YES -> {googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireActivity(),
-                    R.raw.map_dark_style
+    //Determines the mode on the phone, night or day.
+    private fun checkDarkStyleMap() {
+        when (context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_dark_style
+                    )
                 )
-            )}
-            Configuration.UI_MODE_NIGHT_NO -> {   googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireActivity(),
-                    R.raw.map_light_style
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_light_style
+                    )
                 )
-            )}
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> {googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    requireActivity(),
-                    R.raw.map_light_style
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_light_style
+                    )
                 )
-            )}
+            }
         }
     }
 
     @SuppressLint("MissingPermission")
 
-    private fun moveCameraСurrentLocation() {
+    private fun moveCameraCurrentLocation() {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         locationRequest = LocationRequest.create().apply {
@@ -214,9 +226,9 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
                     locationResult.lastLocation.latitude,
                     locationResult.lastLocation.longitude
                 )
-                if (checkOnLocationResult==false) {
+                if (!checkOnLocationResult) {
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, 15f))
-                    checkOnLocationResult=true
+                    checkOnLocationResult = true
                 }
                 //            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
             }
@@ -232,12 +244,10 @@ class AddEditReminderFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    fun unsubscribeToLocationUpdates() {
+    private fun unsubscribeToLocationUpdates() {
 
         try {
-            val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-
-
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         } catch (unlikely: SecurityException) {
 
         }

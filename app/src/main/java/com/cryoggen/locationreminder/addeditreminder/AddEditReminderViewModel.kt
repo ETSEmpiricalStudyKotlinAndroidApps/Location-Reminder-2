@@ -1,6 +1,5 @@
 package com.cryoggen.locationreminder.addeditreminder
 
-import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.Event
@@ -15,12 +14,11 @@ import kotlinx.coroutines.launch
  * ViewModel for the Add/Edit screen.
  */
 class AddEditReminderViewModel(application: Application) : AndroidViewModel(application) {
+
     //current geofence coordinates
     private var latitude = 0.0
     private var longitude = 0.0
 
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
     private val remindersRepository = RemindersRepository.getRepository(application)
 
     // Two-way databinding, exposing MutableLiveData
@@ -29,6 +27,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     // Two-way databinding, exposing MutableLiveData
     val description = MutableLiveData<String>()
 
+    //reminder object for loading data on the map
     private val _uploadReminderDataToMap = MutableLiveData<Reminder>()
     val uploadReminderDataToMap: LiveData<Reminder> = _uploadReminderDataToMap
 
@@ -47,7 +46,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     private val _reminderUpdatedEvent = MutableLiveData<Event<Unit>>()
     val reminderUpdatedEvent: LiveData<Event<Unit>> = _reminderUpdatedEvent
 
-    private var reminderIdForEdtiReminder: String? = null
+    private var reminderIdForEditReminder: String? = null
 
     private var isNewReminder: Boolean = false
 
@@ -60,7 +59,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             return
         }
 
-        this.reminderIdForEdtiReminder = reminderId
+        this.reminderIdForEditReminder = reminderId
         if (reminderId == null) {
             // No need to populate, it's a new reminder
             isNewReminder = true
@@ -104,7 +103,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         _loadDataFromMap.value=true
     }
 
-    fun updateСoordinatesFromMap(latitude:Double,longitude:Double){
+    fun updateCoordinatesFromMap(latitude:Double, longitude:Double){
         _loadDataFromMap.value=false
         this.latitude = latitude
         this.longitude = longitude
@@ -112,10 +111,10 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     }
 
 
-    fun saveReminder() {
+    private fun saveReminder() {
         val currentTitle = title.value
         val currentDescription = description.value ?: ""
-        val currentUserUID = FirebaseAuth.getInstance().currentUser?.getUid().toString()
+        val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid.toString()
         if (currentTitle == null)  {
             _snackbarText.value = Event(R.string.empty_title_reminder_message)
             return
@@ -125,7 +124,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             return
         }
 
-        val currentReminderId = reminderIdForEdtiReminder
+        val currentReminderId = reminderIdForEditReminder
         if (isNewReminder || currentReminderId == null) {
             val newReminder = Reminder(
                 currentTitle,
@@ -153,7 +152,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
 
     private fun createReminder(newReminder: Reminder) {
 
-        //we track the reminder that we will save in order to create geofence tracking
+        //track the reminder that we will save in order to create geofence tracking
         _savedReminder.value = newReminder
 
         viewModelScope.launch {
@@ -167,7 +166,7 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             throw RuntimeException("updateReminder() was called but reminder is new.")
         }
 
-        //we track the reminder that we will update in order to create a geofencing tracking
+        //track the reminder that we will update in order to create a geofencing tracking
         _savedReminder.value = reminder
 
         viewModelScope.launch {
@@ -175,7 +174,6 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
             _reminderUpdatedEvent.value = Event(Unit)
         }
     }
-
 
 
 }
