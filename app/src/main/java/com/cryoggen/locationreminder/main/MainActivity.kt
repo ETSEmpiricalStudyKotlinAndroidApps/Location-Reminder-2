@@ -7,17 +7,16 @@ import android.content.IntentSender
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -45,14 +44,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_MyApplication)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        createNotificationChanals()
+        createNotificationChannels()
 
         findViewById<Button>(R.id.grant_access_button).setOnClickListener {
             requestForegroundPermissions()
@@ -76,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         observeAuthenticationState()
     }
 
-    private fun createNotificationChanals() {
+    private fun createNotificationChannels() {
         createChannelGeofenceEnterNotifications(this)
         createChannelGeofenceStatusNotification(this)
     }
@@ -110,7 +108,6 @@ class MainActivity : AppCompatActivity() {
         stopSound(this)
     }
 
-
     private fun launchSignInFlow() {
         // Give users the ability to login / register by email
         // If users choose to register with their email address,
@@ -124,7 +121,6 @@ class MainActivity : AppCompatActivity() {
         // Create and run the login intent.
         // We listen for the response of this action with
         // SIGN_IN_RESULT_CODE code
-
         startActivityForResult(
             AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(
                 providers
@@ -133,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeAuthenticationState() {
-        viewModel.authenticationState.observe(this, Observer { authenticationState ->
+        viewModel.authenticationState.observe(this, { authenticationState ->
             when (authenticationState) {
                 AuthenticationState.AUTHENTICATED -> {
                     val textViewNavHeader =
@@ -230,7 +226,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun checkDeviceLocationSettings(resolve: Boolean = true) {
+    private fun checkDeviceLocationSettings() {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_LOW_POWER
         }
@@ -239,18 +235,13 @@ class MainActivity : AppCompatActivity() {
         val locationSettingsResponseTask =
             settingsClient.checkLocationSettings(builder.build())
         locationSettingsResponseTask.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException && resolve) {
+            if (exception is ResolvableApiException) {
                 try {
                     exception.startResolutionForResult(
                         this,
                         REQUEST_TURN_DEVICE_LOCATION_ON
                     )
                 } catch (sendEx: IntentSender.SendIntentException) {
-
-                }
-            }
-            locationSettingsResponseTask.addOnCompleteListener {
-                if (it.isSuccessful) {
 
                 }
             }

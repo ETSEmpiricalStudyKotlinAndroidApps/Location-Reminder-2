@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 
 enum class AuthenticationState {
-    AUTHENTICATED, UNAUTHENTICATED, INVALID_AUTHENTICATION
+    AUTHENTICATED, UNAUTHENTICATED
 }
 
 class MainActivityViewModel : ViewModel() {
