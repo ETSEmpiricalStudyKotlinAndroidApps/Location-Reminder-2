@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.servises.GEOFENCE_RADIUS_IN_METERS
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -15,39 +12,32 @@ import com.google.android.gms.maps.model.CircleOptions
 
 
 class MapReminder(
-    val googleMap: GoogleMap,
+    private val googleMap: GoogleMap,
     val context: Context,
-    latitude: Double = 0.0,
-    longitude: Double = 0.0,
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
 
     ) {
-    private var homeLatLng = LatLng(55.75253338241553, 37.617544731021034)
-    private val REQUEST_LOCATION_PERMISSION = 1
 
-    var latitude = latitude
-    var longitude = longitude
-    var zoomLevel: Float = 15f
+    private var zoomLevel: Float = 15f
 
 
     init {
         turnOnMyLocation()
     }
 
-
-
-
-
-
-    fun switchMapLongClick(switcher: Boolean) {
+    //whether to listen for clicks on the map
+    fun switchOnMapClick(switcher: Boolean) {
         if (switcher) {
             setMapClick()
         } else {
-            clearSetMapLongClick()
+            clearSetMapClick()
         }
     }
 
-    private fun clearSetMapLongClick() {
-        googleMap.setOnMapLongClickListener {}
+    //disables listening for clicks on the map
+    private fun clearSetMapClick() {
+        googleMap.setOnMapClickListener {}
     }
 
     @SuppressLint("MissingPermission")
@@ -61,7 +51,7 @@ class MapReminder(
             googleMap.addMarker(
                 MarkerOptions()
                     .position(latLng)
-                    .title(context?.getResources()?.getString(R.string.location_reminder))
+                    .title(context.resources?.getString(R.string.location_reminder))
             )
             latitude = latLng.latitude
             longitude = latLng.longitude
@@ -75,18 +65,18 @@ class MapReminder(
         googleMap.addMarker(
             MarkerOptions()
                 .position(latLng)
-                .title(context?.getResources()?.getString(R.string.location_reminder))
+                .title(context.resources?.getString(R.string.location_reminder))
         )
         addCircleOnMarker()
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
     }
 
-    fun addCircleOnMarker() {
+    private fun addCircleOnMarker() {
         googleMap.addCircle(
             CircleOptions()
                 .center(LatLng(latitude, longitude))
                 .radius(GEOFENCE_RADIUS_IN_METERS.toDouble())
-                .strokeColor(context!!.resources.getColor(R.color.primaryColor))
+                .strokeColor(context.resources.getColor(R.color.primaryColor))
                 .fillColor(
                     context.resources.getColor(R.color.fill_color_circle_geofence)
                 )
