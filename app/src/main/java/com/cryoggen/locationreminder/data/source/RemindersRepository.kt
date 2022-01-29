@@ -3,16 +3,11 @@ package com.cryoggen.locationreminder.data.source
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import com.cryoggen.locationreminder.data.Result
-import com.cryoggen.locationreminder.data.Result.Success
 import com.cryoggen.locationreminder.data.Reminder
+import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.source.local.RemindersLocalDataSource
 import com.cryoggen.locationreminder.data.source.local.ToDoDatabase
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Concrete implementation to load Reminders from the data sources into a cache.
@@ -45,7 +40,7 @@ class RemindersRepository private constructor(application: Application) {
         remindersLocalDataSource = RemindersLocalDataSource(database.remindersDao())
     }
 
-    suspend fun getReminders(forceUpdate: Boolean = false): Result<List<Reminder>> {
+    private suspend fun getReminders(): Result<List<Reminder>> {
         return remindersLocalDataSource.getReminders()
     }
 
@@ -63,7 +58,7 @@ class RemindersRepository private constructor(application: Application) {
     /**
      * Relies on [getReminders] to fetch data and picks the Reminder with the same ID.
      */
-    suspend fun getReminder(ReminderId: String, forceUpdate: Boolean = false): Result<Reminder> {
+    suspend fun getReminder(ReminderId: String): Result<Reminder> {
 
         return remindersLocalDataSource.getReminder(ReminderId)
     }

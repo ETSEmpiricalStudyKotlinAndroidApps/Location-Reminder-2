@@ -22,6 +22,4 @@ data class Reminder @JvmOverloads constructor(
     val isActive
         get() = !isCompleted
 
-    val isEmpty
-        get() = title.isEmpty() || description.isEmpty()
 }

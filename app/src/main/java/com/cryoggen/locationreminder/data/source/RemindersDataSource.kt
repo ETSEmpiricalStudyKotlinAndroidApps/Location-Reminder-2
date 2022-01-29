@@ -14,13 +14,9 @@ interface RemindersDataSource {
 
     suspend fun getReminders(): Result<List<Reminder>>
 
-    suspend fun refreshReminders()
-
     fun observeReminder(ReminderId: String): LiveData<Result<Reminder>>
 
     suspend fun getReminder(ReminderId: String): Result<Reminder>
-
-    suspend fun refreshReminder(ReminderId: String)
 
     suspend fun saveReminder(Reminder: Reminder)
 

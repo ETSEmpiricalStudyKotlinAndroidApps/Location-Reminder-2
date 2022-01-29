@@ -35,13 +35,6 @@ class RemindersLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun refreshReminder(ReminderId: String) {
-        //NO-OP
-    }
-
-    override suspend fun refreshReminders() {
-        //NO-OP
-    }
 
     override suspend fun getReminders(): Result<List<Reminder>> = withContext(ioDispatcher) {
         return@withContext try {

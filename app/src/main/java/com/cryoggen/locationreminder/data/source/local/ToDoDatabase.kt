@@ -6,7 +6,7 @@ import com.cryoggen.locationreminder.data.Reminder
 
 
 /**
- * The Room Database that contains the Task table.
+ * The Room Database that contains the Reminder table.
  *
  * Note that exportSchema should be true in production databases.
  */
