@@ -5,11 +5,10 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.servises.stopSound
 
 
 /**
- * [BindingAdapter]s for the [Task]s list.
+ * [BindingAdapter]s for the [Reminder]s list.
  */
 @BindingAdapter("app:items")
 fun setItems(listView: RecyclerView, items: List<Reminder>?) {

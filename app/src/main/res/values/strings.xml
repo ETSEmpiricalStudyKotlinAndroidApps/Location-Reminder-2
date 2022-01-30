@@ -50,7 +50,7 @@
     <string name="sign_out">Sing out</string>
     <string name="login">Login</string>
     <string name="reminder_deatails">Reminder details</string>
-    <string name="exit">Exit</string>
+    <string name="exit">Logout</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="exit_fragment_text">Logging out...</string>

@@ -3,7 +3,7 @@ package com.cryoggen.locationreminder.map
 import android.annotation.SuppressLint
 import android.content.Context
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.servises.GEOFENCE_RADIUS_IN_METERS
+import com.cryoggen.locationreminder.services.GEOFENCE_RADIUS_IN_METERS
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng

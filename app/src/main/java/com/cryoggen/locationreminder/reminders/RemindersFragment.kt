@@ -2,17 +2,11 @@ package com.cryoggen.locationreminder.reminders
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
@@ -21,12 +15,12 @@ import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.cryoggen.locationreminder.servises.EXTRA_GEOFENCE_INDEX
+import com.cryoggen.locationreminder.services.EXTRA_GEOFENCE_INDEX
+import com.cryoggen.locationreminder.services.RemindersService
+import com.cryoggen.locationreminder.services.stopSound
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
-import com.cryoggen.locationreminder.servises.RemindersService
-import com.cryoggen.locationreminder.servises.stopSound
 
 
 /**
@@ -53,7 +47,7 @@ class RemindersFragment : Fragment() {
         return viewDataBinding.root
     }
 
-    private fun handleIntentfromActivity() {
+    private fun handleIntentFromActivity() {
         val extras = requireActivity().intent?.extras
         if (extras != null) {
             if (extras.containsKey(EXTRA_GEOFENCE_INDEX)) {
@@ -92,6 +86,11 @@ class RemindersFragment : Fragment() {
         inflater.inflate(R.menu.reminders_fragment_menu, menu)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.refresh()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // Set the lifecycle owner to the lifecycle of the view
@@ -101,7 +100,7 @@ class RemindersFragment : Fragment() {
         setupRefreshLayout(viewDataBinding.refreshLayout, viewDataBinding.remindersList)
         setupNavigation()
         setupFab()
-        handleIntentfromActivity()
+        handleIntentFromActivity()
         observeUpdateRemindersForStartService()
     }
 
@@ -114,14 +113,16 @@ class RemindersFragment : Fragment() {
         })
     }
 
-    private fun observeUpdateRemindersForStartService(){
-        viewModel.items.observe(viewLifecycleOwner, Observer {
+    private fun observeUpdateRemindersForStartService() {
+        viewModel.items.observe(viewLifecycleOwner, {
             var sumActiveReminders = 0
             val intentRemindersService = Intent(requireActivity(), RemindersService::class.java)
             for (reminders in it) if (reminders.isActive) sumActiveReminders++
-            if (sumActiveReminders>0) {
+            if (sumActiveReminders > 0) {
                 ContextCompat.startForegroundService(requireActivity(), intentRemindersService)
-            } else {requireActivity().stopService(intentRemindersService)}
+            } else {
+                requireActivity().stopService(intentRemindersService)
+            }
         })
     }
 

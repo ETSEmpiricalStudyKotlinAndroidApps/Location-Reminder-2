@@ -9,9 +9,8 @@ import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.ReminderItemBinding
 
 
-/**
- * Adapter for the Reminder list. Has a reference to the [RemindersViewModel] to send actions back to it.
- */
+// Adapter for the Reminder list. Has a reference to the [RemindersViewModel] to send actions back to it.
+
 class RemindersAdapter(private val viewModel: RemindersViewModel) :
     ListAdapter<Reminder, RemindersAdapter.ViewHolder>(ReminderDiffCallback()) {
 
@@ -25,7 +24,7 @@ class RemindersAdapter(private val viewModel: RemindersViewModel) :
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(val binding: ReminderItemBinding) :
+    class ViewHolder private constructor(private val binding: ReminderItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(viewModel: RemindersViewModel, item: Reminder) {
@@ -46,12 +45,12 @@ class RemindersAdapter(private val viewModel: RemindersViewModel) :
     }
 }
 
-/**
- * Callback for calculating the diff between two non-null items in a list.
- *
- * Used by ListAdapter to calculate the minimum number of changes between and old list and a new
- * list that's been passed to `submitList`.
- */
+
+// Callback for calculating the diff between two non-null items in a list.
+//
+//  Used by ListAdapter to calculate the minimum number of changes between and old list and a new
+//  list that's been passed to `submitList`.
+
 class ReminderDiffCallback : DiffUtil.ItemCallback<Reminder>() {
     override fun areItemsTheSame(oldItem: Reminder, newItem: Reminder): Boolean {
         return oldItem.id == newItem.id

@@ -1,18 +1,13 @@
 package com.cryoggen.locationreminder.reminderdetail
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cryoggen.locationreminder.EventObserver
@@ -21,16 +16,19 @@ import com.cryoggen.locationreminder.databinding.ReminderdetailFragBinding
 import com.cryoggen.locationreminder.main.DELETE_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.cryoggen.locationreminder.servises.RemindersService
+import com.cryoggen.locationreminder.services.RemindersService
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.snackbar.Snackbar
 
 /**
  * Main UI for the Reminder detail screen.
  */
 class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
+
+    private lateinit var googleMap: GoogleMap
 
     private lateinit var mapReminder: MapReminder
 
@@ -86,9 +84,9 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
 
         setHasOptionsMenu(true)
 
-        setingsMapView()
+        settingsMapView()
 
-        observesetCompletedChekedState()
+        observesCompletedCheckedState()
 
         return view
     }
@@ -107,7 +105,7 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         inflater.inflate(R.menu.reminderdetail_fragment_menu, menu)
     }
 
-    private fun setingsMapView() {
+    private fun settingsMapView() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map_detail_reminder) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -129,9 +127,9 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun observeReminderState() {
-        viewModel.reminder.observe(viewLifecycleOwner, Observer { reminderState ->
+        viewModel.reminder.observe(viewLifecycleOwner, { reminderState ->
             if (reminderState != null) {
-                mapReminder.switchMapLongClick(false)
+                mapReminder.switchOnMapClick(false)
                 mapReminder.latitude = reminderState.latitude
                 mapReminder.longitude = reminderState.longitude
                 mapReminder.addMarker()
@@ -139,16 +137,46 @@ class ReminderDetailFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-    private fun observesetCompletedChekedState() {
-        viewModel.setCompletedCheked.observe(viewLifecycleOwner, Observer { reminderState ->
+    private fun observesCompletedCheckedState() {
+        viewModel.setCompletedCheked.observe(viewLifecycleOwner, {
             val intentRemindersService = Intent(requireActivity(), RemindersService::class.java)
             ContextCompat.startForegroundService(requireActivity(), intentRemindersService)
         })
     }
 
-
     override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
+        checkDarkStyleMap()
         mapReminder = MapReminder(googleMap, requireActivity())
         observeReminderState()
+    }
+
+    private fun checkDarkStyleMap() {
+        when (context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_dark_style
+                    )
+                )
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_light_style
+                    )
+                )
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireActivity(),
+                        R.raw.map_light_style
+                    )
+                )
+            }
+        }
     }
 }

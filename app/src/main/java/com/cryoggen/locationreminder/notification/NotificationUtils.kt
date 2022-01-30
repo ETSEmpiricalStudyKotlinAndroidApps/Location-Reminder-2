@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.addeditreminder
+package com.cryoggen.locationreminder.notification
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,13 +12,10 @@ import androidx.core.app.NotificationCompat
 import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.reciver.GeofenceBroadcastReceiver
-import com.cryoggen.locationreminder.servises.EXTRA_GEOFENCE_INDEX
+import com.cryoggen.locationreminder.services.EXTRA_GEOFENCE_INDEX
 
 
-/*
- * We need to create a NotificationChannel associated with our CHANNEL_ID before sending a
- * notification.
- */
+//creates channel for notifications that are triggered when we enter the geofence
 fun createChannelGeofenceEnterNotifications(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val notificationChannel = NotificationChannel(
@@ -44,6 +41,7 @@ fun createChannelGeofenceEnterNotifications(context: Context) {
     }
 }
 
+//creates channel for notifications that fire if there is an active reminder
 fun createChannelGeofenceStatusNotification(context: Context) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -70,11 +68,7 @@ fun createChannelGeofenceStatusNotification(context: Context) {
     }
 }
 
-/*
- * A Kotlin extension function for AndroidX's NotificationCompat that sends our Geofence
- * entered notification.  It sends a custom notification based on the name string associated
- * with the LANDMARK_DATA from GeofencingConstatns in the GeofenceUtils file.
- */
+//creates a notification when the device enters the geofence
 fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notification {
     val contentIntent = Intent(context, MainActivity::class.java)
     contentIntent.action = ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID
@@ -84,7 +78,7 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         context,
         NOTIFICATION_ENTER_IN_GEOFENCE_ID,
         contentIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
     )
 
 
@@ -95,13 +89,11 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         context,
         NOTIFICATION_ENTER_IN_GEOFENCE_ID,
         closeNotificationIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
     )
 
 
-    // We use the name resource ID from the LANDMARK_DATA along with content_text to create
-    // a custom message when a Geofence triggers.
-    val notification = NotificationCompat.Builder(context, CHANNEL_ENTER_IN_GEOFENCE_ID)
+    return NotificationCompat.Builder(context, CHANNEL_ENTER_IN_GEOFENCE_ID)
         .setContentTitle(context.getString(R.string.app_name))
         .setContentText(
             context.getString(
@@ -129,10 +121,9 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         .setVibrate(null)
         .build()
 
-    return notification
-
 }
 
+//sends a notification when there is an active reminder
 fun sendNotificationStatus(context: Context, textTitle: String): Notification {
     val pendingIntent: PendingIntent =
         Intent(context, MainActivity::class.java).let { notificationIntent ->
@@ -140,39 +131,35 @@ fun sendNotificationStatus(context: Context, textTitle: String): Notification {
                 context,
                 NOTIFICATION_GEOFENCE_STATUS_ID,
                 notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
             )
         }
 
-       val disableButtonPendingIntent =
+    val disableButtonPendingIntent =
         Intent(context, GeofenceBroadcastReceiver::class.java).let { notificationIntent ->
             notificationIntent.action = ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS
             PendingIntent.getBroadcast(
                 context,
                 NOTIFICATION_GEOFENCE_STATUS_ID,
                 notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
             )
         }
 
 
-
-    val notification: Notification =
-        NotificationCompat.Builder(context, CHANNEL_GEOFENCE_STATUS_ID)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentTitle(textTitle)
-            .setColor(context.resources.getColor(R.color.colorRed))
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentIntent(pendingIntent)
-            .setTicker(textTitle)
-            .setAutoCancel(true)
-            .addAction(
-                R.drawable.ic_notification_close_button_foreground,
-                context.resources.getString(R.string.disable), disableButtonPendingIntent
-            )
-            .build()
-
-    return notification
+    return NotificationCompat.Builder(context, CHANNEL_GEOFENCE_STATUS_ID)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setContentTitle(textTitle)
+        .setColor(context.resources.getColor(R.color.colorRed))
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentIntent(pendingIntent)
+        .setTicker(textTitle)
+        .setAutoCancel(true)
+        .addAction(
+            R.drawable.ic_notification_close_button_foreground,
+            context.resources.getString(R.string.disable), disableButtonPendingIntent
+        )
+        .build()
 }
 
 

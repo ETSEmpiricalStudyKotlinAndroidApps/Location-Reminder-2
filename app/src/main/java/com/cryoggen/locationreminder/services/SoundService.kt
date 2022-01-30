@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.servises
+package com.cryoggen.locationreminder.services
 
 import android.annotation.SuppressLint
 import android.app.Service

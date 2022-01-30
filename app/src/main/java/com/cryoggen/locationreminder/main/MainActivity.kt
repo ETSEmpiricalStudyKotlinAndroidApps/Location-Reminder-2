@@ -25,9 +25,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.addeditreminder.createChannelGeofenceEnterNotifications
-import com.cryoggen.locationreminder.addeditreminder.createChannelGeofenceStatusNotification
-import com.cryoggen.locationreminder.servises.stopSound
+import com.cryoggen.locationreminder.notification.createChannelGeofenceEnterNotifications
+import com.cryoggen.locationreminder.notification.createChannelGeofenceStatusNotification
+import com.cryoggen.locationreminder.services.stopSound
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest

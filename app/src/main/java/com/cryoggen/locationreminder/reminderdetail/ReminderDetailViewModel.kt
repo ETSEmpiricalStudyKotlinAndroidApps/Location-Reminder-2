@@ -16,8 +16,6 @@ import kotlinx.coroutines.launch
  */
 class ReminderDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
     private val remindersRepository = RemindersRepository.getRepository(application)
 
     private val _reminderId = MutableLiveData<String>()
@@ -28,8 +26,6 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     val reminder: LiveData<Reminder?> = _reminder
 
     val isDataAvailable: LiveData<Boolean> = _reminder.map { it != null }
-
-
 
     private val _setCompletedCheked = MutableLiveData<Boolean>()
     val setCompletedCheked: LiveData<Boolean> = _setCompletedCheked
@@ -97,6 +93,5 @@ class ReminderDetailViewModel(application: Application) : AndroidViewModel(appli
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
     }
-
 
 }

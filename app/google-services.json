@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "434630703513-8hml350voqkog07lsht6g0ri8jsg93fj.apps.googleusercontent.com",
+          "client_id": "434630703513-lha67tcka71i3pfadd5jce2umm1u4867.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cryoggen.locationreminder",
-            "certificate_hash": "7a484c553d20c55bfbc4f1e200a365059132a623"
+            "certificate_hash": "77:56:5C:7E:DB:D6:E6:D7:60:6D:10:F4:18:B8:12:6A:7A:FB:88:19"
           }
         },
         {

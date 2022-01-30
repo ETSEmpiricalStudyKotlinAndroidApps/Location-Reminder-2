@@ -1,14 +1,13 @@
 package com.cryoggen.locationreminder.reminders
 
-import android.app.Activity
 import android.app.Application
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.cryoggen.locationreminder.*
+import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.Result
 import com.cryoggen.locationreminder.data.Result.Success
-import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.data.source.RemindersDataSource
 import com.cryoggen.locationreminder.data.source.RemindersRepository
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
@@ -23,7 +22,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val remindersRepository = RemindersRepository.getRepository(application)
 
-    private val _forceUpdate = MutableLiveData<Boolean>(false)
+    private val _forceUpdate = MutableLiveData(false)
 
     private val _items: LiveData<List<Reminder>> = _forceUpdate.switchMap { forceUpdate ->
         if (forceUpdate) {
@@ -51,8 +50,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val _noReminderIconRes = MutableLiveData<Int>()
     val noReminderIconRes: LiveData<Int> = _noReminderIconRes
 
-    private val _RemindersAddViewVisible = MutableLiveData<Boolean>()
-    val RemindersAddViewVisible: LiveData<Boolean> = _RemindersAddViewVisible
+    private val remindersAddViewVisible = MutableLiveData<Boolean>()
 
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
@@ -84,9 +82,9 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * Sets the current Reminder filtering type.
      *
-     * @param requestType Can be [RemindersFilterType.ALL_Reminders],
-     * [RemindersFilterType.COMPLETED_Reminders], or
-     * [RemindersFilterType.ACTIVE_Reminders]
+     * @param requestType Can be [RemindersFilterType.ALL_REMINDERS],
+     * [RemindersFilterType.COMPLETED_REMINDERS], or
+     * [RemindersFilterType.ACTIVE_REMINDERS]
      */
     fun setFiltering(requestType: RemindersFilterType) {
         currentFiltering = requestType
@@ -123,7 +121,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         _currentFilteringLabel.value = filteringLabelString
         _noRemindersLabel.value = noRemindersLabelString
         _noReminderIconRes.value = noReminderIconDrawable
-        _RemindersAddViewVisible.value = RemindersAddVisible
+        remindersAddViewVisible.value = RemindersAddVisible
     }
 
     fun clearCompletedReminders() {
@@ -148,13 +146,6 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             remindersRepository.activateReminder(reminder)
             showSnackbarMessage(R.string.reminder_marked_active)
         }
-    }
-
-    /**
-     * Called by the Data Binding library and the FAB's click listener.
-     */
-    fun addNewReminder() {
-        _newReminderEvent.value = Event(Unit)
     }
 
     /**
@@ -199,7 +190,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * @param forceUpdate   Pass in true to refresh the data in the [RemindersDataSource]
      */
-    fun loadReminders(forceUpdate: Boolean) {
+    private fun loadReminders(forceUpdate: Boolean) {
         _forceUpdate.value = forceUpdate
     }
 
@@ -207,20 +198,20 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         Reminders: List<Reminder>,
         filteringType: RemindersFilterType
     ): List<Reminder> {
-        val RemindersToShow = ArrayList<Reminder>()
+        val remindersToShow = ArrayList<Reminder>()
         // We filter the Reminders based on the requestType
         for (Reminder in Reminders) {
             when (filteringType) {
-                RemindersFilterType.ALL_REMINDERS -> RemindersToShow.add(Reminder)
+                RemindersFilterType.ALL_REMINDERS -> remindersToShow.add(Reminder)
                 RemindersFilterType.ACTIVE_REMINDERS -> if (Reminder.isActive) {
-                    RemindersToShow.add(Reminder)
+                    remindersToShow.add(Reminder)
                 }
                 RemindersFilterType.COMPLETED_REMINDERS -> if (Reminder.isCompleted) {
-                    RemindersToShow.add(Reminder)
+                    remindersToShow.add(Reminder)
                 }
             }
         }
-        return RemindersToShow
+        return remindersToShow
     }
 
     fun refresh() {

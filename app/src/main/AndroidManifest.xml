@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.cryoggen.locationreminder">
+    package="com.cryoggen.locationreminder"
+    android:versionCode="6"
+    android:versionName="1.0.13">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -17,9 +19,10 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
         <service
-            android:name=".servises.RemindersService"
+            android:name=".services.RemindersService"
+            android:foregroundServiceType="location"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="LocationManager.MODE_CHANGED_ACTION" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -45,7 +48,7 @@
 
 
         <service
-            android:name=".servises.SoundService"
+            android:name=".services.SoundService"
             android:enabled="true"
             android:exported="false" />
 

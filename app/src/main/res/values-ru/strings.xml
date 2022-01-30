@@ -42,7 +42,7 @@
     <string name="sign_out">Выход</string>
     <string name="login">Авторизация</string>
     <string name="reminder_deatails">Сведения о напоминании</string>
-    <string name="exit">Выход</string>
+    <string name="exit">Выход из учётной записи</string>
     <string name="exit_fragment_text">Выход...</string>
     <string name="menu_clear_all">Очистить все</string>
     <string name="All_reminders_cleared">Все напоминания удалены</string>

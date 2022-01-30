@@ -7,7 +7,7 @@ import android.content.Intent
 import com.cryoggen.locationreminder.notification.ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID
 import com.cryoggen.locationreminder.notification.ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS
 import com.cryoggen.locationreminder.notification.NOTIFICATION_ENTER_IN_GEOFENCE_ID
-import com.cryoggen.locationreminder.servises.*
+import com.cryoggen.locationreminder.services.*
 
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
