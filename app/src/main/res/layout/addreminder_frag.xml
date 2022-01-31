@@ -1,6 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -15,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map_new_reminder"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
@@ -51,9 +50,9 @@
             android:layout_height="100dp"
             android:layout_margin="@dimen/reminder_description_margin"
             android:background="@color/primaryLightColor"
-            app:hintTextColor="@color/secondaryDarkColor"
             android:hint="@string/description_hint"
             android:visibility="@{viewmodel.dataLoading ? View.GONE : View.VISIBLE}"
+            app:hintTextColor="@color/secondaryDarkColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
@@ -71,12 +70,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/description_image_floating_button"
             android:onClick="@{() -> viewmodel.loadGeofenceFromMap()}"
             android:src="@drawable/ic_done"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="TODO" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
