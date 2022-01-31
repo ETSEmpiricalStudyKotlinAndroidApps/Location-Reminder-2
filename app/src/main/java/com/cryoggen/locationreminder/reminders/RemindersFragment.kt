@@ -13,8 +13,8 @@ import com.cryoggen.locationreminder.EventObserver
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
-import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
-import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.cryoggen.locationreminder.util.setupRefreshLayout
+import com.cryoggen.locationreminder.util.setupSnackbar
 import com.cryoggen.locationreminder.services.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
