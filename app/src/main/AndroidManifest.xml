@@ -21,9 +21,9 @@
         android:usesCleartextTraffic="true">
         <service
             android:name=".services.RemindersService"
-            android:foregroundServiceType="location"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            android:foregroundServiceType="location">
             <intent-filter>
                 <action android:name="LocationManager.MODE_CHANGED_ACTION" />
                 <category android:name="android.intent.category.DEFAULT" />
