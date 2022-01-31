@@ -99,12 +99,12 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
     }
 
     // Called when clicking on fab.
-    fun loadGeofenceFromMap(){
-        _loadDataFromMap.value=true
+    fun loadGeofenceFromMap() {
+        _loadDataFromMap.value = true
     }
 
-    fun updateCoordinatesFromMap(latitude:Double, longitude:Double){
-        _loadDataFromMap.value=false
+    fun updateCoordinatesFromMap(latitude: Double, longitude: Double) {
+        _loadDataFromMap.value = false
         this.latitude = latitude
         this.longitude = longitude
         saveReminder()
@@ -115,11 +115,11 @@ class AddEditReminderViewModel(application: Application) : AndroidViewModel(appl
         val currentTitle = title.value
         val currentDescription = description.value ?: ""
         val currentUserUID = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        if (currentTitle == null)  {
+        if (currentTitle == null) {
             _snackbarText.value = Event(R.string.empty_title_reminder_message)
             return
         }
-        if  (latitude == 0.0 && longitude == 0.0) {
+        if (latitude == 0.0 && longitude == 0.0) {
             _snackbarText.value = Event(R.string.empty_location_reminder_message)
             return
         }
