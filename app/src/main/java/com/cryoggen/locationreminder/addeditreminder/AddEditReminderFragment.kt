@@ -17,7 +17,7 @@ import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.databinding.AddreminderFragBinding
 import com.cryoggen.locationreminder.main.ADD_EDIT_RESULT_OK
 import com.cryoggen.locationreminder.map.MapReminder
-import com.cryoggen.locationreminder.reminders.util.setupSnackbar
+import com.cryoggen.locationreminder.util.setupSnackbar
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
