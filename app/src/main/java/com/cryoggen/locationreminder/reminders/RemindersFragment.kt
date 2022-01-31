@@ -15,9 +15,7 @@ import com.cryoggen.locationreminder.data.Reminder
 import com.cryoggen.locationreminder.databinding.FragmentRemindersBinding
 import com.cryoggen.locationreminder.reminders.util.setupRefreshLayout
 import com.cryoggen.locationreminder.reminders.util.setupSnackbar
-import com.cryoggen.locationreminder.services.EXTRA_GEOFENCE_INDEX
-import com.cryoggen.locationreminder.services.RemindersService
-import com.cryoggen.locationreminder.services.stopSound
+import com.cryoggen.locationreminder.services.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
@@ -52,7 +50,8 @@ class RemindersFragment : Fragment() {
         if (extras != null) {
             if (extras.containsKey(EXTRA_GEOFENCE_INDEX)) {
 
-                stopSound(requireContext())
+                //stop sound for notification
+                stopSoundAndNotification(requireContext())
 
                 val idReminder = extras.getString(EXTRA_GEOFENCE_INDEX)
                 requireActivity().intent?.removeExtra(EXTRA_GEOFENCE_INDEX)

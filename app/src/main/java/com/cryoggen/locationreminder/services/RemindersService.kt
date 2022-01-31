@@ -55,17 +55,21 @@ class RemindersService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        observeUpdateReminder()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startNotifictionForegraund()
 
-        createLocationRequest()
-        observeUpdateReminder()
-        subscribeToLocationUpdates()
+        when (intent?.action) {
+            ACTION_DEACTIVATE_ALL_REMINDERS -> deactivateAllReminders()
+            else -> {
+                startNotifictionForegraund()
 
+                createLocationRequest()
+                observeUpdateReminder()
+                subscribeToLocationUpdates()
+            }
+        }
 
         return START_STICKY
     }
@@ -78,8 +82,7 @@ class RemindersService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
-//        Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show()
-        deactivateAllReminders()
+
         unsubscribeToLocationUpdates()
         stopSelf()
     }
@@ -111,13 +114,8 @@ class RemindersService : LifecycleService() {
 
     private fun sendNotificationEnterGeofence() {
         if (sumActiveReminders > 0) sumActiveReminders--
-        notificationManager.cancelAllNotifications()
-        val notification = sendGeofenceEnteredNotification(
-            context, reminderMinDistance!!.id
-        )
-        notificationManager.notify(NOTIFICATION_ENTER_IN_GEOFENCE_ID, notification)
         viewModel.completeReminder(reminderMinDistance!!, true)
-        startSound(context)
+        startSoundAndNotification(this, reminderMinDistance!!.id)
     }
 
     private fun deactivateAllReminders() {
@@ -161,6 +159,9 @@ class RemindersService : LifecycleService() {
                 checkSumActiveReminders()
                 if (minDistanceLocation == 0.0F) {
                     sendNotificationEnterGeofence()
+
+                    //it is necessary that notifications are not generated until the distance to the next geofence is updated.
+                    minDistanceLocation = -0.0F
                 }
             }
         }
@@ -255,6 +256,9 @@ class RemindersService : LifecycleService() {
         return if ((minDistanceLocation - GEOFENCE_RADIUS_IN_METERS) >= 0) ((((minDistanceLocation - GEOFENCE_RADIUS_IN_METERS) * 0.1).toInt()) / 100.0f) else 0.0F
     }
 }
+
+
+const val ACTION_DEACTIVATE_ALL_REMINDERS = "com.cryoggen.action.ACTION_DEACTIVATE_ALL_REMINDERS"
 
 
 const val GEOFENCE_RADIUS_IN_METERS = 200f

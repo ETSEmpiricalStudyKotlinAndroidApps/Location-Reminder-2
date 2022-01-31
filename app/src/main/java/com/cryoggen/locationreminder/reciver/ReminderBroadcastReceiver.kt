@@ -15,18 +15,16 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         if (intent.action == ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS) {
-            val intentStopService = Intent(context, RemindersService::class.java)
-            context.stopService(intentStopService)
+            val intentStartService = Intent(context, RemindersService::class.java)
+            intentStartService.action = ACTION_DEACTIVATE_ALL_REMINDERS
+            context.startService(intentStartService)
         }
 
 
         if (intent.action == ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID) {
             //stop work service for sound
-            stopSound(context)
+            stopSoundAndNotification(context)
 
-            val manager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.cancel(NOTIFICATION_ENTER_IN_GEOFENCE_ID)
 
         }
 

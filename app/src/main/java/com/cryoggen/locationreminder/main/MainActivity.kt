@@ -27,7 +27,6 @@ import com.cryoggen.locationreminder.BuildConfig
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.notification.createChannelGeofenceEnterNotifications
 import com.cryoggen.locationreminder.notification.createChannelGeofenceStatusNotification
-import com.cryoggen.locationreminder.services.stopSound
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -101,11 +100,6 @@ class MainActivity : AppCompatActivity() {
             .apply {
                 setStatusBarBackground(R.color.primaryDarkColor)
             }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopSound(this)
     }
 
     private fun launchSignInFlow() {
