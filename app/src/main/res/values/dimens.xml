@@ -20,12 +20,12 @@
     <dimen name="reminder_item_list_margin">4dp</dimen>
     <dimen name="item_list_reminder_margin_start_end">16dp</dimen>
     <dimen name="item_list_reminder_margin_top_bottom">4dp</dimen>
-    <dimen name="nav_heder_text_size_with_logo">25dp</dimen>
+    <dimen name="nav_heder_text_size_with_logo">25sp</dimen>
     <dimen name="start_fragment_text_size">64sp</dimen>
     <dimen name="permission_required_text_title_size">46sp</dimen>
     <dimen name="permission_required_text_title_margin_size">8dp</dimen>
     <dimen name="permission_required_layout_text_size">24sp</dimen>
     <dimen name="permission_required_layout_text_margin">16dp</dimen>
-    <dimen name="permission_required_layouy_image_margin" >16dp</dimen>
+    <dimen name="permission_required_layout_image_margin" >16dp</dimen>
 
 </resources>
