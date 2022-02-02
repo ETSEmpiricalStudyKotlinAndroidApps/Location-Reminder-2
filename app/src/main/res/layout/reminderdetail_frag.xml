@@ -72,8 +72,6 @@
                         android:paddingTop="1dp"
                         android:text="@{viewmodel.reminder.description}"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
                 </RelativeLayout>
 
             </LinearLayout>
@@ -86,7 +84,8 @@
             android:src="@drawable/ic_edit"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/description_button_edit_reminder" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

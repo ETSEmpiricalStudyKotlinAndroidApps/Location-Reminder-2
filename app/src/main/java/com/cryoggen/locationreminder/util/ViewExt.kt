@@ -1,4 +1,4 @@
-package com.cryoggen.locationreminder.reminders.util
+package com.cryoggen.locationreminder.util
 
 /**
  * Extension functions and Binding Adapters.
@@ -9,31 +9,26 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.cryoggen.locationreminder.Event
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.ScrollChildSwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 
-/**
- * Transforms static java function Snackbar.make() to an extension function on View.
- */
+//Transforms static java function Snackbar.make() to an extension function on View.
 fun View.showSnackbar(snackbarText: String, timeLength: Int) {
     Snackbar.make(this, snackbarText, timeLength).run {
         show()
     }
 }
 
-/**
- * Triggers a snackbar message when the value contained by snackbarTaskMessageLiveEvent is modified.
- */
+//Triggers a snackbar message when the value contained by snackbarTaskMessageLiveEvent is modified.
 fun View.setupSnackbar(
     lifecycleOwner: LifecycleOwner,
     snackbarEvent: LiveData<Event<Int>>,
     timeLength: Int
 ) {
 
-    snackbarEvent.observe(lifecycleOwner, Observer { event ->
+    snackbarEvent.observe(lifecycleOwner, { event ->
         event.getContentIfNotHandled()?.let {
             showSnackbar(context.getString(it), timeLength)
         }

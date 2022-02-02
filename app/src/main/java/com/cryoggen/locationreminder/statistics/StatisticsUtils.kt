@@ -2,9 +2,6 @@ package com.cryoggen.locationreminder.statistics
 
 import com.cryoggen.locationreminder.data.Reminder
 
-/**
- * Function that does some trivial computation. Used to showcase unit tests.
- */
 internal fun getActiveAndCompletedStats(reminders: List<Reminder>?): StatsResult {
 
     return if (reminders == null || reminders.isEmpty()) {

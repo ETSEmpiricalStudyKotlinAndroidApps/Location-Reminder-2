@@ -78,7 +78,11 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         context,
         NOTIFICATION_ENTER_IN_GEOFENCE_ID,
         contentIntent,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
     )
 
 
@@ -89,7 +93,11 @@ fun sendGeofenceEnteredNotification(context: Context, reminderId: String): Notif
         context,
         NOTIFICATION_ENTER_IN_GEOFENCE_ID,
         closeNotificationIntent,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
     )
 
 
@@ -131,7 +139,11 @@ fun sendNotificationStatus(context: Context, textTitle: String): Notification {
                 context,
                 NOTIFICATION_GEOFENCE_STATUS_ID,
                 notificationIntent,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
             )
         }
 
@@ -142,7 +154,11 @@ fun sendNotificationStatus(context: Context, textTitle: String): Notification {
                 context,
                 NOTIFICATION_GEOFENCE_STATUS_ID,
                 notificationIntent,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT } else { PendingIntent.FLAG_UPDATE_CURRENT }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                } else {
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                }
             )
         }
 
@@ -167,7 +183,7 @@ fun NotificationManager.cancelAllNotifications() {
     cancelAll()
 }
 
-const val ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID=
+const val ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID =
     "com.cryoggen.action.ACTION_CLOSE_NOTIFICATION_ENTER_IN_GEOFENCE_ID"
 
 const val ACTION_CLOSE_NOTIFICATION_GEOFENCE_STATUS =

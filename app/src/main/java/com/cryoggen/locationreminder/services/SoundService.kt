@@ -1,42 +1,35 @@
 package com.cryoggen.locationreminder.services
 
 import android.annotation.SuppressLint
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.*
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startForegroundService
 import com.cryoggen.locationreminder.R
-import com.cryoggen.locationreminder.main.MainActivity
 import com.cryoggen.locationreminder.notification.NOTIFICATION_ENTER_IN_GEOFENCE_ID
 import com.cryoggen.locationreminder.notification.sendGeofenceEnteredNotification
 
 
 class SoundService : Service() {
 
-    val wakeLock: PowerManager.WakeLock by lazy {     (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-        newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocationReminder::MyWakelockTag").apply {
-            acquire()
+    private val wakeLock: PowerManager.WakeLock by lazy {
+        (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LocationReminder::MyWakelockTag").apply {
+                acquire()
+            }
         }
-    } }
-
-
-    lateinit var mediaPlayer: MediaPlayer
-    lateinit var vibrator: Vibrator
-    val vibratePattern = longArrayOf(0, 400, 800, 600, 800, 800, 800, 1000)
-    val amplitudesVibration = intArrayOf(0, 255, 0, 255, 0, 255, 0, 255)
-
-    var soundStatus = false
-
-    val notificationManager by lazy {
-        ContextCompat.getSystemService(
-            this,
-            NotificationManager::class.java
-        ) as NotificationManager
     }
+
+
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var vibrator: Vibrator
+    private val vibratePattern = longArrayOf(0, 400, 800, 600, 800, 800, 800, 1000)
+    private val amplitudesVibration = intArrayOf(0, 255, 0, 255, 0, 255, 0, 255)
+
+    // set to false if the notification sound is not currently sounding, else true
+    private var soundStatus = false
 
     private var reminderId = ""
 
@@ -74,12 +67,13 @@ class SoundService : Service() {
     }
 
 
-    fun initializedSound() {
+    private fun initializedSound() {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.rington)
 
-         vibrator  = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =  this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =
+                this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             getSystemService(VIBRATOR_SERVICE) as Vibrator

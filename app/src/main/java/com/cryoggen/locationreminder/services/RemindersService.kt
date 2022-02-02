@@ -4,22 +4,20 @@ import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Intent
 import android.location.Location
-import android.os.*
+import android.os.IBinder
+import android.os.Looper
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleService
 import com.cryoggen.locationreminder.R
 import com.cryoggen.locationreminder.data.Reminder
-import com.cryoggen.locationreminder.notification.NOTIFICATION_ENTER_IN_GEOFENCE_ID
 import com.cryoggen.locationreminder.notification.NOTIFICATION_GEOFENCE_STATUS_ID
-import com.cryoggen.locationreminder.notification.cancelAllNotifications
-import com.cryoggen.locationreminder.notification.sendGeofenceEnteredNotification
 import com.cryoggen.locationreminder.reminders.RemindersViewModel
 import com.google.android.gms.location.*
 
 
 class RemindersService : LifecycleService() {
 
-    var reminderMinDistance: Reminder? = null
+    private var reminderMinDistance: Reminder? = null
     var minDistanceLocation = -1.0F
 
     // FusedLocationProviderClient - Main class for receiving location updates.
@@ -32,12 +30,10 @@ class RemindersService : LifecycleService() {
     // LocationCallback - Called when FusedLocationProviderClient has a new Location.
     private lateinit var locationCallback: LocationCallback
 
-    // Used only for local storage of the last known location. Usually, this would be saved to your
-    // database, but because this is a simplified sample without a full database, we only need the
-    // last location to create a Notification if the user navigates away from the app.
+    // Used to store the last known location.
     private var currentLocation: Location? = null
 
-    var sumActiveReminders = -1
+    private var sumActiveReminders = -1
 
     private var listReminders = listOf<Reminder>()
 
@@ -45,16 +41,11 @@ class RemindersService : LifecycleService() {
 
     private val context = this
 
-    val notificationManager by lazy {
+    private val notificationManager by lazy {
         ContextCompat.getSystemService(
             this,
             NotificationManager::class.java
         ) as NotificationManager
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -63,7 +54,7 @@ class RemindersService : LifecycleService() {
         when (intent?.action) {
             ACTION_DEACTIVATE_ALL_REMINDERS -> deactivateAllReminders()
             else -> {
-                startNotifictionForegraund()
+                startNotificationForeground()
 
                 createLocationRequest()
                 observeUpdateReminder()
@@ -87,7 +78,7 @@ class RemindersService : LifecycleService() {
         stopSelf()
     }
 
-    private fun startNotifictionForegraund() {
+    private fun startNotificationForeground() {
         startForeground(
             NOTIFICATION_GEOFENCE_STATUS_ID,
             com.cryoggen.locationreminder.notification.sendNotificationStatus(
@@ -97,6 +88,7 @@ class RemindersService : LifecycleService() {
         )
     }
 
+    //displays information in kilometers to the nearest geofence
     private fun sendNotificationStatus() {
         val textNotification: String =
             if (reminderMinDistance == null) getString(R.string.loading_notification_text) else "${reminderMinDistance!!.title} · " + getString(
@@ -128,14 +120,16 @@ class RemindersService : LifecycleService() {
 
     }
 
+    //monitors database update
     private fun observeUpdateReminder() {
-        viewModel.items.observe(this, Observer {
+        viewModel.items.observe(this, {
             listReminders = it
             updateSumActiveReminders()
         })
     }
 
-    fun updateSumActiveReminders() {
+    // keeps track of the number of reminders to track
+    private fun updateSumActiveReminders() {
         var sumReminders = 0
         for (reminder in listReminders) {
             if (reminder.isActive) {
@@ -145,7 +139,8 @@ class RemindersService : LifecycleService() {
         sumActiveReminders = sumReminders
     }
 
-    fun createLocationRequest() {
+    //gets new coordinates about the location of the device about once every 1 second
+    private fun createLocationRequest() {
 
         createLocationSetting()
 
@@ -180,6 +175,7 @@ class RemindersService : LifecycleService() {
             .addLocationRequest(locationRequest)
     }
 
+    //if there are no active notifications left in the database, then stop the service
     private fun checkSumActiveReminders() {
         when (sumActiveReminders) {
             in 1..100 -> {
@@ -204,15 +200,13 @@ class RemindersService : LifecycleService() {
         }
     }
 
-    fun unsubscribeToLocationUpdates() {
+    private fun unsubscribeToLocationUpdates() {
 
         try {
             val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     stopSelf()
-                } else {
-
                 }
             }
 
@@ -222,10 +216,11 @@ class RemindersService : LifecycleService() {
 
     }
 
+    // finds the nearest geofence, and saves the mileage to it
     fun determinesNearestGeofence() {
         reminderMinDistance = null
         minDistanceLocation = Float.MAX_VALUE
-        var reminderLocation = Location("location")
+        val reminderLocation = Location("location")
         var reminderDistanceLocation = 0.0F
         if (sumActiveReminders > 0) {
 
@@ -259,7 +254,6 @@ class RemindersService : LifecycleService() {
 
 
 const val ACTION_DEACTIVATE_ALL_REMINDERS = "com.cryoggen.action.ACTION_DEACTIVATE_ALL_REMINDERS"
-
-
 const val GEOFENCE_RADIUS_IN_METERS = 200f
+
 const val EXTRA_GEOFENCE_INDEX = "com.cryoggen.GEOFENCE_INDEX"

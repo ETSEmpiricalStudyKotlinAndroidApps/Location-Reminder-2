@@ -71,4 +71,8 @@
     <!-- Add Edit Reminder messages-->
     <string name="empty_title_reminder_message">заголовок напоминания не может быть пустым</string>
     <string name="empty_location_reminder_message">установите локацию на карте, которую нужно отслеживать</string>
+    <string name="description_image_logo">Изображение логотипа</string>
+    <string name="description_image_floating_button">Кнопка для сохранения данных</string>
+    <string name="description_button_crate_new_reminder">Кнопка для создания нового напоминания</string>
+    <string name="description_button_edit_reminder">Кнопка для редактирования напоминания</string>
 </resources>
